@@ -47,16 +47,15 @@ public class MimeTypeSourceGenerator : ISourceGenerator
          context.AddSource("MimeHelper.Properties.cs", SourceText.From(@$"
 namespace ManagedCode.MimeTypes
 {{
-  public static partial class MimeHelper
-  {{
-    static partial void Init()
-    {{
-        {defineDictionaryBuilder.ToString()}
-    }}
-
-   {propertyBuilder.ToString()}
-  }}
- }}
+public static partial class MimeHelper
+{{
+static partial void Init()
+{{
+{defineDictionaryBuilder.ToString()}
+}}
+{propertyBuilder.ToString()}
+}}
+}}
 ", Encoding.UTF8));
     }
 

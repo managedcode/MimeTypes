@@ -13,6 +13,12 @@ public static partial class MimeHelper
     {
         Init();
     }
+
+    public static string GetMimeType(FileInfo file)
+    {
+        return GetMimeType(file.Extension);
+    }
+
     public static string GetMimeType(string extension)
     {
         if (string.IsNullOrWhiteSpace(extension))
