@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <LangVersion>10</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ManagedCode.MimeTypes.Generator\ManagedCode.MimeTypes.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
+    <!--NuGet-->
+    <PropertyGroup>
+        <Title>ManagedCode.MimeTypes</Title>
+        <PackageId>ManagedCode.MimeTypes</PackageId>
+        <Description>MimeTypes for .NET</Description>
+        <PackageTags>managedcode, mimetypes, mime</PackageTags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    </ItemGroup>
+
+</Project>

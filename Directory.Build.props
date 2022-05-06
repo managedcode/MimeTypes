@@ -1,0 +1,26 @@
+<Project>
+    <!--NuGet-->
+    <PropertyGroup>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <Authors>ManagedCode</Authors>
+        <Copyright>Copyright © 2021-$([System.DateTime]::Now.ToString(`yyyy`)) ManagedCode SAS</Copyright>
+        <RepositoryUrl>https://github.com/managed-code-hub/MimeTypes</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/managed-code-hub/MimeTypes</PackageProjectUrl>
+        <RepositoryType>Github</RepositoryType>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+        <PackageIcon>logo.png</PackageIcon>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Product>Managed Code - MimeTypes</Product>
+        <Version>1.0.0</Version>
+        <PackageVersion>1.0.0</PackageVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="$(SolutionDir)\logo.png" Pack="true" Visible="false" PackagePath="\"/>
+        <None Include="$(SolutionDir)\README.md" Pack="true" Visible="false" PackagePath="\"/>
+    </ItemGroup>
+</Project>
