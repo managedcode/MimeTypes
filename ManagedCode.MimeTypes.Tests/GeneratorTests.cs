@@ -24,7 +24,7 @@ public class GeneratorTests
     {
         MimeHelper.GetMimeType("").Should().Be("application/octet-stream");
         MimeHelper.GetMimeType("     ").Should().Be("application/octet-stream");
-        MimeHelper.GetMimeType(null).Should().Be("application/octet-stream");
+        MimeHelper.GetMimeType(null as string).Should().Be("application/octet-stream");
     }
     
     [Fact]
