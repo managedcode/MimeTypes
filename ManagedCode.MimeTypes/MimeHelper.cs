@@ -57,23 +57,25 @@ public static partial class MimeHelper
             
         var m = mime.ToLowerInvariant();
         
+        // Check formats that can appear in multiple primary types first
+        if (XmlPattern.IsMatch(m)) return MimeTypeCategory.Xml;
+        if (JsonPattern.IsMatch(m)) return MimeTypeCategory.Json;
+        
         // Primary types
         if (m.StartsWith("video/")) return MimeTypeCategory.Video;
         if (m.StartsWith("audio/")) return MimeTypeCategory.Audio;
         if (m.StartsWith("image/")) return MimeTypeCategory.Image;
-        if (m.StartsWith("text/")) return MimeTypeCategory.Text;
         if (m.StartsWith("font/")) return MimeTypeCategory.Font;
         if (m.StartsWith("model/")) return MimeTypeCategory.Model;
         
+        // Text types (after checking for XML/JSON)
+        if (m.StartsWith("text/")) return MimeTypeCategory.Text;
+        
         // Document types
         if (m == "application/pdf") return MimeTypeCategory.Pdf;
-        if (WordPattern.IsMatch(m)) return MimeTypeCategory.Document;
         if (SpreadsheetPattern.IsMatch(m)) return MimeTypeCategory.Spreadsheet;
         if (PresentationPattern.IsMatch(m)) return MimeTypeCategory.Presentation;
-        
-        // Data formats
-        if (JsonPattern.IsMatch(m)) return MimeTypeCategory.Json;
-        if (XmlPattern.IsMatch(m)) return MimeTypeCategory.Xml;
+        if (WordPattern.IsMatch(m)) return MimeTypeCategory.Document;
         
         // Special types
         if (ArchivePattern.IsMatch(m)) return MimeTypeCategory.Archive;

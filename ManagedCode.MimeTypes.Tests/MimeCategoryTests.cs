@@ -88,12 +88,32 @@ public class MimeCategoryTests
 
     [Theory]
     [InlineData("application/msword")]
-    [InlineData("application/vnd.ms-excel")]
     [InlineData("application/vnd.openxmlformats-officedocument.wordprocessingml.document")]
-    public void DocumentMimeTypes_ShouldBeDocument(string mime)
+    [InlineData("application/vnd.oasis.opendocument.text")]
+    public void WordDocumentMimeTypes_ShouldBeDocument(string mime)
     {
         MimeHelper.GetMimeCategory(mime).ShouldBe(MimeTypeCategory.Document);
         MimeHelper.IsDocument(mime).ShouldBeTrue();
+    }
+
+    [Theory]
+    [InlineData("application/vnd.ms-excel")]
+    [InlineData("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")]
+    [InlineData("application/vnd.oasis.opendocument.spreadsheet")]
+    public void SpreadsheetMimeTypes_ShouldBeSpreadsheet(string mime)
+    {
+        MimeHelper.GetMimeCategory(mime).ShouldBe(MimeTypeCategory.Spreadsheet);
+        MimeHelper.IsSpreadsheet(mime).ShouldBeTrue();
+    }
+
+    [Theory]
+    [InlineData("application/vnd.ms-powerpoint")]
+    [InlineData("application/vnd.openxmlformats-officedocument.presentationml.presentation")]
+    [InlineData("application/vnd.oasis.opendocument.presentation")]
+    public void PresentationMimeTypes_ShouldBePresentation(string mime)
+    {
+        MimeHelper.GetMimeCategory(mime).ShouldBe(MimeTypeCategory.Presentation);
+        MimeHelper.IsPresentation(mime).ShouldBeTrue();
     }
 
     [Fact]
