@@ -68,9 +68,9 @@ public static partial class MimeHelper
             fs.ReadExactly(fileHeader, 0, fileHeader.Length);
         }
 
-        foreach (var mime in MimeTypes)
+        foreach (var mime in MimeTypesForContent)
         {
-            if (fileHeader.AsSpan().Slice(0, mime.Key.Length).SequenceEqual(mime.Key))
+            if (fileHeader.AsSpan().Slice(0, mime.Key.Length).SequenceEqual(mime.Key.AsSpan()))
             {
                 return mime.Value;
             }
@@ -84,9 +84,9 @@ public static partial class MimeHelper
         byte[] fileHeader = new byte[4];
         fileStream.ReadExactly(fileHeader, 0, fileHeader.Length);
 
-        foreach (var mime in MimeTypes)
+        foreach (var mime in MimeTypesForContent)
         {
-            if (fileHeader.AsSpan().Slice(0, mime.Key.Length).SequenceEqual(mime.Key))
+            if (fileHeader.AsSpan().Slice(0, mime.Key.Length).SequenceEqual(mime.Key.AsSpan()))
             {
                 return mime.Value;
             }

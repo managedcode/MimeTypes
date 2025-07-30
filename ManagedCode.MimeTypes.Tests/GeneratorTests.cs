@@ -32,6 +32,7 @@ public class GeneratorTests
         MimeHelper.PNG.ShouldBe("image/png");
         MimeHelper.MP4.ShouldBe("video/mp4");
         MimeHelper._7Z.ShouldBe("application/x-7z-compressed");
+        MimeHelper.EVENT_STREAM.ShouldBe("text/event-stream");
     }
 
     [Fact]
