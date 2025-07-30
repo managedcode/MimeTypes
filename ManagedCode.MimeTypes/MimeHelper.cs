@@ -50,6 +50,52 @@ public static partial class MimeHelper
     private static readonly Regex CalendarPattern = new(@"^(?:text/calendar|application/ics)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     private static readonly Regex EmailPattern = new(@"^(?:message/(?:rfc822|global)|application/(?:mbox|x-msmessage))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
     
+    private static readonly Dictionary<byte[], string> MimeTypesForContent = new()
+    {
+        { new byte[] { 0x25, 0x50, 0x44, 0x46 }, "application/pdf" }, // PDF
+        { new byte[] { 0xFF, 0xD8, 0xFF }, "image/jpeg" }, // JPEG
+        { new byte[] { 0x89, 0x50, 0x4E, 0x47 }, "image/png" }, // PNG
+        { new byte[] { 0x47, 0x49, 0x46, 0x38 }, "image/gif" }, // GIF
+        { new byte[] { 0x50, 0x4B, 0x03, 0x04 }, "application/zip" }, // ZIP
+        { new byte[] { 0x1F, 0x8B }, "application/gzip" } // GZIP
+    };
+    
+    public static string GetMimeTypeByContent(string filePath)
+    {
+        byte[] fileHeader = new byte[4];
+        using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+        {
+            fs.ReadExactly(fileHeader, 0, fileHeader.Length);
+        }
+
+        foreach (var mime in MimeTypes)
+        {
+            if (fileHeader.AsSpan().Slice(0, mime.Key.Length).SequenceEqual(mime.Key))
+            {
+                return mime.Value;
+            }
+        }
+
+        return "application/octet-stream"; // Default MIME type
+    }
+
+    public static string GetMimeTypeByContent(Stream fileStream)
+    {
+        byte[] fileHeader = new byte[4];
+        fileStream.ReadExactly(fileHeader, 0, fileHeader.Length);
+
+        foreach (var mime in MimeTypes)
+        {
+            if (fileHeader.AsSpan().Slice(0, mime.Key.Length).SequenceEqual(mime.Key))
+            {
+                return mime.Value;
+            }
+        }
+
+        return "application/octet-stream"; // Default MIME type
+    }
+
+    
     public static MimeTypeCategory GetMimeCategory(string mime)
     {
         if (string.IsNullOrWhiteSpace(mime))

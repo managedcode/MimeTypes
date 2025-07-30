@@ -8,6 +8,7 @@ public class GeneratorTests
     [Fact]
     public void ExtensionsTest()
     {
+        MimeHelper.GetMimeType("somefile.pdf").ShouldBe("application/pdf");
         MimeHelper.GetMimeType("pdf").ShouldBe("application/pdf");
         MimeHelper.GetMimeType(".gz").ShouldBe("application/gzip");
         MimeHelper.GetMimeType("word.docx").ShouldBe("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
