@@ -1,0 +1,43 @@
+name: MIME database sync
+
+on:
+  schedule:
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Run MIME sync tool
+        run: dotnet run --project ManagedCode.MimeTypes.Sync --configuration Release -- --prefer-remote
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: sync MIME database"
+          title: "chore: sync MIME database"
+          body: |
+            Automated update of MIME database from configured sources.
+          branch: chore/sync-mime-database
+          delete-branch: true
+          labels: |
+            automation
+            dependencies
