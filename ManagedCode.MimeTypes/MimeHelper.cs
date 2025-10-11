@@ -31,7 +31,7 @@ public static partial class MimeHelper
 
     private static readonly Regex ScriptPattern = new(@"^(?:application|text)/(?:javascript|ecmascript|x-php|x-sh|x-shellscript|x-python|x-ruby|x-perl)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-    private static readonly char[] QueryFragmentSeparators = { '?', '#' };
+    private static readonly SearchValues<char> QueryFragmentSeparators = SearchValues.Create(new[] { '?', '#' });
 
     private static readonly HashSet<string> ScriptMimeSet = new(StringComparer.OrdinalIgnoreCase)
     {
