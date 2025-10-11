@@ -654,48 +654,80 @@ public static partial class MimeHelper
 
     private static string? DetectZipBasedType(ReadOnlySpan<byte> header)
     {
-        var ascii = Encoding.ASCII.GetString(header);
-
-        if (ascii.Contains("mimetypeapplication/epub+zip", StringComparison.OrdinalIgnoreCase))
+        // Patterns to search for (ASCII, case-insensitive)
+        ReadOnlySpan<byte> epubPattern = "mimetypeapplication/epub+zip"u8;
+        if (ContainsAsciiIgnoreCase(header, epubPattern))
         {
             return "application/epub+zip";
         }
 
-        if (ascii.Contains("mimetypeapplication/vnd.oasis.opendocument.text", StringComparison.OrdinalIgnoreCase))
+        ReadOnlySpan<byte> odtPattern = "mimetypeapplication/vnd.oasis.opendocument.text"u8;
+        if (ContainsAsciiIgnoreCase(header, odtPattern))
         {
             return "application/vnd.oasis.opendocument.text";
         }
 
-        if (ascii.Contains("mimetypeapplication/vnd.oasis.opendocument.spreadsheet", StringComparison.OrdinalIgnoreCase))
+        ReadOnlySpan<byte> odsPattern = "mimetypeapplication/vnd.oasis.opendocument.spreadsheet"u8;
+        if (ContainsAsciiIgnoreCase(header, odsPattern))
         {
             return "application/vnd.oasis.opendocument.spreadsheet";
         }
 
-        if (ascii.Contains("mimetypeapplication/vnd.oasis.opendocument.presentation", StringComparison.OrdinalIgnoreCase))
+        ReadOnlySpan<byte> odpPattern = "mimetypeapplication/vnd.oasis.opendocument.presentation"u8;
+        if (ContainsAsciiIgnoreCase(header, odpPattern))
         {
             return "application/vnd.oasis.opendocument.presentation";
         }
 
-        if (ascii.Contains("word/", StringComparison.OrdinalIgnoreCase))
+        ReadOnlySpan<byte> wordPattern = "word/"u8;
+        if (ContainsAsciiIgnoreCase(header, wordPattern))
         {
             return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
         }
 
-        if (ascii.Contains("xl/", StringComparison.OrdinalIgnoreCase))
+        ReadOnlySpan<byte> xlPattern = "xl/"u8;
+        if (ContainsAsciiIgnoreCase(header, xlPattern))
         {
             return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
         }
 
-        if (ascii.Contains("ppt/", StringComparison.OrdinalIgnoreCase))
+        ReadOnlySpan<byte> pptPattern = "ppt/"u8;
+        if (ContainsAsciiIgnoreCase(header, pptPattern))
         {
             return "application/vnd.openxmlformats-officedocument.presentationml.presentation";
         }
 
-        if (ascii.Contains("AndroidManifest.xml", StringComparison.OrdinalIgnoreCase))
+        ReadOnlySpan<byte> androidManifestPattern = "AndroidManifest.xml"u8;
+        if (ContainsAsciiIgnoreCase(header, androidManifestPattern))
         {
             return "application/vnd.android.package-archive";
         }
 
         return null;
+    }
+
+    // Helper: case-insensitive ASCII search for pattern in span
+    private static bool ContainsAsciiIgnoreCase(ReadOnlySpan<byte> span, ReadOnlySpan<byte> pattern)
+    {
+        if (pattern.Length == 0 || pattern.Length > span.Length)
+            return false;
+
+        for (int i = 0; i <= span.Length - pattern.Length; i++)
+        {
+            int j = 0;
+            for (; j < pattern.Length; j++)
+            {
+                byte a = span[i + j];
+                byte b = pattern[j];
+                // ASCII case-insensitive compare
+                if (a >= (byte)'A' && a <= (byte)'Z') a = (byte)(a + 32);
+                if (b >= (byte)'A' && b <= (byte)'Z') b = (byte)(b + 32);
+                if (a != b)
+                    break;
+            }
+            if (j == pattern.Length)
+                return true;
+        }
+        return false;
     }
 }
