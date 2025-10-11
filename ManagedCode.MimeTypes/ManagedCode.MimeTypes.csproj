@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <Nullable>enable</Nullable>
-        <LangVersion>13</LangVersion>
+        <LangVersion>preview</LangVersion>
         <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
         <CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
