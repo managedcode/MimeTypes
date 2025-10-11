@@ -16,8 +16,6 @@ internal static class MimeTypeSyncTool
         "https://raw.githubusercontent.com/apache/httpd/trunk/docs/conf/mime.types"
     };
 
-    private static readonly char[] MimeTypeSeparators = new[] { ' ', '\t' };
-
     public static async Task<int> RunAsync(string[] args)
     {
         try
@@ -147,7 +145,7 @@ internal static class MimeTypeSyncTool
                 continue;
             }
 
-            var parts = line.Split(MimeTypeSeparators, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var parts = line.Split(' ', '\t', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             if (parts.Length < 2)
             {
                 continue;
