@@ -19,5 +19,9 @@ public enum MimeTypeCategory
     Executable,
     Certificate,
     Calendar,
-    Email
+    Email,
+    Script,
+    Binary,
+    Multipart,
+    Message
 }

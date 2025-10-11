@@ -81,7 +81,7 @@ public class MimeCategoryTests
     [InlineData("")]
     [InlineData(null)]
     [InlineData("   ")]
-    public void EmptyMimeTypes_ShouldBeUnknown(string mime)
+    public void EmptyMimeTypes_ShouldBeUnknown(string? mime)
     {
         MimeHelper.GetMimeCategory(mime).ShouldBe(MimeTypeCategory.Unknown);
     }
@@ -114,6 +114,41 @@ public class MimeCategoryTests
     {
         MimeHelper.GetMimeCategory(mime).ShouldBe(MimeTypeCategory.Presentation);
         MimeHelper.IsPresentation(mime).ShouldBeTrue();
+    }
+
+    [Theory]
+    [InlineData("application/javascript")]
+    [InlineData("text/x-php")]
+    [InlineData("application/x-sh")]
+    public void ScriptMimeTypes_ShouldBeScript(string mime)
+    {
+        MimeHelper.GetMimeCategory(mime).ShouldBe(MimeTypeCategory.Script);
+        MimeHelper.IsScript(mime).ShouldBeTrue();
+    }
+
+    [Theory]
+    [InlineData("application/octet-stream")]
+    [InlineData("application/x-binary")]
+    public void BinaryMimeTypes_ShouldBeBinary(string mime)
+    {
+        MimeHelper.GetMimeCategory(mime).ShouldBe(MimeTypeCategory.Binary);
+        MimeHelper.IsBinary(mime).ShouldBeTrue();
+    }
+
+    [Theory]
+    [InlineData("multipart/form-data")]
+    [InlineData("multipart/related")]
+    public void MultipartMimeTypes_ShouldBeMultipart(string mime)
+    {
+        MimeHelper.GetMimeCategory(mime).ShouldBe(MimeTypeCategory.Multipart);
+    }
+
+    [Theory]
+    [InlineData("message/rfc822")]
+    [InlineData("message/global")]
+    public void MessageMimeTypes_ShouldBeMessage(string mime)
+    {
+        MimeHelper.GetMimeCategory(mime).ShouldBe(MimeTypeCategory.Message);
     }
 
     [Fact]

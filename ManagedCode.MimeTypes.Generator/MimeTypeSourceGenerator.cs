@@ -65,13 +65,16 @@ public class MimeTypeSourceGenerator : ISourceGenerator
 
             foreach (var item in properties)
             {
-                defineDictionaryBuilder.AppendLine($"MimeTypes.Add(string.Intern(\"{item.Name}\"),string.Intern(\"{item.Value}\"));");
-                types[ParseKey(item.Name)] = item.Value.ToString();
+                var extension = item.Name.Trim();
+                var mimeValue = item.Value.ToString()?.Trim() ?? string.Empty;
+
+                defineDictionaryBuilder.AppendLine($"RegisterMimeTypeInternal(\"{Escape(extension)}\", \"{Escape(mimeValue)}\");");
+                types[ParseKey(extension)] = mimeValue;
             }
 
             foreach (var item in types)
             {
-                propertyBuilder.AppendLine($"public static string {item.Key} => \"{item.Value}\";");
+                propertyBuilder.AppendLine($"public static string {item.Key} => \"{Escape(item.Value)}\";");
             }
             
             context.AddSource("MimeHelper.Properties.cs", SourceText.From(@$"
@@ -124,16 +127,23 @@ static partial void Init()
         return possiblePaths.FirstOrDefault(File.Exists) ?? possiblePaths[0];
     }
 
-    private string ParseKey(string key)
+    private static string ParseKey(string key)
     {
         if (char.IsDigit(key[0]))
         {
             key = "_" + key;
         }
-        
-        key = key.Replace("-", "_");
+
+        key = key.Replace("-", "_").Replace('.', '_');
 
         return key.ToUpperInvariant();
+    }
+
+    private static string Escape(string value)
+    {
+        return value
+            .Replace("\\", "\\\\")
+            .Replace("\"", "\\\"");
     }
 }
 
