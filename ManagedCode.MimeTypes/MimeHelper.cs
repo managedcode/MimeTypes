@@ -31,6 +31,8 @@ public static partial class MimeHelper
 
     private static readonly Regex ScriptPattern = new(@"^(?:application|text)/(?:javascript|ecmascript|x-php|x-sh|x-shellscript|x-python|x-ruby|x-perl)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+    private static readonly SearchValues<char> QueryFragmentSeparators = SearchValues.Create("?#");
+
     private static readonly HashSet<string> ScriptMimeSet = new(StringComparer.OrdinalIgnoreCase)
     {
         "application/javascript",
@@ -403,7 +405,7 @@ public static partial class MimeHelper
             yield break;
         }
 
-        var separatorIndex = trimmed.IndexOfAny(new[] { '?', '#' });
+        var separatorIndex = trimmed.AsSpan().IndexOfAny(QueryFragmentSeparators);
         if (separatorIndex >= 0)
         {
             trimmed = trimmed[..separatorIndex];
@@ -441,10 +443,12 @@ public static partial class MimeHelper
         }
 
         var yielded = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var sanitized = fileName.Trim('.');
         var index = fileName.IndexOf('.');
         while (index >= 0 && index < fileName.Length - 1)
         {
-            var candidate = fileName[(index + 1)..].Trim('.');
+            var remainder = fileName[(index + 1)..];
+            var candidate = remainder.Trim('.');
             if (candidate.Length > 0 && yielded.Add(candidate))
             {
                 yield return candidate;
@@ -453,7 +457,6 @@ public static partial class MimeHelper
             index = fileName.IndexOf('.', index + 1);
         }
 
-        var sanitized = fileName.Trim('.');
         if (sanitized.Length > 0 && yielded.Add(sanitized))
         {
             yield return sanitized;
@@ -467,8 +470,41 @@ public static partial class MimeHelper
             return string.Empty;
         }
 
-        var normalized = extension.Trim().TrimStart('.');
-        return normalized.ToLowerInvariant();
+        var span = extension.AsSpan();
+
+        var start = 0;
+        var end = span.Length - 1;
+
+        while (start <= end && char.IsWhiteSpace(span[start]))
+        {
+            start++;
+        }
+
+        while (end >= start && char.IsWhiteSpace(span[end]))
+        {
+            end--;
+        }
+
+        while (start <= end && span[start] == '.')
+        {
+            start++;
+        }
+
+        if (start > end)
+        {
+            return string.Empty;
+        }
+
+        var length = end - start + 1;
+
+        return string.Create(length, (extension, start, length), static (destination, state) =>
+        {
+            var (source, offset, count) = state;
+            for (var i = 0; i < count; i++)
+            {
+                destination[i] = char.ToLowerInvariant(source[offset + i]);
+            }
+        });
     }
 
     private static void RegisterMimeTypeInternal(string extension, string mime)
