@@ -61,21 +61,18 @@ public class GeneratorTests
     [Fact]
     public void RuntimeRegistrationShouldUpdateLookups()
     {
-        const string extension = "customext";
-        const string mime = "application/x-custom";
-
         try
         {
-            MimeHelper.RegisterMimeType(extension, mime);
-            MimeHelper.GetMimeType($"file.{extension}").ShouldBe(mime);
+            MimeHelper.RegisterMimeType("customext", "application/x-custom");
+            MimeHelper.GetMimeType("file.customext").ShouldBe("application/x-custom");
 
-            MimeHelper.TryGetExtensions(mime, out var extensions).ShouldBeTrue();
-            extensions.ShouldContain($".{extension}");
+            MimeHelper.TryGetExtensions("application/x-custom", out var extensions).ShouldBeTrue();
+            extensions.ShouldContain(".customext");
         }
         finally
         {
-            MimeHelper.UnregisterMimeType(extension).ShouldBeTrue();
-            MimeHelper.GetMimeType(extension).ShouldBe("application/octet-stream");
+            MimeHelper.UnregisterMimeType("customext").ShouldBeTrue();
+            MimeHelper.GetMimeType("customext").ShouldBe("application/octet-stream");
         }
     }
 }

@@ -31,7 +31,7 @@ public static partial class MimeHelper
 
     private static readonly Regex ScriptPattern = new(@"^(?:application|text)/(?:javascript|ecmascript|x-php|x-sh|x-shellscript|x-python|x-ruby|x-perl)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-    private static readonly SearchValues<char> QueryFragmentSeparators = SearchValues.Create("?#");
+    private static readonly char[] QueryFragmentSeparators = { '?', '#' };
 
     private static readonly HashSet<string> ScriptMimeSet = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -605,40 +605,34 @@ public static partial class MimeHelper
     {
         if (header.Length >= 12 && header[..4].SequenceEqual(RiffSignature))
         {
-            if (header.Length >= 12)
+            var format = header.Slice(8, 4);
+            if (format.SequenceEqual(WebpFourCC))
             {
-                var format = header.Slice(8, 4);
-                if (format.SequenceEqual(WebpFourCC))
-                {
-                    return "image/webp";
-                }
+                return "image/webp";
+            }
 
-                if (format.SequenceEqual(AviFourCC))
-                {
-                    return "video/x-msvideo";
-                }
+            if (format.SequenceEqual(AviFourCC))
+            {
+                return "video/x-msvideo";
+            }
 
-                if (format.SequenceEqual(WaveFourCC))
-                {
-                    return "audio/wav";
-                }
+            if (format.SequenceEqual(WaveFourCC))
+            {
+                return "audio/wav";
             }
         }
 
-        if (header.Length >= 12 && header.Slice(4, Math.Min(4, header.Length - 4)).SequenceEqual(FtypFourCC))
+        if (header.Length >= 12 && header.Slice(4, 4).SequenceEqual(FtypFourCC))
         {
-            if (header.Length >= 12)
+            var brand = header.Slice(8, 4);
+            if (IsMp4Brand(brand))
             {
-                var brand = header.Slice(8, Math.Min(4, header.Length - 8));
-                if (IsMp4Brand(brand))
-                {
-                    return "video/mp4";
-                }
+                return "video/mp4";
+            }
 
-                if (brand.SequenceEqual(QuickTimeBrand))
-                {
-                    return "video/quicktime";
-                }
+            if (brand.SequenceEqual(QuickTimeBrand))
+            {
+                return "video/quicktime";
             }
         }
 
