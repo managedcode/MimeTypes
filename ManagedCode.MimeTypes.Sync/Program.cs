@@ -145,7 +145,7 @@ internal static class MimeTypeSyncTool
                 continue;
             }
 
-            var parts = line.Split(' ', '\t', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            var parts = line.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             if (parts.Length < 2)
             {
                 continue;
