@@ -118,12 +118,27 @@ public class MimeCategoryTests
 
     [Theory]
     [InlineData("application/javascript")]
+    [InlineData("application/x-javascript")]
     [InlineData("text/x-php")]
+    [InlineData("application/x-httpd-php")]
     [InlineData("application/x-sh")]
+    [InlineData("text/coffeescript")]
+    [InlineData("application/vnd.google-apps.script")]
+    [InlineData("application/x-powershell")]
     public void ScriptMimeTypes_ShouldBeScript(string mime)
     {
         MimeHelper.GetMimeCategory(mime).ShouldBe(MimeTypeCategory.Script);
         MimeHelper.IsScript(mime).ShouldBeTrue();
+    }
+
+    [Theory]
+    [InlineData("application/postscript")]
+    [InlineData("application/vnd.cups-postscript")]
+    [InlineData("application/x-font-ghostscript")]
+    public void PostScriptMimeTypes_ShouldNotBeScript(string mime)
+    {
+        MimeHelper.IsScript(mime).ShouldBeFalse();
+        MimeHelper.GetMimeCategory(mime).ShouldNotBe(MimeTypeCategory.Script);
     }
 
     [Theory]

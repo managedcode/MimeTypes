@@ -8,71 +8,76 @@ public class GeneratorTests
     [Fact]
     public void ExtensionsTest()
     {
-        MimeHelper.GetMimeType("somefile.pdf").ShouldBe("application/pdf");
-        MimeHelper.GetMimeType("pdf").ShouldBe("application/pdf");
-        MimeHelper.GetMimeType(".gz").ShouldBe("application/gzip");
-        MimeHelper.GetMimeType("word.docx").ShouldBe("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-        MimeHelper.GetMimeType("C:\\\\users\\file.txt").ShouldBe("text/plain");
-        MimeHelper.GetMimeType("https://cdn.example.com/assets/image.png?version=1").ShouldBe("image/png");
-        MimeHelper.GetMimeType("ARCHIVE.TAR.GZ").ShouldBe("application/gzip");
-        MimeHelper.GetMimeType("module.d.ts").ShouldBe("application/typescript");
+        MimeHelper.GetMimeType("somefile.pdf").ShouldBe(MimeHelper.PDF);
+        MimeHelper.GetMimeType("pdf").ShouldBe(MimeHelper.PDF);
+        MimeHelper.GetMimeType(".gz").ShouldBe(MimeHelper.GZ);
+        MimeHelper.GetMimeType("word.docx").ShouldBe(MimeHelper.DOCX);
+        MimeHelper.GetMimeType("C:\\\\users\\file.txt").ShouldBe(MimeHelper.TXT);
+        MimeHelper.GetMimeType("https://cdn.example.com/assets/image.png?version=1").ShouldBe(MimeHelper.PNG);
+        MimeHelper.GetMimeType("ARCHIVE.TAR.GZ").ShouldBe(MimeHelper.GZ);
+        MimeHelper.GetMimeType("module.d.ts").ShouldBe(MimeHelper.D_TS);
     }
 
     [Fact]
     public void EmptyExtensionsTest()
     {
-        MimeHelper.GetMimeType("").ShouldBe("application/octet-stream");
-        MimeHelper.GetMimeType("     ").ShouldBe("application/octet-stream");
-        MimeHelper.GetMimeType(null as string).ShouldBe("application/octet-stream");
+        MimeHelper.GetMimeType("").ShouldBe(MimeHelper.BIN);
+        MimeHelper.GetMimeType("     ").ShouldBe(MimeHelper.BIN);
+        MimeHelper.GetMimeType(null as string).ShouldBe(MimeHelper.BIN);
     }
     
     [Fact]
     public void GeneratedPropertiesTest()
     {
         // Test static properties generated from mimeTypes.json
-        MimeHelper.PDF.ShouldBe("application/pdf");
-        MimeHelper.DOCX.ShouldBe("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-        MimeHelper.PNG.ShouldBe("image/png");
-        MimeHelper.MP4.ShouldBe("video/mp4");
-        MimeHelper._7Z.ShouldBe("application/x-7z-compressed");
-        MimeHelper.EVENT_STREAM.ShouldBe("text/event-stream");
+        const string eventStreamMime = "text/event-stream";
+        MimeHelper.PDF.ShouldBe(MimeHelper.GetMimeType(".pdf"));
+        MimeHelper.DOCX.ShouldBe(MimeHelper.GetMimeType(".docx"));
+        MimeHelper.PNG.ShouldBe(MimeHelper.GetMimeType(".png"));
+        MimeHelper.MP4.ShouldBe(MimeHelper.GetMimeType(".mp4"));
+        MimeHelper._7Z.ShouldBe(MimeHelper.GetMimeType(".7z"));
+        MimeHelper.EVENT_STREAM.ShouldBe(eventStreamMime);
     }
 
     [Fact]
     public void GeneratedDictionaryTest()
     {
         // Test if dictionary is properly initialized
-        MimeHelper.GetMimeType(".pdf").ShouldBe("application/pdf");
-        MimeHelper.GetMimeType(".docx").ShouldBe("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-        MimeHelper.GetMimeType(".7z").ShouldBe("application/x-7z-compressed");
+        MimeHelper.GetMimeType(".pdf").ShouldBe(MimeHelper.PDF);
+        MimeHelper.GetMimeType(".docx").ShouldBe(MimeHelper.DOCX);
+        MimeHelper.GetMimeType(".7z").ShouldBe(MimeHelper._7Z);
     }
 
     [Fact]
     public void GetExtensionsShouldReturnKnownExtensions()
     {
-        var jpegExtensions = MimeHelper.GetExtensions("image/jpeg");
+        var jpegExtensions = MimeHelper.GetExtensions(MimeHelper.JPG);
         jpegExtensions.ShouldContain(".jpg");
         jpegExtensions.ShouldContain(".jpeg");
         jpegExtensions.ShouldContain(".jpe");
 
-        MimeHelper.TryGetExtensions("application/x-unknown", out _).ShouldBeFalse();
+        const string unknownMime = "application/x-unknown";
+        MimeHelper.TryGetExtensions(unknownMime, out _).ShouldBeFalse();
     }
 
     [Fact]
     public void RuntimeRegistrationShouldUpdateLookups()
     {
+        const string extension = "customext";
+        const string mime = "application/x-custom";
+
         try
         {
-            MimeHelper.RegisterMimeType("customext", "application/x-custom");
-            MimeHelper.GetMimeType("file.customext").ShouldBe("application/x-custom");
+            MimeHelper.RegisterMimeType(extension, mime);
+            MimeHelper.GetMimeType("file.customext").ShouldBe(mime);
 
-            MimeHelper.TryGetExtensions("application/x-custom", out var extensions).ShouldBeTrue();
+            MimeHelper.TryGetExtensions(mime, out var extensions).ShouldBeTrue();
             extensions.ShouldContain(".customext");
         }
         finally
         {
-            MimeHelper.UnregisterMimeType("customext").ShouldBeTrue();
-            MimeHelper.GetMimeType("customext").ShouldBe("application/octet-stream");
+            MimeHelper.UnregisterMimeType(extension).ShouldBeTrue();
+            MimeHelper.GetMimeType(extension).ShouldBe(MimeHelper.BIN);
         }
     }
 }

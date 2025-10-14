@@ -24,10 +24,12 @@ project, [Apache's canonical `mime.types` list](https://github.com/apache/httpd/
 
 ## Feature overview
 * Generated extension → MIME map based on the latest mime-db dataset (plus curated compound extensions such as `tar.gz`, `d.ts`, `ps1`, …).
+* Rich overrides for lightweight markup and diagram DSLs (AsciiDoc, BibTeX, Org-Mode, PlantUML, Mermaid, Typst, TikZ, …) tailored for AI/document pipelines.
 * Reverse lookup API that returns the extensions known for a given MIME value.
 * Runtime registration/unregistration so applications can plug in custom corporate formats.
 * Content sniffing for common file signatures (PDF, PNG, JPEG, GIF, WebP, MP4, ZIP/OOXML, ODF, APK, etc.) with graceful handling of short or empty streams.
 * Extended categorisation enum covering document, audio/video, script, binary, multipart and message families with convenience predicates.
+* Safe-by-default mutation model powered by immutable dictionaries, configurable fallback MIME via `MimeHelper.SetDefaultMimeType`, and an `IMimeHelper` abstraction (`MimeHelper.Instance`) for DI scenarios.
 * CLI utility to refresh `mimeTypes.json` directly from `mime-db` or a custom source.
 
 ## Quick start
@@ -55,6 +57,11 @@ var jpegExtensions = MimeHelper.GetExtensions("image/jpeg");     // .jpeg, .jpg,
 MimeHelper.RegisterMimeType("acme", "application/x-acme");
 var custom = MimeHelper.GetMimeType("invoice.acme");
 MimeHelper.UnregisterMimeType("acme");
+
+// Override the fallback MIME and use the DI-friendly adapter
+MimeHelper.SetDefaultMimeType(MimeHelper.JSON);
+IMimeHelper helper = MimeHelper.Instance;
+var fallback = helper.GetMimeType("file.unknownext");             // application/json (custom fallback)
 ```
 
 ## Keeping the database fresh

@@ -6,13 +6,25 @@ using Microsoft.CodeAnalysis.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 namespace ManagedCode.MimeTypes.Generator;
 
+/// <summary>
+/// Emits source that bootstraps MIME mappings and exposes typed constants for each extension.
+/// </summary>
 [Generator]
 public class MimeTypeSourceGenerator : ISourceGenerator
 {
+    private static readonly DiagnosticDescriptor MimeTypesLoadedDiagnostic = new(
+        "MIME002",
+        "MimeTypes loaded",
+        "Successfully loaded {0} mime types",
+        "MimeTypes",
+        DiagnosticSeverity.Info,
+        isEnabledByDefault: true);
+
+    /// <inheritdoc />
     public void Initialize(GeneratorInitializationContext context)
     {
 #if DEBUG
@@ -23,6 +35,7 @@ public class MimeTypeSourceGenerator : ISourceGenerator
 #endif
     }
 
+    /// <inheritdoc />
     public void Execute(GeneratorExecutionContext context)
     {
         try
@@ -45,28 +58,22 @@ public class MimeTypeSourceGenerator : ISourceGenerator
                 return;
             }
 
-            var mime = JObject.Parse(File.ReadAllText(mimeTypesPath));
-            var properties = mime.Properties().ToList();
-            
-            context.ReportDiagnostic(Diagnostic.Create(
-                new DiagnosticDescriptor(
-                    "MIME002",
-                    "MimeTypes loaded",
-                    "Successfully loaded {0} mime types",
-                    "MimeTypes",
-                    DiagnosticSeverity.Info,
-                    true),
-                Location.None,
-                properties.Count));
+            var json = File.ReadAllBytes(mimeTypesPath);
+            using var document = JsonDocument.Parse(json);
 
             StringBuilder defineDictionaryBuilder = new();
             StringBuilder propertyBuilder = new();
-            Dictionary<string, string> types = new Dictionary<string, string>();
+            Dictionary<string, string> types = new(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var item in properties)
+            foreach (var item in document.RootElement.EnumerateObject())
             {
                 var extension = item.Name.Trim();
-                var mimeValue = item.Value.ToString()?.Trim() ?? string.Empty;
+                var mimeValue = item.Value.GetString()?.Trim() ?? string.Empty;
+
+                if (extension.Length == 0 || mimeValue.Length == 0)
+                {
+                    continue;
+                }
 
                 defineDictionaryBuilder.AppendLine($"RegisterMimeTypeInternal(\"{Escape(extension)}\", \"{Escape(mimeValue)}\");");
                 types[ParseKey(extension)] = mimeValue;
@@ -76,6 +83,8 @@ public class MimeTypeSourceGenerator : ISourceGenerator
             {
                 propertyBuilder.AppendLine($"public static string {item.Key} => \"{Escape(item.Value)}\";");
             }
+
+            context.ReportDiagnostic(Diagnostic.Create(MimeTypesLoadedDiagnostic, Location.None, types.Count));
             
             context.AddSource("MimeHelper.Properties.cs", SourceText.From(@$"
 namespace ManagedCode.MimeTypes
@@ -146,5 +155,3 @@ static partial void Init()
             .Replace("\"", "\\\"");
     }
 }
-
-

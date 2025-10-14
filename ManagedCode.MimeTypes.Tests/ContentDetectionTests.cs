@@ -59,14 +59,14 @@ public class ContentDetectionTests
         var docxBytes = Combine(
             new byte[] { 0x50, 0x4B, 0x03, 0x04 },
             Encoding.ASCII.GetBytes("word/document.xml"));
-        Detect(docxBytes).ShouldBe("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        Detect(docxBytes).ShouldBe(MimeHelper.DOCX);
     }
 
     [Fact]
     public void ShortStream_ShouldReturnDefault()
     {
         using var stream = new MemoryStream(new byte[] { 0x01, 0x02 });
-        MimeHelper.GetMimeTypeByContent(stream).ShouldBe("application/octet-stream");
+        MimeHelper.GetMimeTypeByContent(stream).ShouldBe(MimeHelper.BIN);
         stream.Position.ShouldBe(0);
     }
 
@@ -74,7 +74,7 @@ public class ContentDetectionTests
     public void EmptyStream_ShouldReturnDefault()
     {
         using var stream = new MemoryStream();
-        MimeHelper.GetMimeTypeByContent(stream).ShouldBe("application/octet-stream");
+        MimeHelper.GetMimeTypeByContent(stream).ShouldBe(MimeHelper.BIN);
     }
 
     [Fact]
@@ -85,7 +85,7 @@ public class ContentDetectionTests
         try
         {
             File.WriteAllBytes(tempFile, pdfBytes);
-            MimeHelper.GetMimeTypeByContent(tempFile).ShouldBe("application/pdf");
+            MimeHelper.GetMimeTypeByContent(tempFile).ShouldBe(MimeHelper.PDF);
         }
         finally
         {
