@@ -12,6 +12,11 @@
       <ProjectReference Include="..\ManagedCode.MimeTypes.Generator\ManagedCode.MimeTypes.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     </ItemGroup>
 
+    <ItemGroup>
+      <AdditionalFiles Include="mimeTypes.json" />
+      <AdditionalFiles Include="mimeTypes.metadata.json" Condition="Exists('mimeTypes.metadata.json')" />
+    </ItemGroup>
+
     <!--NuGet-->
     <PropertyGroup>
         <Title>ManagedCode.MimeTypes</Title>

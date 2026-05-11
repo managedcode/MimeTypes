@@ -14,6 +14,8 @@ public static partial class MimeHelper
 
     private static ImmutableDictionary<string, string> MimeTypes = ImmutableDictionary.Create<string, string>(StringComparer.OrdinalIgnoreCase);
     private static ImmutableDictionary<string, ImmutableHashSet<string>> ExtensionsByMime = ImmutableDictionary.Create<string, ImmutableHashSet<string>>(StringComparer.OrdinalIgnoreCase);
+    private static ImmutableDictionary<string, MimeTypeInfo> MimeTypeInfos = ImmutableDictionary.Create<string, MimeTypeInfo>(StringComparer.OrdinalIgnoreCase);
+    private static ImmutableDictionary<string, MimeTypeInfo> MimeTypeInfosByExtension = ImmutableDictionary.Create<string, MimeTypeInfo>(StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
     /// Gets the MIME type returned when no better match is found.

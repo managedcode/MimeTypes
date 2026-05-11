@@ -42,6 +42,7 @@
     <ItemGroup>
       <ProjectReference Include="..\ManagedCode.MimeTypes.Generator\ManagedCode.MimeTypes.Generator.csproj" />
       <ProjectReference Include="..\ManagedCode.MimeTypes\ManagedCode.MimeTypes.csproj" />
+      <ProjectReference Include="..\ManagedCode.MimeTypes.Sync\ManagedCode.MimeTypes.Sync.csproj" />
     </ItemGroup>
 
 </Project>

@@ -26,7 +26,50 @@ jobs:
         run: dotnet restore
 
       - name: Run MIME sync tool
-        run: dotnet run --project ManagedCode.MimeTypes.Sync --configuration Release -- --prefer-remote
+        run: >
+          dotnet run --project ManagedCode.MimeTypes.Sync --configuration Release --
+          --prefer-remote
+          --template-concurrency 8
+
+      - name: Detect MIME database changes
+        id: mime_changes
+        shell: bash
+        run: |
+          if git diff --quiet -- ManagedCode.MimeTypes/mimeTypes.json ManagedCode.MimeTypes/mimeTypes.metadata.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No MIME database changes detected." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "MIME database changes detected." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Bump patch package version
+        if: steps.mime_changes.outputs.changed == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          current_version="$(sed -nE 's#.*<Version>([^<]+)</Version>.*#\1#p' Directory.Build.props | head -n 1)"
+          package_version="$(sed -nE 's#.*<PackageVersion>([^<]+)</PackageVersion>.*#\1#p' Directory.Build.props | head -n 1)"
+
+          if [[ "$current_version" != "$package_version" ]]; then
+            echo "Version and PackageVersion differ: $current_version vs $package_version" >&2
+            exit 1
+          fi
+
+          if [[ ! "$current_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Unsupported version format: $current_version" >&2
+            exit 1
+          fi
+
+          IFS='.' read -r major minor patch <<< "$current_version"
+          next_version="$major.$minor.$((patch + 1))"
+          perl -0pi -e "s#<Version>\\Q$current_version\\E</Version>#<Version>$next_version</Version>#; s#<PackageVersion>\\Q$current_version\\E</PackageVersion>#<PackageVersion>$next_version</PackageVersion>#;" Directory.Build.props
+
+          echo "Bumped package version: $current_version -> $next_version" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Test synced database
+        run: dotnet test --configuration Release --no-restore --verbosity normal
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
@@ -35,7 +78,11 @@ jobs:
           commit-message: "chore: sync MIME database"
           title: "chore: sync MIME database"
           body: |
-            Automated update of MIME database from configured sources.
+            Automated update of the MIME database from the IANA media types registry,
+            mime-db, Apache mime.types, and curated ManagedCode overrides.
+
+            When MIME data changes, this PR also bumps the package patch version.
+            See the workflow summary for the IANA registry date, source counts, and version bump.
           branch: chore/sync-mime-database
           delete-branch: true
           labels: |

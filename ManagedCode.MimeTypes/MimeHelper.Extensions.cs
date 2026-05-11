@@ -73,6 +73,75 @@ public static partial class MimeHelper
     }
 
     /// <summary>
+    /// Gets the registry metadata known for MIME types bundled with this package.
+    /// </summary>
+    /// <returns>A snapshot of known MIME metadata records.</returns>
+    public static IReadOnlyCollection<MimeTypeInfo> GetKnownMimeTypes()
+    {
+        return MimeTypeInfos.Values.OrderBy(static info => info.Mime, StringComparer.OrdinalIgnoreCase).ToArray();
+    }
+
+    /// <summary>
+    /// Attempts to retrieve registry metadata for the supplied MIME type.
+    /// </summary>
+    /// <param name="mime">The MIME type to inspect.</param>
+    /// <param name="info">The known registry metadata when the lookup succeeds.</param>
+    /// <returns><c>true</c> when metadata exists; otherwise <c>false</c>.</returns>
+    public static bool TryGetMimeTypeInfo(string mime, out MimeTypeInfo info)
+    {
+        info = null!;
+        if (string.IsNullOrWhiteSpace(mime))
+        {
+            return false;
+        }
+
+        if (MimeTypeInfos.TryGetValue(mime.Trim(), out var found))
+        {
+            info = found;
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Attempts to retrieve registry metadata by file name, URI, or extension.
+    /// </summary>
+    /// <param name="value">A file name, URI, or extension.</param>
+    /// <param name="info">The known registry metadata when the lookup succeeds.</param>
+    /// <returns><c>true</c> when metadata exists; otherwise <c>false</c>.</returns>
+    public static bool TryGetMimeTypeInfoByExtension(string? value, out MimeTypeInfo info)
+    {
+        info = null!;
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return false;
+        }
+
+        foreach (var candidate in EnumerateExtensionCandidates(value!))
+        {
+            var normalized = NormalizeExtensionKey(candidate);
+            if (normalized.Length == 0)
+            {
+                continue;
+            }
+
+            if (MimeTypeInfosByExtension.TryGetValue(normalized, out var found))
+            {
+                info = found;
+                return true;
+            }
+
+            if (MimeTypes.TryGetValue(normalized, out var mime) && TryGetMimeTypeInfo(mime, out info))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Attempts to retrieve all registered extensions that point to the given MIME type.
     /// </summary>
     /// <param name="mime">The MIME type to inspect.</param>
@@ -228,6 +297,31 @@ public static partial class MimeHelper
         if (mappingChanged)
         {
             RefreshScriptMimeSet();
+        }
+    }
+
+    private static void RegisterMimeTypeInfoInternal(MimeTypeInfo info)
+    {
+        if (string.IsNullOrWhiteSpace(info.Mime))
+        {
+            return;
+        }
+
+        var normalizedMime = string.Intern(info.Mime.Trim());
+        if (!string.Equals(normalizedMime, info.Mime, StringComparison.Ordinal))
+        {
+            info = info with { Mime = normalizedMime };
+        }
+
+        MimeTypeInfos = MimeTypeInfos.SetItem(normalizedMime, info);
+
+        foreach (var extension in info.Extensions)
+        {
+            var normalizedExtension = NormalizeExtensionKey(extension);
+            if (normalizedExtension.Length > 0)
+            {
+                MimeTypeInfosByExtension = MimeTypeInfosByExtension.SetItem(normalizedExtension, info);
+            }
         }
     }
 
