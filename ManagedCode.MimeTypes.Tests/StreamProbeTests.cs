@@ -7,7 +7,7 @@ using Xunit;
 namespace ManagedCode.MimeTypes.Tests;
 
 /// <summary>
-/// Exercises stream-based MIME detection against the curated sample set.
+/// Exercises stream-based MIME detection against the local sample set.
 /// </summary>
 public class StreamProbeTests
 {

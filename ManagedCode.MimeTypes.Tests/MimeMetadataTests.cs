@@ -34,7 +34,7 @@ public class MimeMetadataTests
         var known = MimeHelper.GetKnownMimeTypes();
 
         known.ShouldContain(static info => info.Mime == "application/pdf" && info.IsIanaRegistered);
-        known.ShouldContain(static info => info.Mime == "application/x-powershell" && !info.IsIanaRegistered && info.Source == "curated");
+        known.ShouldContain(static info => info.Mime == "application/x-7z-compressed" && !info.IsIanaRegistered && info.Source == "apache");
     }
 
     [Fact]

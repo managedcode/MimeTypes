@@ -15,7 +15,6 @@ public class GeneratorTests
         MimeHelper.GetMimeType("C:\\\\users\\file.txt").ShouldBe(MimeHelper.TXT);
         MimeHelper.GetMimeType("https://cdn.example.com/assets/image.png?version=1").ShouldBe(MimeHelper.PNG);
         MimeHelper.GetMimeType("ARCHIVE.TAR.GZ").ShouldBe(MimeHelper.GZ);
-        MimeHelper.GetMimeType("module.d.ts").ShouldBe(MimeHelper.D_TS);
     }
 
     [Fact]
@@ -30,13 +29,11 @@ public class GeneratorTests
     public void GeneratedPropertiesTest()
     {
         // Test static properties generated from mimeTypes.json
-        const string eventStreamMime = "text/event-stream";
         MimeHelper.PDF.ShouldBe(MimeHelper.GetMimeType(".pdf"));
         MimeHelper.DOCX.ShouldBe(MimeHelper.GetMimeType(".docx"));
         MimeHelper.PNG.ShouldBe(MimeHelper.GetMimeType(".png"));
         MimeHelper.MP4.ShouldBe(MimeHelper.GetMimeType(".mp4"));
         MimeHelper._7Z.ShouldBe(MimeHelper.GetMimeType(".7z"));
-        MimeHelper.EVENT_STREAM.ShouldBe(eventStreamMime);
     }
 
     [Fact]

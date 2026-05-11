@@ -70,21 +70,17 @@ public class SyncToolTests
         {
             new SourceMapping("conflict", "application/apache", MimeSourceKind.Apache),
             new SourceMapping("conflict", "application/iana", MimeSourceKind.Iana),
-            new SourceMapping("conflict", "application/mime-db", MimeSourceKind.MimeDb),
-            new SourceMapping("iana-only", "application/iana", MimeSourceKind.Iana),
-            new SourceMapping("mjs", "application/x-old", MimeSourceKind.Iana),
-            new SourceMapping("mjs", "text/javascript", MimeSourceKind.Curated)
+            new SourceMapping("conflict", "application/custom", MimeSourceKind.Custom),
+            new SourceMapping("iana-only", "application/iana", MimeSourceKind.Iana)
         };
 
         var preferRemote = MimeTypeSyncTool.MergeMappings(mappings, existing, preferRemote: true);
-        preferRemote["conflict"].Mime.ShouldBe("application/mime-db");
+        preferRemote["conflict"].Mime.ShouldBe("application/custom");
         preferRemote["iana-only"].Mime.ShouldBe("application/iana");
         preferRemote["local"].Mime.ShouldBe("application/existing-local");
-        preferRemote["mjs"].Mime.ShouldBe("text/javascript");
 
         var preferExisting = MimeTypeSyncTool.MergeMappings(mappings, existing, preferRemote: false);
         preferExisting["conflict"].Mime.ShouldBe("application/existing");
-        preferExisting["mjs"].Mime.ShouldBe("text/javascript");
     }
 
     private const string IanaXml = """

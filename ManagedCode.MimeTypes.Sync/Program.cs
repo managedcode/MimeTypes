@@ -22,7 +22,6 @@ internal static partial class MimeTypeSyncTool
 
     private static readonly string[] DefaultSupplementalSources =
     [
-        "https://raw.githubusercontent.com/jshttp/mime-db/master/db.json",
         "https://raw.githubusercontent.com/apache/httpd/trunk/docs/conf/mime.types"
     ];
 
@@ -58,9 +57,9 @@ internal static partial class MimeTypeSyncTool
                 sourceMappings.AddRange(ParseSupplementalSource(source, raw, kind));
             }
 
-            sourceMappings.AddRange(CustomMappings().Select(static kvp => new SourceMapping(kvp.Key, kvp.Value, MimeSourceKind.Curated)));
-
-            var existing = LoadExisting(options.OutputPath);
+            var existing = options.PreserveExisting
+                ? LoadExisting(options.OutputPath)
+                : new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             var merged = MergeMappings(sourceMappings, existing, options.PreferRemote);
             var mergedMetadata = BuildMergedMetadata(metadata, merged);
 
@@ -502,24 +501,6 @@ internal static partial class MimeTypeSyncTool
             .ToDictionary(static kvp => kvp.Key, static kvp => kvp.Value.NormalizeForOutput(), StringComparer.OrdinalIgnoreCase);
     }
 
-    private static IEnumerable<KeyValuePair<string, string>> CustomMappings()
-    {
-        yield return new KeyValuePair<string, string>("tar.gz", "application/gzip");
-        yield return new KeyValuePair<string, string>("gz", "application/gzip");
-        yield return new KeyValuePair<string, string>("tar.bz2", "application/x-bzip2");
-        yield return new KeyValuePair<string, string>("tar.xz", "application/x-xz");
-        yield return new KeyValuePair<string, string>("tar.zst", "application/zstd");
-        yield return new KeyValuePair<string, string>("d.ts", "application/typescript");
-        yield return new KeyValuePair<string, string>("cjs", "application/node");
-        yield return new KeyValuePair<string, string>("mjs", "text/javascript");
-        yield return new KeyValuePair<string, string>("wasm", "application/wasm");
-        yield return new KeyValuePair<string, string>("heic", "image/heic");
-        yield return new KeyValuePair<string, string>("heif", "image/heif");
-        yield return new KeyValuePair<string, string>("ics", "text/calendar");
-        yield return new KeyValuePair<string, string>("ps1", "application/x-powershell");
-        yield return new KeyValuePair<string, string>("appx", "application/vnd.ms-appx");
-    }
-
     private static void WriteMimeMap(string outputPath, IReadOnlyDictionary<string, MergedMapping> data)
     {
         Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
@@ -844,19 +825,13 @@ internal static partial class MimeTypeSyncTool
 
     private static MimeSourceKind ClassifySupplementalSource(string source)
     {
-        if (source.Contains("jshttp/mime-db", StringComparison.OrdinalIgnoreCase) ||
-            source.EndsWith("db.json", StringComparison.OrdinalIgnoreCase))
-        {
-            return MimeSourceKind.MimeDb;
-        }
-
         if (source.Contains("apache", StringComparison.OrdinalIgnoreCase) ||
             source.EndsWith("mime.types", StringComparison.OrdinalIgnoreCase))
         {
             return MimeSourceKind.Apache;
         }
 
-        return MimeSourceKind.MimeDb;
+        return MimeSourceKind.Custom;
     }
 
     [GeneratedRegex(@"^\s*(?<name>[A-Za-z][A-Za-z0-9 /&().+\-]*(?:\(s\))?)\s*:\s*(?<value>.*)$", RegexOptions.Compiled)]
@@ -897,6 +872,7 @@ internal static partial class MimeTypeSyncTool
         bool PreferRemote,
         bool UseIana,
         bool SkipIanaTemplates,
+        bool PreserveExisting,
         int TemplateConcurrency)
     {
         public static SyncOptions Parse(string[] args)
@@ -908,6 +884,7 @@ internal static partial class MimeTypeSyncTool
             bool preferRemote = false;
             bool useIana = true;
             bool skipIanaTemplates = false;
+            bool preserveExisting = false;
             var templateConcurrency = 8;
             var customSupplementalSources = false;
 
@@ -952,13 +929,16 @@ internal static partial class MimeTypeSyncTool
                     case "--prefer-remote":
                         preferRemote = true;
                         break;
+                    case "--preserve-existing":
+                        preserveExisting = true;
+                        break;
                 }
             }
 
             output ??= Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "ManagedCode.MimeTypes", "mimeTypes.json"));
             metadataOutput ??= Path.Combine(Path.GetDirectoryName(output)!, "mimeTypes.metadata.json");
 
-            return new SyncOptions(ianaSource, supplementalSources, output, metadataOutput, preferRemote, useIana, skipIanaTemplates, templateConcurrency);
+            return new SyncOptions(ianaSource, supplementalSources, output, metadataOutput, preferRemote, useIana, skipIanaTemplates, preserveExisting, templateConcurrency);
         }
 
         private static void AddSources(List<string> sources, string value)
@@ -975,10 +955,9 @@ internal enum MimeSourceKind
 {
     Existing,
     Apache,
-    MimeDb,
+    Custom,
     Iana,
-    ExistingPreferred,
-    Curated
+    ExistingPreferred
 }
 
 internal static class MimeSourceKindExtensions
@@ -990,9 +969,8 @@ internal static class MimeSourceKindExtensions
             MimeSourceKind.Existing => 0,
             MimeSourceKind.Apache => 10,
             MimeSourceKind.Iana => 15,
-            MimeSourceKind.MimeDb => 20,
+            MimeSourceKind.Custom => 20,
             MimeSourceKind.ExistingPreferred => 35,
-            MimeSourceKind.Curated => 40,
             _ => 0
         };
     }
@@ -1002,9 +980,8 @@ internal static class MimeSourceKindExtensions
         return kind switch
         {
             MimeSourceKind.Apache => "apache",
-            MimeSourceKind.MimeDb => "mime-db",
+            MimeSourceKind.Custom => "custom",
             MimeSourceKind.Iana => "iana",
-            MimeSourceKind.Curated => "curated",
             MimeSourceKind.ExistingPreferred => "existing",
             _ => "existing"
         };

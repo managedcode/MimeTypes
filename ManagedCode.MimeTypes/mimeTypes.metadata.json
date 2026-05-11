@@ -751,18 +751,6 @@
     ],
     "magicSignatures": []
   },
-  "application/appinstaller": {
-    "mime": "application/appinstaller",
-    "extensions": [
-      ".appinstaller"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "application/applefile": {
     "mime": "application/applefile",
     "extensions": [],
@@ -785,19 +773,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/appxbundle": {
-    "mime": "application/appxbundle",
-    "extensions": [
-      ".appxbundle"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -1332,18 +1308,6 @@
     ],
     "magicSignatures": []
   },
-  "application/bits+xml": {
-    "mime": "application/bits+xml",
-    "extensions": [
-      ".bits"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "application/bufr": {
     "mime": "application/bufr",
     "extensions": [],
@@ -1597,9 +1561,7 @@
   },
   "application/CDFX+XML": {
     "mime": "application/CDFX+XML",
-    "extensions": [
-      ".cdfx"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/CDFX+XML",
@@ -2358,9 +2320,7 @@
   },
   "application/cpl+xml": {
     "mime": "application/cpl+xml",
-    "extensions": [
-      ".cpl"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/cpl+xml",
@@ -2454,16 +2414,14 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
   },
   "application/cwl": {
     "mime": "application/cwl",
-    "extensions": [
-      ".cwl"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/cwl",
@@ -2559,9 +2517,7 @@
   },
   "application/dash+xml": {
     "mime": "application/dash+xml",
-    "extensions": [
-      ".mpd"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/dash+xml",
@@ -2735,9 +2691,7 @@
   },
   "application/dicom": {
     "mime": "application/dicom",
-    "extensions": [
-      ".dcm"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/dicom",
@@ -2916,12 +2870,11 @@
   "application/docbook+xml": {
     "mime": "application/docbook+xml",
     "extensions": [
-      ".dbk",
-      ".docbook"
+      ".dbk"
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -3569,9 +3522,7 @@
   },
   "application/emotionml+xml": {
     "mime": "application/emotionml+xml",
-    "extensions": [
-      ".emotionml"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/emotionml+xml",
@@ -3793,9 +3744,7 @@
   },
   "application/express": {
     "mime": "application/express",
-    "extensions": [
-      ".exp"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/express",
@@ -3858,18 +3807,6 @@
       "person:ISO-IEC_JTC_1_SC_6_ASN.1_Rapporteur",
       "person:ITU-T_ASN.1_Rapporteur"
     ],
-    "magicSignatures": []
-  },
-  "application/fb2+zip": {
-    "mime": "application/fb2+zip",
-    "extensions": [
-      ".fb2"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
-    "deprecatedAliases": [],
-    "references": [],
     "magicSignatures": []
   },
   "application/fdf": {
@@ -4421,7 +4358,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -4453,7 +4390,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -4461,8 +4398,7 @@
   "application/gzip": {
     "mime": "application/gzip",
     "extensions": [
-      ".gz",
-      ".tar.gz"
+      ".gz"
     ],
     "isIanaRegistered": true,
     "isObsolete": false,
@@ -4535,18 +4471,6 @@
         "offset": 0
       }
     ]
-  },
-  "application/hjson": {
-    "mime": "application/hjson",
-    "extensions": [
-      ".hjson"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
   },
   "application/hl7v2+xml": {
     "mime": "application/hl7v2+xml",
@@ -4887,9 +4811,7 @@
   },
   "application/its+xml": {
     "mime": "application/its+xml",
-    "extensions": [
-      ".its"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/its+xml",
@@ -4905,24 +4827,10 @@
     ],
     "magicSignatures": []
   },
-  "application/jats+xml": {
-    "mime": "application/jats+xml",
-    "extensions": [
-      ".jats"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "application/java-archive": {
     "mime": "application/java-archive",
     "extensions": [
-      ".ear",
-      ".jar",
-      ".war"
+      ".jar"
     ],
     "isIanaRegistered": true,
     "isObsolete": false,
@@ -4948,7 +4856,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -4960,7 +4868,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -5109,10 +5017,7 @@
   "application/json": {
     "mime": "application/json",
     "extensions": [
-      ".json",
-      ".jsonl",
-      ".map",
-      ".ndjson"
+      ".json"
     ],
     "isIanaRegistered": true,
     "isObsolete": false,
@@ -5189,18 +5094,6 @@
     ],
     "magicSignatures": []
   },
-  "application/json5": {
-    "mime": "application/json5",
-    "extensions": [
-      ".json5"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "application/jsonml+json": {
     "mime": "application/jsonml+json",
     "extensions": [
@@ -5208,7 +5101,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -5335,9 +5228,7 @@
   },
   "application/kbl+xml": {
     "mime": "application/kbl+xml",
-    "extensions": [
-      ".kbl"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/kbl+xml",
@@ -5655,7 +5546,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -5699,9 +5590,7 @@
   },
   "application/manifest+json": {
     "mime": "application/manifest+json",
-    "extensions": [
-      ".webmanifest"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/manifest+json",
@@ -6123,9 +6012,7 @@
   },
   "application/media-policy-dataset+xml": {
     "mime": "application/media-policy-dataset+xml",
-    "extensions": [
-      ".mpf"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/media-policy-dataset+xml",
@@ -6209,7 +6096,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -6479,7 +6366,6 @@
   "application/mp4": {
     "mime": "application/mp4",
     "extensions": [
-      ".m4p",
       ".mp4s"
     ],
     "isIanaRegistered": true,
@@ -6641,30 +6527,6 @@
       }
     ]
   },
-  "application/msix": {
-    "mime": "application/msix",
-    "extensions": [
-      ".msix"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/msixbundle": {
-    "mime": "application/msixbundle",
-    "extensions": [
-      ".msixbundle"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "application/msword": {
     "mime": "application/msword",
     "extensions": [
@@ -6747,9 +6609,7 @@
   },
   "application/n-quads": {
     "mime": "application/n-quads",
-    "extensions": [
-      ".nq"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/n-quads",
@@ -6768,9 +6628,7 @@
   },
   "application/n-triples": {
     "mime": "application/n-triples",
-    "extensions": [
-      ".nt"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/n-triples",
@@ -7011,18 +6869,14 @@
     "extensions": [
       ".bin",
       ".bpk",
-      ".buffer",
       ".deploy",
       ".dist",
       ".distz",
       ".dms",
       ".dump",
       ".elc",
-      ".img",
       ".lrf",
       ".mar",
-      ".msm",
-      ".msp",
       ".pkg",
       ".so"
     ],
@@ -7177,7 +7031,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -7185,8 +7039,6 @@
   "application/onenote": {
     "mime": "application/onenote",
     "extensions": [
-      ".one",
-      ".onea",
       ".onepkg",
       ".onetmp",
       ".onetoc",
@@ -7194,7 +7046,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -7523,7 +7375,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -8380,9 +8232,7 @@
   },
   "application/prs.xsf+xml": {
     "mime": "application/prs.xsf+xml",
-    "extensions": [
-      ".xsf"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/prs.xsf+xml",
@@ -8452,18 +8302,6 @@
     ],
     "magicSignatures": []
   },
-  "application/raml+yaml": {
-    "mime": "application/raml+yaml",
-    "extensions": [
-      ".raml"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "application/raptorfec": {
     "mime": "application/raptorfec",
     "extensions": [],
@@ -8513,7 +8351,6 @@
   "application/rdf+xml": {
     "mime": "application/rdf+xml",
     "extensions": [
-      ".owl",
       ".rdf"
     ],
     "isIanaRegistered": true,
@@ -9105,7 +8942,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -9117,14 +8954,16 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
   },
   "application/rtf": {
     "mime": "application/rtf",
-    "extensions": [],
+    "extensions": [
+      ".rtf"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/rtf",
@@ -10133,10 +9972,7 @@
   },
   "application/smil+xml": {
     "mime": "application/smil+xml",
-    "extensions": [
-      ".smi",
-      ".smil"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/smil+xml",
@@ -10437,7 +10273,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -10621,9 +10457,7 @@
   },
   "application/swid+xml": {
     "mime": "application/swid+xml",
-    "extensions": [
-      ".swidtag"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/swid+xml",
@@ -11235,9 +11069,7 @@
   },
   "application/toml": {
     "mime": "application/toml",
-    "extensions": [
-      ".toml"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/toml",
@@ -11277,9 +11109,7 @@
   },
   "application/trig": {
     "mime": "application/trig",
-    "extensions": [
-      ".trig"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/trig",
@@ -11381,9 +11211,7 @@
   },
   "application/ttml+xml": {
     "mime": "application/ttml+xml",
-    "extensions": [
-      ".ttml"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/ttml+xml",
@@ -11417,18 +11245,6 @@
     "references": [
       "person:Linda_Welsh"
     ],
-    "magicSignatures": []
-  },
-  "application/typescript": {
-    "mime": "application/typescript",
-    "extensions": [
-      ".d.ts"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "curated",
-    "deprecatedAliases": [],
-    "references": [],
     "magicSignatures": []
   },
   "application/tzif": {
@@ -11494,18 +11310,6 @@
         "offset": 0
       }
     ]
-  },
-  "application/ubjson": {
-    "mime": "application/ubjson",
-    "extensions": [
-      ".ubj"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
   },
   "application/uccs+cbor": {
     "mime": "application/uccs+cbor",
@@ -11620,9 +11424,7 @@
   },
   "application/urc-targetdesc+xml": {
     "mime": "application/urc-targetdesc+xml",
-    "extensions": [
-      ".td"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/urc-targetdesc+xml",
@@ -11802,9 +11604,7 @@
   },
   "application/vec+xml": {
     "mime": "application/vec+xml",
-    "extensions": [
-      ".vec"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vec+xml",
@@ -11880,9 +11680,7 @@
   },
   "application/vnd.1000minds.decision-model+xml": {
     "mime": "application/vnd.1000minds.decision-model+xml",
-    "extensions": [
-      ".1km"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.1000minds.decision-model+xml",
@@ -13688,7 +13486,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -13786,6 +13584,18 @@
     "references": [
       "person:John_Brinkman"
     ],
+    "magicSignatures": []
+  },
+  "application/vnd.adobe.xfdf": {
+    "mime": "application/vnd.adobe.xfdf",
+    "extensions": [
+      ".xfdf"
+    ],
+    "isIanaRegistered": false,
+    "isObsolete": false,
+    "source": "apache",
+    "deprecatedAliases": [],
+    "references": [],
     "magicSignatures": []
   },
   "application/vnd.aether.imp": {
@@ -14216,9 +14026,7 @@
   },
   "application/vnd.age": {
     "mime": "application/vnd.age",
-    "extensions": [
-      ".age"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.age",
@@ -14357,7 +14165,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -14463,7 +14271,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -14513,7 +14321,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -14578,9 +14386,7 @@
   },
   "application/vnd.apache.parquet": {
     "mime": "application/vnd.apache.parquet",
-    "extensions": [
-      ".parquet"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.apache.parquet",
@@ -14831,18 +14637,6 @@
     ],
     "magicSignatures": []
   },
-  "application/vnd.apple.pkpass": {
-    "mime": "application/vnd.apple.pkpass",
-    "extensions": [
-      ".pkpass"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "application/vnd.arastra.swi": {
     "mime": "application/vnd.arastra.swi",
     "extensions": [],
@@ -15033,18 +14827,6 @@
     ],
     "magicSignatures": []
   },
-  "application/vnd.autodesk.fbx": {
-    "mime": "application/vnd.autodesk.fbx",
-    "extensions": [
-      ".fbx"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "application/vnd.autopackage": {
     "mime": "application/vnd.autopackage",
     "extensions": [],
@@ -15100,9 +14882,7 @@
   },
   "application/vnd.balsamiq.bmml+xml": {
     "mime": "application/vnd.balsamiq.bmml+xml",
-    "extensions": [
-      ".bmml"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.balsamiq.bmml+xml",
@@ -15741,23 +15521,9 @@
     ],
     "magicSignatures": []
   },
-  "application/vnd.citationstyles.csl+json": {
-    "mime": "application/vnd.citationstyles.csl+json",
-    "extensions": [
-      ".csljson"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "application/vnd.citationstyles.style+xml": {
     "mime": "application/vnd.citationstyles.style+xml",
-    "extensions": [
-      ".csl"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.citationstyles.style+xml",
@@ -16645,7 +16411,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -16657,7 +16423,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -16885,9 +16651,7 @@
   },
   "application/vnd.dbf": {
     "mime": "application/vnd.dbf",
-    "extensions": [
-      ".dbf"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.dbf",
@@ -16905,9 +16669,7 @@
   },
   "application/vnd.dcmp+xml": {
     "mime": "application/vnd.dcmp+xml",
-    "extensions": [
-      ".dcmp"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.dcmp+xml",
@@ -17161,7 +16923,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -17287,7 +17049,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -18918,7 +18680,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -20194,114 +19956,6 @@
     ],
     "magicSignatures": []
   },
-  "application/vnd.google-apps.document": {
-    "mime": "application/vnd.google-apps.document",
-    "extensions": [
-      ".gdoc"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/vnd.google-apps.drawing": {
-    "mime": "application/vnd.google-apps.drawing",
-    "extensions": [
-      ".gdraw"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/vnd.google-apps.form": {
-    "mime": "application/vnd.google-apps.form",
-    "extensions": [
-      ".gform"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/vnd.google-apps.jam": {
-    "mime": "application/vnd.google-apps.jam",
-    "extensions": [
-      ".gjam"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/vnd.google-apps.map": {
-    "mime": "application/vnd.google-apps.map",
-    "extensions": [
-      ".gmap"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/vnd.google-apps.presentation": {
-    "mime": "application/vnd.google-apps.presentation",
-    "extensions": [
-      ".gslides"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/vnd.google-apps.script": {
-    "mime": "application/vnd.google-apps.script",
-    "extensions": [
-      ".gscript"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/vnd.google-apps.site": {
-    "mime": "application/vnd.google-apps.site",
-    "extensions": [
-      ".gsite"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/vnd.google-apps.spreadsheet": {
-    "mime": "application/vnd.google-apps.spreadsheet",
-    "extensions": [
-      ".gsheet"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "application/vnd.google-earth.kml+xml": {
     "mime": "application/vnd.google-earth.kml+xml",
     "extensions": [
@@ -20380,9 +20034,7 @@
   },
   "application/vnd.gov.sk.xmldatacontainer+xml": {
     "mime": "application/vnd.gov.sk.xmldatacontainer+xml",
-    "extensions": [
-      ".xdcf"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.gov.sk.xmldatacontainer+xml",
@@ -22868,7 +22520,9 @@
   },
   "application/vnd.lotus-organizer": {
     "mime": "application/vnd.lotus-organizer",
-    "extensions": [],
+    "extensions": [
+      ".org"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.lotus-organizer",
@@ -22980,9 +22634,7 @@
   },
   "application/vnd.mapbox-vector-tile": {
     "mime": "application/vnd.mapbox-vector-tile",
-    "extensions": [
-      ".mvt"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.mapbox-vector-tile",
@@ -23122,9 +22774,7 @@
   },
   "application/vnd.mcd": {
     "mime": "application/vnd.mcd",
-    "extensions": [
-      ".mcd"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.mcd",
@@ -23854,18 +23504,6 @@
     ],
     "magicSignatures": []
   },
-  "application/vnd.ms-appx": {
-    "mime": "application/vnd.ms-appx",
-    "extensions": [
-      ".appx"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "curated",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "application/vnd.ms-artgalry": {
     "mime": "application/vnd.ms-artgalry",
     "extensions": [
@@ -24132,18 +23770,6 @@
     ],
     "magicSignatures": []
   },
-  "application/vnd.ms-outlook": {
-    "mime": "application/vnd.ms-outlook",
-    "extensions": [
-      ".msg"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "application/vnd.ms-pki.seccat": {
     "mime": "application/vnd.ms-pki.seccat",
     "extensions": [
@@ -24151,7 +23777,19 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
+    "deprecatedAliases": [],
+    "references": [],
+    "magicSignatures": []
+  },
+  "application/vnd.ms-pki.stl": {
+    "mime": "application/vnd.ms-pki.stl",
+    "extensions": [
+      ".stl"
+    ],
+    "isIanaRegistered": false,
+    "isObsolete": false,
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -24326,7 +23964,6 @@
   "application/vnd.ms-project": {
     "mime": "application/vnd.ms-project",
     "extensions": [
-      ".mpp",
       ".mpt"
     ],
     "isIanaRegistered": true,
@@ -24354,18 +23991,6 @@
     "references": [
       "person:Sukvinder_S._Gill"
     ],
-    "magicSignatures": []
-  },
-  "application/vnd.ms-visio.viewer": {
-    "mime": "application/vnd.ms-visio.viewer",
-    "extensions": [
-      ".vdx"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
     "magicSignatures": []
   },
   "application/vnd.ms-windows.devicepairing": {
@@ -24849,9 +24474,7 @@
   },
   "application/vnd.nato.bindingdataobject+xml": {
     "mime": "application/vnd.nato.bindingdataobject+xml",
-    "extensions": [
-      ".bdo"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.nato.bindingdataobject+xml",
@@ -25293,9 +24916,7 @@
   },
   "application/vnd.nokia.n-gage.ac+xml": {
     "mime": "application/vnd.nokia.n-gage.ac+xml",
-    "extensions": [
-      ".ac"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.nokia.n-gage.ac+xml",
@@ -27255,9 +26876,7 @@
   },
   "application/vnd.openblox.game+xml": {
     "mime": "application/vnd.openblox.game+xml",
-    "extensions": [
-      ".obgx"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.openblox.game+xml",
@@ -27317,7 +26936,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -27343,9 +26962,7 @@
   },
   "application/vnd.openstreetmap.data+xml": {
     "mime": "application/vnd.openstreetmap.data+xml",
-    "extensions": [
-      ".osm"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.openstreetmap.data+xml",
@@ -28868,6 +28485,7 @@
     "mime": "application/vnd.palm",
     "extensions": [
       ".oprc",
+      ".pdb",
       ".pqa"
     ],
     "isIanaRegistered": true,
@@ -29287,9 +28905,7 @@
   },
   "application/vnd.pp.systemverify+xml": {
     "mime": "application/vnd.pp.systemverify+xml",
-    "extensions": [
-      ".systemverify"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.pp.systemverify+xml",
@@ -29340,42 +28956,6 @@
     "references": [
       "person:Roman_Smolgovsky"
     ],
-    "magicSignatures": []
-  },
-  "application/vnd.procreate.brush": {
-    "mime": "application/vnd.procreate.brush",
-    "extensions": [
-      ".brush"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/vnd.procreate.brushset": {
-    "mime": "application/vnd.procreate.brushset",
-    "extensions": [
-      ".brushset"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/vnd.procreate.dream": {
-    "mime": "application/vnd.procreate.dream",
-    "extensions": [
-      ".drm"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
     "magicSignatures": []
   },
   "application/vnd.project-graph": {
@@ -29513,9 +29093,7 @@
   },
   "application/vnd.pwg-xhtml-print+xml": {
     "mime": "application/vnd.pwg-xhtml-print+xml",
-    "extensions": [
-      ".xhtm"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.pwg-xhtml-print+xml",
@@ -30146,7 +29724,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -30158,7 +29736,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -30170,7 +29748,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31185,7 +30763,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31197,7 +30775,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31209,7 +30787,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31221,7 +30799,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31234,7 +30812,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31246,7 +30824,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31310,9 +30888,7 @@
   },
   "application/vnd.sun.wadl+xml": {
     "mime": "application/vnd.sun.wadl+xml",
-    "extensions": [
-      ".wadl"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.sun.wadl+xml",
@@ -31334,7 +30910,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31346,7 +30922,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31358,7 +30934,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31370,7 +30946,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31382,7 +30958,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31394,7 +30970,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31406,7 +30982,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31418,7 +30994,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31430,7 +31006,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31442,7 +31018,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -31587,7 +31163,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -32713,11 +32289,9 @@
     "mime": "application/vnd.visio",
     "extensions": [
       ".vsd",
-      ".vsdx",
       ".vss",
       ".vst",
-      ".vsw",
-      ".vtx"
+      ".vsw"
     ],
     "isIanaRegistered": true,
     "isObsolete": false,
@@ -32885,9 +32459,7 @@
   },
   "application/vnd.wap.wbxml": {
     "mime": "application/vnd.wap.wbxml",
-    "extensions": [
-      ".wbxml"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.wap.wbxml",
@@ -34117,9 +33689,7 @@
   },
   "application/watcherinfo+xml": {
     "mime": "application/watcherinfo+xml",
-    "extensions": [
-      ".wif"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/watcherinfo+xml",
@@ -34234,7 +33804,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34318,7 +33888,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34330,7 +33900,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34342,7 +33912,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34354,19 +33924,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-arj": {
-    "mime": "application/x-arj",
-    "extensions": [
-      ".arj"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34381,7 +33939,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34393,7 +33951,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34405,7 +33963,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34417,19 +33975,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-bdoc": {
-    "mime": "application/x-bdoc",
-    "extensions": [
-      ".bdoc"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34441,19 +33987,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-blender": {
-    "mime": "application/x-blender",
-    "extensions": [
-      ".blend"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34466,7 +34000,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34478,7 +34012,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34487,12 +34021,11 @@
     "mime": "application/x-bzip2",
     "extensions": [
       ".boz",
-      ".bz2",
-      ".tar.bz2"
+      ".bz2"
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34508,7 +34041,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34520,7 +34053,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34532,7 +34065,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34544,7 +34077,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34556,31 +34089,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-chrome-extension": {
-    "mime": "application/x-chrome-extension",
-    "extensions": [
-      ".crx"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-cocoa": {
-    "mime": "application/x-cocoa",
-    "extensions": [
-      ".cco"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34592,7 +34101,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34604,7 +34113,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34616,7 +34125,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34629,7 +34138,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34641,7 +34150,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34661,7 +34170,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34673,7 +34182,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34685,7 +34194,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34697,7 +34206,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34709,7 +34218,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34721,20 +34230,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-endnote-refer": {
-    "mime": "application/x-endnote-refer",
-    "extensions": [
-      ".endnote",
-      ".enl"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34746,7 +34242,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34758,7 +34254,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34770,7 +34266,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34782,7 +34278,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34794,7 +34290,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34806,7 +34302,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34818,7 +34314,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34833,7 +34329,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34845,7 +34341,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34857,7 +34353,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34869,7 +34365,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34881,7 +34377,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34893,7 +34389,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34905,7 +34401,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34917,7 +34413,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34929,7 +34425,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34941,19 +34437,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-ipynb+json": {
-    "mime": "application/x-ipynb+json",
-    "extensions": [
-      ".ipynb"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -34965,55 +34449,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-iwork-keynote-sffkey": {
-    "mime": "application/x-iwork-keynote-sffkey",
-    "extensions": [
-      ".key"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-iwork-numbers-sffnumbers": {
-    "mime": "application/x-iwork-numbers-sffnumbers",
-    "extensions": [
-      ".numbers"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-iwork-pages-sffpages": {
-    "mime": "application/x-iwork-pages-sffpages",
-    "extensions": [
-      ".pages"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-java-archive-diff": {
-    "mime": "application/x-java-archive-diff",
-    "extensions": [
-      ".jardiff"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35025,19 +34461,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-keepass2": {
-    "mime": "application/x-keepass2",
-    "extensions": [
-      ".kdbx"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35049,19 +34473,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-lua-bytecode": {
-    "mime": "application/x-lua-bytecode",
-    "extensions": [
-      ".luac"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35074,19 +34486,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-makeself": {
-    "mime": "application/x-makeself",
-    "extensions": [
-      ".run"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35098,7 +34498,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35106,11 +34506,12 @@
   "application/x-mobipocket-ebook": {
     "mime": "application/x-mobipocket-ebook",
     "extensions": [
-      ".mobi"
+      ".mobi",
+      ".prc"
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35122,7 +34523,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35134,7 +34535,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35146,7 +34547,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35158,7 +34559,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35170,7 +34571,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35182,7 +34583,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35194,7 +34595,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35206,7 +34607,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35222,7 +34623,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35236,7 +34637,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35249,7 +34650,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35261,7 +34662,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35273,7 +34674,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35285,7 +34686,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35297,7 +34698,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35309,7 +34710,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35322,19 +34723,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-ns-proxy-autoconfig": {
-    "mime": "application/x-ns-proxy-autoconfig",
-    "extensions": [
-      ".pac"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35346,45 +34735,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-perl": {
-    "mime": "application/x-perl",
-    "extensions": [
-      ".pl",
-      ".pm"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-pilot": {
-    "mime": "application/x-pilot",
-    "extensions": [
-      ".pdb"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-pkcs12": {
-    "mime": "application/x-pkcs12",
-    "extensions": [
-      ".p12",
-      ".pfx"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35397,7 +34748,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35409,7 +34760,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35434,18 +34785,6 @@
     ],
     "magicSignatures": []
   },
-  "application/x-powershell": {
-    "mime": "application/x-powershell",
-    "extensions": [
-      ".ps1"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "curated",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "application/x-rar-compressed": {
     "mime": "application/x-rar-compressed",
     "extensions": [
@@ -35453,19 +34792,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-redhat-package-manager": {
-    "mime": "application/x-redhat-package-manager",
-    "extensions": [
-      ".rpm"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35477,19 +34804,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-sea": {
-    "mime": "application/x-sea",
-    "extensions": [
-      ".sea"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35501,7 +34816,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35513,7 +34828,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35525,7 +34840,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35537,19 +34852,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-sql": {
-    "mime": "application/x-sql",
-    "extensions": [
-      ".sql"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35561,7 +34864,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35573,7 +34876,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35585,7 +34888,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35597,7 +34900,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35609,7 +34912,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35621,7 +34924,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35633,7 +34936,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35645,7 +34948,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35653,12 +34956,11 @@
   "application/x-tcl": {
     "mime": "application/x-tcl",
     "extensions": [
-      ".tcl",
-      ".tk"
+      ".tcl"
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35670,7 +34972,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35682,7 +34984,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35695,7 +34997,19 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
+    "deprecatedAliases": [],
+    "references": [],
+    "magicSignatures": []
+  },
+  "application/x-tgif": {
+    "mime": "application/x-tgif",
+    "extensions": [
+      ".obj"
+    ],
+    "isIanaRegistered": false,
+    "isObsolete": false,
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35707,103 +35021,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-virtualbox-hdd": {
-    "mime": "application/x-virtualbox-hdd",
-    "extensions": [
-      ".hdd"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-virtualbox-ova": {
-    "mime": "application/x-virtualbox-ova",
-    "extensions": [
-      ".ova"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-virtualbox-ovf": {
-    "mime": "application/x-virtualbox-ovf",
-    "extensions": [
-      ".ovf"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-virtualbox-vbox": {
-    "mime": "application/x-virtualbox-vbox",
-    "extensions": [
-      ".vbox"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-virtualbox-vbox-extpack": {
-    "mime": "application/x-virtualbox-vbox-extpack",
-    "extensions": [
-      ".vbox-extpack"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-virtualbox-vdi": {
-    "mime": "application/x-virtualbox-vdi",
-    "extensions": [
-      ".vdi"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-virtualbox-vhd": {
-    "mime": "application/x-virtualbox-vhd",
-    "extensions": [
-      ".vhd"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-virtualbox-vmdk": {
-    "mime": "application/x-virtualbox-vmdk",
-    "extensions": [
-      ".vmdk"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35815,19 +35033,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "application/x-web-app-manifest+json": {
-    "mime": "application/x-web-app-manifest+json",
-    "extensions": [
-      ".webapp"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35854,8 +35060,7 @@
     "mime": "application/x-x509-ca-cert",
     "extensions": [
       ".crt",
-      ".der",
-      ".pem"
+      ".der"
     ],
     "isIanaRegistered": true,
     "isObsolete": false,
@@ -35921,7 +35126,19 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
+    "deprecatedAliases": [],
+    "references": [],
+    "magicSignatures": []
+  },
+  "application/x-xliff+xml": {
+    "mime": "application/x-xliff+xml",
+    "extensions": [
+      ".xlf"
+    ],
+    "isIanaRegistered": false,
+    "isObsolete": false,
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35933,7 +35150,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35941,12 +35158,11 @@
   "application/x-xz": {
     "mime": "application/x-xz",
     "extensions": [
-      ".tar.xz",
       ".xz"
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "curated",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -35965,7 +35181,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -36017,16 +35233,14 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
   },
   "application/xcap-att+xml": {
     "mime": "application/xcap-att+xml",
-    "extensions": [
-      ".xav"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/xcap-att+xml",
@@ -36045,9 +35259,7 @@
   },
   "application/xcap-caps+xml": {
     "mime": "application/xcap-caps+xml",
-    "extensions": [
-      ".xca"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/xcap-caps+xml",
@@ -36087,9 +35299,7 @@
   },
   "application/xcap-el+xml": {
     "mime": "application/xcap-el+xml",
-    "extensions": [
-      ".xel"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/xcap-el+xml",
@@ -36127,9 +35337,7 @@
   },
   "application/xcap-ns+xml": {
     "mime": "application/xcap-ns+xml",
-    "extensions": [
-      ".xns"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/xcap-ns+xml",
@@ -36215,9 +35423,7 @@
   },
   "application/xfdf": {
     "mime": "application/xfdf",
-    "extensions": [
-      ".xfdf"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/xfdf",
@@ -36259,9 +35465,7 @@
   },
   "application/xliff+xml": {
     "mime": "application/xliff+xml",
-    "extensions": [
-      ".xlf"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/xliff+xml",
@@ -36281,9 +35485,7 @@
   "application/xml": {
     "mime": "application/xml",
     "extensions": [
-      ".rng",
-      ".xml",
-      ".xsd"
+      ".xml"
     ],
     "isIanaRegistered": true,
     "isObsolete": false,
@@ -36435,7 +35637,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -36476,7 +35678,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -36717,18 +35919,6 @@
     ],
     "magicSignatures": []
   },
-  "application/zip+dotlottie": {
-    "mime": "application/zip+dotlottie",
-    "extensions": [
-      ".lottie"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "application/zlib": {
     "mime": "application/zlib",
     "extensions": [],
@@ -36775,7 +35965,6 @@
   "application/zstd": {
     "mime": "application/zstd",
     "extensions": [
-      ".tar.zst",
       ".zst"
     ],
     "isIanaRegistered": true,
@@ -36960,16 +36149,14 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
   },
   "audio/AMR": {
     "mime": "audio/AMR",
-    "extensions": [
-      ".amr"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "audio/AMR",
@@ -38336,13 +37523,12 @@
     "mime": "audio/midi",
     "extensions": [
       ".kar",
-      ".mid",
       ".midi",
       ".rmi"
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -38390,7 +37576,7 @@
   "audio/mp4": {
     "mime": "audio/mp4",
     "extensions": [
-      ".m4b",
+      ".m4a",
       ".mp4a"
     ],
     "isIanaRegistered": true,
@@ -38838,7 +38024,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -38869,7 +38055,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -40054,19 +39240,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "audio/x-aac": {
-    "mime": "audio/x-aac",
-    "extensions": [
-      ".aac"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -40080,7 +39254,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -40092,55 +39266,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "audio/x-flac": {
-    "mime": "audio/x-flac",
-    "extensions": [
-      ".flac"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "audio/x-m4a": {
-    "mime": "audio/x-m4a",
-    "extensions": [
-      ".m4a"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "audio/x-matroska": {
-    "mime": "audio/x-matroska",
-    "extensions": [
-      ".mka"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "audio/x-mpegurl": {
-    "mime": "audio/x-mpegurl",
-    "extensions": [
-      ".m3u"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -40152,7 +39278,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -40164,7 +39290,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -40172,11 +39298,12 @@
   "audio/x-pn-realaudio": {
     "mime": "audio/x-pn-realaudio",
     "extensions": [
+      ".ra",
       ".ram"
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -40188,19 +39315,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "audio/x-realaudio": {
-    "mime": "audio/x-realaudio",
-    "extensions": [
-      ".ra"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -40212,7 +39327,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -40224,7 +39339,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -40236,7 +39351,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -40248,7 +39363,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -40260,19 +39375,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "chemical/x-cml": {
-    "mime": "chemical/x-cml",
-    "extensions": [
-      ".cml"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -40284,7 +39387,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -40296,7 +39399,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -40601,9 +39704,7 @@
   },
   "image/aces": {
     "mime": "image/aces",
-    "extensions": [
-      ".exr"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/aces",
@@ -40623,9 +39724,7 @@
   },
   "image/apng": {
     "mime": "image/apng",
-    "extensions": [
-      ".apng"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/apng",
@@ -40762,9 +39861,7 @@
   },
   "image/dicom-rle": {
     "mime": "image/dicom-rle",
-    "extensions": [
-      ".drle"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/dicom-rle",
@@ -41051,9 +40148,7 @@
   },
   "image/hej2k": {
     "mime": "image/hej2k",
-    "extensions": [
-      ".hej2"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/hej2k",
@@ -41073,9 +40168,7 @@
   },
   "image/hsj2": {
     "mime": "image/hsj2",
-    "extensions": [
-      ".hsj2"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/hsj2",
@@ -41133,9 +40226,7 @@
   },
   "image/jaii": {
     "mime": "image/jaii",
-    "extensions": [
-      ".jaii"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/jaii",
@@ -41155,9 +40246,7 @@
   },
   "image/jais": {
     "mime": "image/jais",
-    "extensions": [
-      ".jais"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/jais",
@@ -41177,9 +40266,7 @@
   },
   "image/jls": {
     "mime": "image/jls",
-    "extensions": [
-      ".jls"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/jls",
@@ -41199,10 +40286,7 @@
   },
   "image/jp2": {
     "mime": "image/jp2",
-    "extensions": [
-      ".jp2",
-      ".jpg2"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/jp2",
@@ -41339,10 +40423,7 @@
   },
   "image/jpx": {
     "mime": "image/jpx",
-    "extensions": [
-      ".jpf",
-      ".jpx"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/jpx",
@@ -41428,9 +40509,7 @@
   },
   "image/jxrA": {
     "mime": "image/jxrA",
-    "extensions": [
-      ".jxra"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/jxrA",
@@ -41450,9 +40529,7 @@
   },
   "image/jxrS": {
     "mime": "image/jxrS",
-    "extensions": [
-      ".jxrs"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/jxrS",
@@ -41687,18 +40764,6 @@
     ],
     "magicSignatures": []
   },
-  "image/pjpeg": {
-    "mime": "image/pjpeg",
-    "extensions": [
-      ".jfif"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "image/png": {
     "mime": "image/png",
     "extensions": [
@@ -41724,7 +40789,6 @@
   "image/prs.btif": {
     "mime": "image/prs.btif",
     "extensions": [
-      ".btf",
       ".btif"
     ],
     "isIanaRegistered": true,
@@ -41744,9 +40808,7 @@
   },
   "image/prs.pti": {
     "mime": "image/prs.pti",
-    "extensions": [
-      ".pti"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/prs.pti",
@@ -41786,7 +40848,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -41895,9 +40957,7 @@
   },
   "image/vnd.airzip.accelerator.azv": {
     "mime": "image/vnd.airzip.accelerator.azv",
-    "extensions": [
-      ".azv"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/vnd.airzip.accelerator.azv",
@@ -41915,9 +40975,7 @@
   },
   "image/vnd.blockfact.facti": {
     "mime": "image/vnd.blockfact.facti",
-    "extensions": [
-      ".facti"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/vnd.blockfact.facti",
@@ -42263,18 +41321,6 @@
     ],
     "magicSignatures": []
   },
-  "image/vnd.ms-dds": {
-    "mime": "image/vnd.ms-dds",
-    "extensions": [
-      ".dds"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "image/vnd.ms-modi": {
     "mime": "image/vnd.ms-modi",
     "extensions": [
@@ -42302,7 +41348,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -42329,9 +41375,7 @@
   },
   "image/vnd.pco.b16": {
     "mime": "image/vnd.pco.b16",
-    "extensions": [
-      ".b16"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/vnd.pco.b16",
@@ -42483,9 +41527,7 @@
   },
   "image/vnd.tencent.tap": {
     "mime": "image/vnd.tencent.tap",
-    "extensions": [
-      ".tap"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/vnd.tencent.tap",
@@ -42503,9 +41545,7 @@
   },
   "image/vnd.valve.source.texture": {
     "mime": "image/vnd.valve.source.texture",
-    "extensions": [
-      ".vtf"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/vnd.valve.source.texture",
@@ -42669,19 +41709,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "image/x-adobe-dng": {
-    "mime": "image/x-adobe-dng",
-    "extensions": [
-      ".dng"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -42693,7 +41721,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -42705,7 +41733,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -42721,7 +41749,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -42733,43 +41761,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "image/x-jng": {
-    "mime": "image/x-jng",
-    "extensions": [
-      ".jng"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "image/x-mrsid-image": {
-    "mime": "image/x-mrsid-image",
-    "extensions": [
-      ".sid"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "image/x-ms-bmp": {
-    "mime": "image/x-ms-bmp",
-    "extensions": [
-      ".bmp"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -42781,7 +41773,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -42789,12 +41781,11 @@
   "image/x-pict": {
     "mime": "image/x-pict",
     "extensions": [
-      ".pct",
-      ".pic"
+      ".pct"
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -42806,7 +41797,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -42818,7 +41809,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -42830,7 +41821,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -42842,7 +41833,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -42854,7 +41845,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -42866,7 +41857,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -42878,7 +41869,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -42890,7 +41881,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -42902,7 +41893,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -43296,8 +42287,6 @@
     "mime": "message/rfc822",
     "extensions": [
       ".eml",
-      ".mht",
-      ".mhtml",
       ".mime"
     ],
     "isIanaRegistered": true,
@@ -43396,9 +42385,7 @@
   },
   "message/vnd.wfa.wsc": {
     "mime": "message/vnd.wfa.wsc",
-    "extensions": [
-      ".wsc"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "message/vnd.wfa.wsc",
@@ -43477,9 +42464,7 @@
   },
   "model/gltf+json": {
     "mime": "model/gltf+json",
-    "extensions": [
-      ".gltf"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/gltf+json",
@@ -43499,9 +42484,7 @@
   },
   "model/gltf-binary": {
     "mime": "model/gltf-binary",
-    "extensions": [
-      ".glb"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/gltf-binary",
@@ -43541,9 +42524,7 @@
   },
   "model/JT": {
     "mime": "model/JT",
-    "extensions": [
-      ".jt"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/JT",
@@ -43582,9 +42563,7 @@
   },
   "model/mtl": {
     "mime": "model/mtl",
-    "extensions": [
-      ".mtl"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/mtl",
@@ -43605,9 +42584,7 @@
   },
   "model/obj": {
     "mime": "model/obj",
-    "extensions": [
-      ".obj"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/obj",
@@ -43628,9 +42605,7 @@
   },
   "model/prc": {
     "mime": "model/prc",
-    "extensions": [
-      ".prc"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/prc",
@@ -43650,13 +42625,7 @@
   },
   "model/step": {
     "mime": "model/step",
-    "extensions": [
-      ".210",
-      ".p21",
-      ".step",
-      ".stp",
-      ".stpnc"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/step",
@@ -43676,9 +42645,7 @@
   },
   "model/step+xml": {
     "mime": "model/step+xml",
-    "extensions": [
-      ".stpx"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/step+xml",
@@ -43698,9 +42665,7 @@
   },
   "model/step+zip": {
     "mime": "model/step+zip",
-    "extensions": [
-      ".stpz"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/step+zip",
@@ -43720,9 +42685,7 @@
   },
   "model/step-xml+zip": {
     "mime": "model/step-xml+zip",
-    "extensions": [
-      ".stpxz"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/step-xml+zip",
@@ -43742,9 +42705,7 @@
   },
   "model/stl": {
     "mime": "model/stl",
-    "extensions": [
-      ".stl"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/stl",
@@ -43765,9 +42726,7 @@
   },
   "model/u3d": {
     "mime": "model/u3d",
-    "extensions": [
-      ".u3d"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/u3d",
@@ -43787,9 +42746,7 @@
   },
   "model/vnd.bary": {
     "mime": "model/vnd.bary",
-    "extensions": [
-      ".bary"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/vnd.bary",
@@ -43808,9 +42765,7 @@
   },
   "model/vnd.cld": {
     "mime": "model/vnd.cld",
-    "extensions": [
-      ".cld"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/vnd.cld",
@@ -43980,9 +42935,7 @@
   },
   "model/vnd.opengex": {
     "mime": "model/vnd.opengex",
-    "extensions": [
-      ".ogex"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/vnd.opengex",
@@ -44000,9 +42953,7 @@
   },
   "model/vnd.parasolid.transmit.binary": {
     "mime": "model/vnd.parasolid.transmit.binary",
-    "extensions": [
-      ".x_b"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/vnd.parasolid.transmit.binary",
@@ -44020,9 +42971,7 @@
   },
   "model/vnd.parasolid.transmit.text": {
     "mime": "model/vnd.parasolid.transmit.text",
-    "extensions": [
-      ".x_t"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/vnd.parasolid.transmit.text",
@@ -44039,10 +42988,7 @@
   },
   "model/vnd.pytha.pyox": {
     "mime": "model/vnd.pytha.pyox",
-    "extensions": [
-      ".pyo",
-      ".pyox"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/vnd.pytha.pyox",
@@ -44080,9 +43026,7 @@
   },
   "model/vnd.sap.vds": {
     "mime": "model/vnd.sap.vds",
-    "extensions": [
-      ".vds"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/vnd.sap.vds",
@@ -44101,9 +43045,7 @@
   },
   "model/vnd.usda": {
     "mime": "model/vnd.usda",
-    "extensions": [
-      ".usda"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/vnd.usda",
@@ -44121,9 +43063,7 @@
   },
   "model/vnd.usdz+zip": {
     "mime": "model/vnd.usdz+zip",
-    "extensions": [
-      ".usdz"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/vnd.usdz+zip",
@@ -44141,9 +43081,7 @@
   },
   "model/vnd.valve.source.compiled-map": {
     "mime": "model/vnd.valve.source.compiled-map",
-    "extensions": [
-      ".bsp"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/vnd.valve.source.compiled-map",
@@ -44201,20 +43139,19 @@
   "model/x3d+binary": {
     "mime": "model/x3d+binary",
     "extensions": [
+      ".x3db",
       ".x3dbz"
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
   },
   "model/x3d+fastinfoset": {
     "mime": "model/x3d+fastinfoset",
-    "extensions": [
-      ".x3db"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/x3d+fastinfoset",
@@ -44233,11 +43170,12 @@
   "model/x3d+vrml": {
     "mime": "model/x3d+vrml",
     "extensions": [
+      ".x3dv",
       ".x3dvz"
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -44266,9 +43204,7 @@
   },
   "model/x3d-vrml": {
     "mime": "model/x3d-vrml",
-    "extensions": [
-      ".x3dv"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "model/x3d-vrml",
@@ -44601,24 +43537,10 @@
     ],
     "magicSignatures": []
   },
-  "text/asciidoc": {
-    "mime": "text/asciidoc",
-    "extensions": [
-      ".adoc",
-      ".asciidoc"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "text/cache-manifest": {
     "mime": "text/cache-manifest",
     "extensions": [
-      ".appcache",
-      ".manifest"
+      ".appcache"
     ],
     "isIanaRegistered": true,
     "isObsolete": false,
@@ -44656,19 +43578,6 @@
     "references": [
       "rfc:rfc5545"
     ],
-    "magicSignatures": []
-  },
-  "text/coffeescript": {
-    "mime": "text/coffeescript",
-    "extensions": [
-      ".coffee",
-      ".litcoffee"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
     "magicSignatures": []
   },
   "text/cql": {
@@ -44885,18 +43794,6 @@
     ],
     "magicSignatures": []
   },
-  "text/event-stream": {
-    "mime": "text/event-stream",
-    "extensions": [
-      ".event_stream"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "text/example": {
     "mime": "text/example",
     "extensions": [],
@@ -45033,9 +43930,7 @@
   "text/html": {
     "mime": "text/html",
     "extensions": [
-      ".htm",
-      ".html",
-      ".shtml"
+      ".htm"
     ],
     "isIanaRegistered": true,
     "isObsolete": false,
@@ -45050,18 +43945,6 @@
       "person:Robin_Berjon",
       "person:W3C"
     ],
-    "magicSignatures": []
-  },
-  "text/jade": {
-    "mime": "text/jade",
-    "extensions": [
-      ".jade"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
     "magicSignatures": []
   },
   "text/javascript": {
@@ -45118,30 +44001,6 @@
     ],
     "magicSignatures": []
   },
-  "text/jsx": {
-    "mime": "text/jsx",
-    "extensions": [
-      ".jsx"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/less": {
-    "mime": "text/less",
-    "extensions": [
-      ".less"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "text/markdown": {
     "mime": "text/markdown",
     "extensions": [
@@ -45163,30 +44022,6 @@
     "references": [
       "rfc:rfc7763"
     ],
-    "magicSignatures": []
-  },
-  "text/mathml": {
-    "mime": "text/mathml",
-    "extensions": [
-      ".mml"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/mdx": {
-    "mime": "text/mdx",
-    "extensions": [
-      ".mdx"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
     "magicSignatures": []
   },
   "text/mizar": {
@@ -45298,7 +44133,6 @@
       ".conf",
       ".def",
       ".in",
-      ".ini",
       ".list",
       ".log",
       ".text",
@@ -45347,10 +44181,7 @@
   },
   "text/prs.fallenstein.rst": {
     "mime": "text/prs.fallenstein.rst",
-    "extensions": [
-      ".rest",
-      ".rst"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "text/prs.fallenstein.rst",
@@ -45505,9 +44336,7 @@
   },
   "text/rtf": {
     "mime": "text/rtf",
-    "extensions": [
-      ".rtf"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "text/rtf",
@@ -45627,9 +44456,7 @@
   },
   "text/shex": {
     "mime": "text/shex",
-    "extensions": [
-      ".shex"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "text/shex",
@@ -45647,24 +44474,9 @@
     ],
     "magicSignatures": []
   },
-  "text/slim": {
-    "mime": "text/slim",
-    "extensions": [
-      ".slim",
-      ".slm"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "text/spdx": {
     "mime": "text/spdx",
-    "extensions": [
-      ".spdx"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "text/spdx",
@@ -45700,19 +44512,6 @@
     ],
     "magicSignatures": []
   },
-  "text/stylus": {
-    "mime": "text/stylus",
-    "extensions": [
-      ".styl",
-      ".stylus"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "text/t140": {
     "mime": "text/t140",
     "extensions": [],
@@ -45734,7 +44533,6 @@
   "text/tab-separated-values": {
     "mime": "text/tab-separated-values",
     "extensions": [
-      ".tab",
       ".tsv"
     ],
     "isIanaRegistered": true,
@@ -45992,7 +44790,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -46004,7 +44802,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -46016,7 +44814,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -46115,9 +44913,7 @@
   },
   "text/vnd.familysearch.gedcom": {
     "mime": "text/vnd.familysearch.gedcom",
-    "extensions": [
-      ".ged"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "text/vnd.familysearch.gedcom",
@@ -46728,9 +45524,7 @@
   },
   "text/vtt": {
     "mime": "text/vtt",
-    "extensions": [
-      ".vtt"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "text/vtt",
@@ -46762,9 +45556,7 @@
   },
   "text/wgsl": {
     "mime": "text/wgsl",
-    "extensions": [
-      ".wgsl"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "text/wgsl",
@@ -46790,20 +45582,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-bibtex": {
-    "mime": "text/x-bibtex",
-    "extensions": [
-      ".bib",
-      ".bibtex"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -46821,56 +45600,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-component": {
-    "mime": "text/x-component",
-    "extensions": [
-      ".htc"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-creole": {
-    "mime": "text/x-creole",
-    "extensions": [
-      ".creole"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-djot": {
-    "mime": "text/x-djot",
-    "extensions": [
-      ".dj",
-      ".djot"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-dokuwiki": {
-    "mime": "text/x-dokuwiki",
-    "extensions": [
-      ".dokuwiki"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -46885,19 +45615,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-handlebars-template": {
-    "mime": "text/x-handlebars-template",
-    "extensions": [
-      ".hbs"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -46909,67 +45627,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-lua": {
-    "mime": "text/x-lua",
-    "extensions": [
-      ".lua"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-markdown": {
-    "mime": "text/x-markdown",
-    "extensions": [
-      ".mkd"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-mediawiki": {
-    "mime": "text/x-mediawiki",
-    "extensions": [
-      ".mediawiki"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-mermaid": {
-    "mime": "text/x-mermaid",
-    "extensions": [
-      ".mermaid"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-metamd": {
-    "mime": "text/x-metamd",
-    "extensions": [
-      ".metamd"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -46981,7 +45639,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -46993,19 +45651,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-org": {
-    "mime": "text/x-org",
-    "extensions": [
-      ".org"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -47018,69 +45664,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-php": {
-    "mime": "text/x-php",
-    "extensions": [
-      ".php"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-plantuml": {
-    "mime": "text/x-plantuml",
-    "extensions": [
-      ".plantuml",
-      ".puml",
-      ".wsd"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-processing": {
-    "mime": "text/x-processing",
-    "extensions": [
-      ".pde"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-sass": {
-    "mime": "text/x-sass",
-    "extensions": [
-      ".sass"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-scss": {
-    "mime": "text/x-scss",
-    "extensions": [
-      ".scss"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -47092,7 +45676,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -47104,56 +45688,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-suse-ymp": {
-    "mime": "text/x-suse-ymp",
-    "extensions": [
-      ".ymp"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-textile": {
-    "mime": "text/x-textile",
-    "extensions": [
-      ".textile"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-tikz": {
-    "mime": "text/x-tikz",
-    "extensions": [
-      ".tikz"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-typst": {
-    "mime": "text/x-typst",
-    "extensions": [
-      ".typ",
-      ".typst"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -47165,7 +45700,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -47177,31 +45712,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-vcard": {
-    "mime": "text/x-vcard",
-    "extensions": [
-      ".vcf"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
-  "text/x-wiki": {
-    "mime": "text/x-wiki",
-    "extensions": [
-      ".wiki"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "existing",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -47268,19 +45779,6 @@
       }
     ]
   },
-  "text/yaml": {
-    "mime": "text/yaml",
-    "extensions": [
-      ".yaml",
-      ".yml"
-    ],
-    "isIanaRegistered": false,
-    "isObsolete": false,
-    "source": "mime-db",
-    "deprecatedAliases": [],
-    "references": [],
-    "magicSignatures": []
-  },
   "video/1d-interleaved-parityfec": {
     "mime": "video/1d-interleaved-parityfec",
     "extensions": [],
@@ -47303,8 +45801,7 @@
   "video/3gpp": {
     "mime": "video/3gpp",
     "extensions": [
-      ".3gp",
-      ".3gpp"
+      ".3gp"
     ],
     "isIanaRegistered": true,
     "isObsolete": false,
@@ -47828,7 +46325,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -48010,7 +46507,6 @@
   "video/mp4": {
     "mime": "video/mp4",
     "extensions": [
-      ".mp4",
       ".mp4v",
       ".mpg4"
     ],
@@ -49181,7 +47677,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -49193,7 +47689,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -49205,7 +47701,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -49217,7 +47713,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -49229,7 +47725,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -49237,13 +47733,11 @@
   "video/x-matroska": {
     "mime": "video/x-matroska",
     "extensions": [
-      ".mk3d",
-      ".mks",
-      ".mkv"
+      ".mks"
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -49255,7 +47749,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -49263,12 +47757,11 @@
   "video/x-ms-asf": {
     "mime": "video/x-ms-asf",
     "extensions": [
-      ".asf",
       ".asx"
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -49280,7 +47773,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -49292,7 +47785,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -49304,7 +47797,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -49316,7 +47809,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -49328,7 +47821,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -49340,7 +47833,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -49352,7 +47845,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -49364,7 +47857,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []
@@ -49376,7 +47869,7 @@
     ],
     "isIanaRegistered": false,
     "isObsolete": false,
-    "source": "mime-db",
+    "source": "apache",
     "deprecatedAliases": [],
     "references": [],
     "magicSignatures": []

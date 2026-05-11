@@ -21,8 +21,8 @@
     <PropertyGroup>
         <Title>ManagedCode.MimeTypes</Title>
         <PackageId>ManagedCode.MimeTypes</PackageId>
-        <Description>MimeTypes for .NET</Description>
-        <PackageTags>managedcode, mimetypes, mime</PackageTags>
+        <Description>Official IANA and Apache MIME/media type lookup, metadata, categorisation, and content detection for .NET</Description>
+        <PackageTags>managedcode, mimetypes, mime, media-types, iana, apache, content-detection, file-signatures, magic-numbers, mime-sniffing</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

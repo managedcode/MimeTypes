@@ -28,7 +28,6 @@ jobs:
       - name: Run MIME sync tool
         run: >
           dotnet run --project ManagedCode.MimeTypes.Sync --configuration Release --
-          --prefer-remote
           --template-concurrency 8
 
       - name: Detect MIME database changes
@@ -72,6 +71,7 @@ jobs:
         run: dotnet test --configuration Release --no-restore --verbosity normal
 
       - name: Create Pull Request
+        if: steps.mime_changes.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -79,7 +79,7 @@ jobs:
           title: "chore: sync MIME database"
           body: |
             Automated update of the MIME database from the IANA media types registry,
-            mime-db, Apache mime.types, and curated ManagedCode overrides.
+            and Apache mime.types.
 
             When MIME data changes, this PR also bumps the package patch version.
             See the workflow summary for the IANA registry date, source counts, and version bump.

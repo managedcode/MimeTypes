@@ -18,20 +18,19 @@ MIME (Multipurpose Internet Mail Extensions) values describe the media type of a
  workflows, messaging protocols and countless integrations. Unfortunately the canonical values are long strings, which makes code
  prone to typos and hard to validate.
 
-`ManagedCode.MimeTypes` ships a generated helper with more than **1,200** extensions sourced from the [IANA media types registry](https://www.iana.org/assignments/media-types/),
-the [jshttp/mime-db](https://github.com/jshttp/mime-db) project, [Apache's canonical `mime.types` list](https://github.com/apache/httpd/blob/trunk/docs/conf/mime.types) and curated overrides, smart heuristics for multi-part extensions (such as `.tar.gz`), runtime registration APIs and rich helpers for detecting and
+`ManagedCode.MimeTypes` ships a generated helper with official MIME data sourced from the [IANA media types registry](https://www.iana.org/assignments/media-types/)
+and [Apache's canonical `mime.types` list](https://github.com/apache/httpd/blob/trunk/docs/conf/mime.types), runtime registration APIs and rich helpers for detecting and
  categorising data by content.
 
 ## Feature overview
-* Generated extension → MIME map based on the official IANA registry plus supplemental mime-db/Apache coverage and curated compound extensions such as `tar.gz`, `d.ts`, `ps1`, …
+* Generated extension → MIME map based on the official IANA registry plus Apache's maintained `mime.types` coverage.
 * Generated MIME metadata API for IANA registration status, template URLs, references, extensions, intended usage and parseable magic-number prefixes.
-* Rich overrides for lightweight markup and diagram DSLs (AsciiDoc, BibTeX, Org-Mode, PlantUML, Mermaid, Typst, TikZ, …) tailored for AI/document pipelines.
 * Reverse lookup API that returns the extensions known for a given MIME value.
 * Runtime registration/unregistration so applications can plug in custom corporate formats.
-* Content sniffing for common file signatures (PDF, PNG, JPEG, GIF, WebP, MP4, ZIP/OOXML, ODF, APK, etc.) with graceful handling of short or empty streams.
+* Content sniffing for common file signatures (PDF, PNG, JPEG, GIF, WebP, MP4, ZIP/OOXML, ODF, APK, etc.) so applications can verify whether bytes match the claimed type, with graceful handling of short or empty streams.
 * Extended categorisation enum covering document, audio/video, script, binary, multipart and message families with convenience predicates.
 * Safe-by-default mutation model powered by immutable dictionaries, configurable fallback MIME via `MimeHelper.SetDefaultMimeType`, and an `IMimeHelper` abstraction (`MimeHelper.Instance`) for DI scenarios.
-* CLI utility to refresh `mimeTypes.json` and `mimeTypes.metadata.json` from IANA, supplemental sources or custom sources.
+* CLI utility to refresh `mimeTypes.json` and `mimeTypes.metadata.json` from IANA and Apache.
 
 ## Quick start
 ```csharp
@@ -39,7 +38,7 @@ using ManagedCode.MimeTypes;
 
 // Extension based lookup (handles multi-part extensions automatically)
 var gzip = MimeHelper.GetMimeType("archive.tar.gz");             // application/gzip
-var typeScript = MimeHelper.GetMimeType("module.d.ts");          // application/typescript
+var image = MimeHelper.GetMimeType("avatar.png");                // image/png
 
 // Content-based detection
 using var stream = File.OpenRead("report.pdf");
@@ -74,9 +73,12 @@ var fallback = helper.GetMimeType("file.unknownext");             // application
 
 ## Keeping the database fresh
 A small console utility is included to synchronise `mimeTypes.json` and `mimeTypes.metadata.json` with the IANA media types registry,
-supplemental upstream datasets and our curated overrides. The repository also ships a scheduled GitHub Actions workflow that runs the sync
-tool weekly, validates the generated database with tests, bumps the package patch version when MIME data changes and opens a pull request
-whenever new MIME definitions are published.
+Apache's canonical `mime.types` list and no unverified third-party MIME database. The scheduled GitHub Actions workflow runs weekly,
+validates the generated database with tests, bumps the package patch version when MIME data changes and opens a pull request whenever new
+official MIME definitions are published.
+
+The IANA templates include useful metadata such as file extensions, references, intended usage and magic-number descriptions. When a magic
+number is a fixed byte prefix, the sync tool stores it as parseable metadata so content detectors can be added and tested without guessing.
 
 ```bash
 # Update the data file in-place
@@ -85,12 +87,11 @@ dotnet run --project ManagedCode.MimeTypes.Sync
 # Provide custom sources or output
 DOTNET_CLI_TELEMETRY_OPTOUT=1 dotnet run --project ManagedCode.MimeTypes.Sync -- \
     --iana-source https://www.iana.org/assignments/media-types/media-types.xml \
-    --add-source https://example.com/additional-mime-map.json \
     --output ./artifacts/mimeTypes.json \
     --metadata-output ./artifacts/mimeTypes.metadata.json
 
-# Start with a clean supplemental slate and prefer remote registry data over preserved local mappings
-dotnet run --project ManagedCode.MimeTypes.Sync -- --reset-sources --prefer-remote
+# Preserve an existing local map only when intentionally carrying compatibility data forward
+dotnet run --project ManagedCode.MimeTypes.Sync -- --preserve-existing --prefer-remote
 ```
 
 Running the tool re-generates the JSON file, which in turn updates the generated helper during the next build.
