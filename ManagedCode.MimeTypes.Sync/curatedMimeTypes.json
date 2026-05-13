@@ -1,0 +1,110 @@
+[
+  {
+    "extension": "tar.gz",
+    "mime": "application/gzip",
+    "source": "ManagedCode compatibility",
+    "reason": "Compound archive extension; upstream MIME listings usually map only the terminal .gz extension."
+  },
+  {
+    "extension": "gz",
+    "mime": "application/gzip",
+    "source": "MDN Common media types",
+    "reason": "Common web mapping; keeps gzip archives on the registered application/gzip value."
+  },
+  {
+    "extension": "tar.bz2",
+    "mime": "application/x-bzip2",
+    "source": "ManagedCode compatibility",
+    "reason": "Compound archive extension; upstream MIME listings usually map only the terminal .bz2 extension."
+  },
+  {
+    "extension": "tar.xz",
+    "mime": "application/x-xz",
+    "source": "ManagedCode compatibility",
+    "reason": "Compound archive extension; upstream MIME listings usually map only the terminal .xz extension."
+  },
+  {
+    "extension": "tar.zst",
+    "mime": "application/zstd",
+    "source": "ManagedCode compatibility",
+    "reason": "Compound archive extension; upstream MIME listings usually map only the terminal .zst extension."
+  },
+  {
+    "extension": "aac",
+    "mime": "audio/aac",
+    "source": "MDN Common media types",
+    "reason": "Common browser/runtime mapping; Apache still carries the older audio/x-aac value."
+  },
+  {
+    "extension": "cda",
+    "mime": "application/x-cdf",
+    "source": "MDN Common media types",
+    "reason": "Common Windows CD audio extension absent from IANA and Apache extension listings."
+  },
+  {
+    "extension": "d.ts",
+    "mime": "application/typescript",
+    "source": "ManagedCode compatibility",
+    "reason": "TypeScript declaration files need a compound extension mapping before the terminal .ts MPEG transport-stream mapping."
+  },
+  {
+    "extension": "cjs",
+    "mime": "application/node",
+    "source": "Node.js ecosystem",
+    "reason": "CommonJS module extension used by Node.js projects."
+  },
+  {
+    "extension": "mjs",
+    "mime": "text/javascript",
+    "source": "MDN Common media types",
+    "reason": "JavaScript module extension; browsers expect text/javascript."
+  },
+  {
+    "extension": "wasm",
+    "mime": "application/wasm",
+    "source": "WebAssembly",
+    "reason": "Common WebAssembly module mapping."
+  },
+  {
+    "extension": "heic",
+    "mime": "image/heic",
+    "source": "IANA media types",
+    "reason": "Common HEIF image extension; keeps extension lookup aligned with registered image/heic metadata."
+  },
+  {
+    "extension": "heif",
+    "mime": "image/heif",
+    "source": "IANA media types",
+    "reason": "Common HEIF image extension; keeps extension lookup aligned with registered image/heif metadata."
+  },
+  {
+    "extension": "ics",
+    "mime": "text/calendar",
+    "source": "MDN Common media types",
+    "reason": "Common iCalendar file extension."
+  },
+  {
+    "extension": "php",
+    "mime": "application/x-httpd-php",
+    "source": "MDN Common media types",
+    "reason": "Common server-side script mapping absent from IANA and Apache extension listings."
+  },
+  {
+    "extension": "ps1",
+    "mime": "application/x-powershell",
+    "source": "ManagedCode compatibility",
+    "reason": "Common PowerShell script extension absent from IANA and Apache extension listings."
+  },
+  {
+    "extension": "appx",
+    "mime": "application/vnd.ms-appx",
+    "source": "Windows app package ecosystem",
+    "reason": "Common Windows app package extension absent from Apache extension listings."
+  },
+  {
+    "extension": "event_stream",
+    "mime": "text/event-stream",
+    "source": "MDN Server-sent events",
+    "reason": "Server-sent events require text/event-stream, but the MIME has no normal file extension in IANA or Apache."
+  }
+]

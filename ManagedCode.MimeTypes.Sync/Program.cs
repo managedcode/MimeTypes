@@ -18,10 +18,12 @@ internal static partial class MimeTypeSyncTool
 {
     private const string DefaultIanaSource = "https://www.iana.org/assignments/media-types/media-types.xml";
     private const string IanaAssignmentsNamespace = "http://www.iana.org/assignments";
+    private const string DefaultCuratedFileName = "curatedMimeTypes.json";
     private const string UserAgent = "ManagedCode.MimeTypes.Sync/2.0 (+https://github.com/managedcode/MimeTypes)";
 
     private static readonly string[] DefaultSupplementalSources =
     [
+        "https://raw.githubusercontent.com/jshttp/mime-db/master/db.json",
         "https://raw.githubusercontent.com/apache/httpd/trunk/docs/conf/mime.types"
     ];
 
@@ -55,6 +57,15 @@ internal static partial class MimeTypeSyncTool
                 var kind = ClassifySupplementalSource(source);
                 var raw = await LoadRawDataAsync(client, source);
                 sourceMappings.AddRange(ParseSupplementalSource(source, raw, kind));
+            }
+
+            if (options.UseCurated)
+            {
+                foreach (var source in options.CuratedSources)
+                {
+                    var raw = await LoadRawDataAsync(client, source);
+                    sourceMappings.AddRange(ParseSupplementalSource(source, raw, MimeSourceKind.Curated));
+                }
             }
 
             var existing = options.PreserveExisting
@@ -183,14 +194,61 @@ internal static partial class MimeTypeSyncTool
             return Array.Empty<MagicSignatureMetadata>();
         }
 
-        var offset = ParseOffset(text);
-        var parsed = TryParseQuotedAsciiSignature(text, offset) ?? TryParseHexSignature(text, offset);
-        if (parsed != null)
+        var offsetQualified = RemoveRedundantPrefixSignatures(ParseOffsetQualifiedSignatures(raw ?? text, text))
+            .ToArray();
+        if (offsetQualified.Length > 0)
         {
-            return [parsed];
+            return offsetQualified;
+        }
+
+        var offset = ParseOffset(text);
+        var parsed = RemoveRedundantPrefixSignatures(ParseQuotedAsciiSignatures(text, offset)
+            .Concat(ParseHexSignatures(raw ?? text, text, offset))
+            .DistinctBy(static signature => (signature.Hex, signature.Offset)))
+            .ToArray();
+        if (parsed.Length > 0)
+        {
+            return parsed;
         }
 
         return [new MagicSignatureMetadata(text, Array.Empty<int>(), null, offset)];
+    }
+
+    private static IEnumerable<MagicSignatureMetadata> RemoveRedundantPrefixSignatures(IEnumerable<MagicSignatureMetadata> signatures)
+    {
+        var kept = new List<MagicSignatureMetadata>();
+        foreach (var signature in signatures.OrderBy(static value => value.Bytes.Length).ThenBy(static value => value.Hex, StringComparer.OrdinalIgnoreCase))
+        {
+            if (kept.Any(existing => existing.Offset == signature.Offset && IsPrefix(existing.Bytes, signature.Bytes)))
+            {
+                continue;
+            }
+
+            kept.Add(signature);
+        }
+
+        return kept
+            .OrderBy(static value => value.Offset)
+            .ThenBy(static value => value.Bytes.Length)
+            .ThenBy(static value => value.Hex, StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static bool IsPrefix(IReadOnlyList<int> prefix, IReadOnlyList<int> value)
+    {
+        if (prefix.Count == 0 || prefix.Count > value.Count)
+        {
+            return false;
+        }
+
+        for (var i = 0; i < prefix.Count; i++)
+        {
+            if (prefix[i] != value[i])
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     internal static IReadOnlyList<SourceMapping> ParseSupplementalSource(string source, byte[] data, MimeSourceKind kind)
@@ -605,13 +663,13 @@ internal static partial class MimeTypeSyncTool
             return;
         }
 
-        fields[currentKey] = NormalizeFreeText(value.ToString());
+        fields[currentKey] = value.ToString().Trim();
     }
 
     private static string? GetField(Dictionary<string, string> fields, string key)
     {
         return fields.TryGetValue(key, out var value) && !IsNoneValue(value)
-            ? value
+            ? NormalizeFreeText(value)
             : null;
     }
 
@@ -657,57 +715,163 @@ internal static partial class MimeTypeSyncTool
 
     private static string[] SplitLooseList(string raw)
     {
-        return NormalizeFreeText(raw)
+        return raw.Replace("\r\n", "\n", StringComparison.Ordinal)
+            .Replace('\r', '\n')
             .Split([',', ';', '\n'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(NormalizeFreeText)
             .Where(static value => !IsNoneValue(value))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .OrderBy(static value => value, StringComparer.OrdinalIgnoreCase)
             .ToArray();
     }
 
-    private static MagicSignatureMetadata? TryParseQuotedAsciiSignature(string text, int offset)
+    private static IEnumerable<MagicSignatureMetadata> ParseOffsetQualifiedSignatures(string raw, string text)
     {
-        foreach (Match match in QuotedStringRegex().Matches(text))
+        foreach (Match match in OffsetQualifiedSignatureRegex().Matches(raw))
         {
-            var value = match.Groups["value"].Value;
-            if (value.Length is < 2 or > 64 || !value.Any(static c => !char.IsWhiteSpace(c)))
+            if (!int.TryParse(match.Groups["offset"].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var offset))
             {
                 continue;
             }
 
-            if (value.Any(static c => c < 0x20 || c > 0x7E))
+            if (match.Groups["ascii"].Success)
+            {
+                var value = match.Groups["ascii"].Value;
+                if (!IsAsciiSignatureValue(value))
+                {
+                    continue;
+                }
+
+                var asciiBytes = Encoding.ASCII.GetBytes(value);
+                yield return new MagicSignatureMetadata(text, asciiBytes.Select(static value => (int)value).ToArray(), ToHex(asciiBytes), offset);
+                continue;
+            }
+
+            if (match.Groups["hex"].Success && TryParseCompactHex(match.Groups["hex"].Value, out var hexBytes))
+            {
+                yield return new MagicSignatureMetadata(text, hexBytes.Select(static value => (int)value).ToArray(), ToHex(hexBytes), offset);
+            }
+        }
+    }
+
+    private static IEnumerable<MagicSignatureMetadata> ParseQuotedAsciiSignatures(string text, int offset)
+    {
+        foreach (Match match in QuotedStringRegex().Matches(text))
+        {
+            var value = match.Groups["value"].Value;
+            if (!IsAsciiMagicCandidate(value, text, match.Index, match.Length))
             {
                 continue;
             }
 
             var bytes = Encoding.ASCII.GetBytes(value);
-            return new MagicSignatureMetadata(text, bytes.Select(static value => (int)value).ToArray(), ToHex(bytes), offset);
+            yield return new MagicSignatureMetadata(text, bytes.Select(static value => (int)value).ToArray(), ToHex(bytes), offset);
         }
-
-        return null;
     }
 
-    private static MagicSignatureMetadata? TryParseHexSignature(string text, int offset)
+    private static IEnumerable<MagicSignatureMetadata> ParseHexSignatures(string raw, string text, int offset)
     {
-        var matches = HexByteRegex().Matches(text);
-        if (matches.Count < 2)
+        var candidates = raw
+            .Replace("\r\n", "\n", StringComparison.Ordinal)
+            .Replace('\r', '\n')
+            .Split(['\n', ';'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+        if (candidates.Length == 0 || HexByteListRegex().IsMatch(text))
         {
-            return null;
+            candidates = [text];
         }
 
-        var hasHexMarker = text.Contains("0x", StringComparison.OrdinalIgnoreCase) ||
-            text.Contains("hex", StringComparison.OrdinalIgnoreCase) ||
-            HexByteListRegex().IsMatch(text);
-        if (!hasHexMarker)
+        foreach (var candidate in candidates)
         {
-            return null;
+            var normalized = NormalizeFreeText(candidate);
+            var bytes = ParseExplicitHexBytes(normalized);
+            if (bytes.Length < 2)
+            {
+                continue;
+            }
+
+            yield return new MagicSignatureMetadata(text, bytes.Select(static value => (int)value).ToArray(), ToHex(bytes), offset);
+        }
+    }
+
+    private static bool IsAsciiMagicCandidate(string value, string text, int matchIndex, int matchLength)
+    {
+        if (!IsAsciiSignatureValue(value))
+        {
+            return false;
         }
 
-        var bytes = matches
-            .Select(static match => byte.Parse(match.Groups["byte"].Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
+        if (value.Any(static c => c < 0x20 || c > 0x7E))
+        {
+            return false;
+        }
+
+        var normalizedValue = NormalizeFreeText(value);
+        if (normalizedValue.Equals("magic number", StringComparison.OrdinalIgnoreCase) ||
+            normalizedValue.Equals("file", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        if (normalizedValue.Any(static c => !char.IsLetterOrDigit(c) && !char.IsWhiteSpace(c)))
+        {
+            return true;
+        }
+
+        if (normalizedValue.Any(char.IsDigit))
+        {
+            return true;
+        }
+
+        if (normalizedValue.Equals(normalizedValue.ToUpperInvariant(), StringComparison.Ordinal) && normalizedValue.Any(char.IsLetter))
+        {
+            return true;
+        }
+
+        var contextStart = Math.Max(0, matchIndex - 80);
+        var contextLength = Math.Min(text.Length - contextStart, matchLength + 160);
+        var context = text.Substring(contextStart, contextLength);
+        return normalizedValue.Length >= 4 &&
+            char.IsUpper(normalizedValue[0]) &&
+            (context.Contains("leading", StringComparison.OrdinalIgnoreCase) ||
+             context.Contains("start", StringComparison.OrdinalIgnoreCase) ||
+             context.Contains("begin", StringComparison.OrdinalIgnoreCase)) &&
+            !context.Contains("command", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsAsciiSignatureValue(string value)
+    {
+        return value.Length is >= 2 and <= 64 &&
+            value.Any(static c => !char.IsWhiteSpace(c)) &&
+            value.All(static c => c is >= (char)0x20 and <= (char)0x7E);
+    }
+
+    private static byte[] ParseExplicitHexBytes(string value)
+    {
+        if (HexByteListRegex().IsMatch(value))
+        {
+            return HexByteRegex().Matches(value)
+                .Select(static match => byte.Parse(match.Groups["byte"].Value, NumberStyles.HexNumber, CultureInfo.InvariantCulture))
+                .ToArray();
+        }
+
+        return ExplicitHexRegex().Matches(value)
+            .SelectMany(static match => TryParseCompactHex(match.Groups["hex"].Value, out var bytes) ? bytes : [])
             .ToArray();
+    }
 
-        return new MagicSignatureMetadata(text, bytes.Select(static value => (int)value).ToArray(), ToHex(bytes), offset);
+    private static bool TryParseCompactHex(string value, out byte[] bytes)
+    {
+        bytes = [];
+        if (value.Length < 2 || value.Length % 2 != 0 || !value.All(Uri.IsHexDigit))
+        {
+            return false;
+        }
+
+        bytes = Enumerable.Range(0, value.Length / 2)
+            .Select(index => byte.Parse(value.Substring(index * 2, 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture))
+            .ToArray();
+        return true;
     }
 
     private static int ParseOffset(string text)
@@ -825,6 +989,12 @@ internal static partial class MimeTypeSyncTool
 
     private static MimeSourceKind ClassifySupplementalSource(string source)
     {
+        if (source.Contains("jshttp/mime-db", StringComparison.OrdinalIgnoreCase) ||
+            source.EndsWith("db.json", StringComparison.OrdinalIgnoreCase))
+        {
+            return MimeSourceKind.MimeDb;
+        }
+
         if (source.Contains("apache", StringComparison.OrdinalIgnoreCase) ||
             source.EndsWith("mime.types", StringComparison.OrdinalIgnoreCase))
         {
@@ -834,7 +1004,20 @@ internal static partial class MimeTypeSyncTool
         return MimeSourceKind.Custom;
     }
 
-    [GeneratedRegex(@"^\s*(?<name>[A-Za-z][A-Za-z0-9 /&().+\-]*(?:\(s\))?)\s*:\s*(?<value>.*)$", RegexOptions.Compiled)]
+    private static string ResolveDefaultCuratedSource()
+    {
+        var candidates = new[]
+        {
+            Path.Combine(AppContext.BaseDirectory, DefaultCuratedFileName),
+            Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", DefaultCuratedFileName)),
+            Path.Combine(Directory.GetCurrentDirectory(), "ManagedCode.MimeTypes.Sync", DefaultCuratedFileName),
+            Path.Combine(Directory.GetCurrentDirectory(), DefaultCuratedFileName)
+        };
+
+        return candidates.FirstOrDefault(File.Exists) ?? candidates[0];
+    }
+
+    [GeneratedRegex(@"^\s*(?:\d+\.\s*)?(?<name>[A-Za-z][A-Za-z0-9 /&().+\-]*(?:\(s\))?)\s*:\s*(?<value>.*)$", RegexOptions.Compiled)]
     private static partial Regex TemplateFieldRegex();
 
     [GeneratedRegex(@"(?<![A-Za-z0-9])\.(?<extension>[A-Za-z0-9][A-Za-z0-9.+_-]{0,63})", RegexOptions.Compiled)]
@@ -846,7 +1029,7 @@ internal static partial class MimeTypeSyncTool
     [GeneratedRegex(@"^[A-Za-z0-9][A-Za-z0-9.+_-]*(?:\s*[,;]\s*[A-Za-z0-9][A-Za-z0-9.+_-]*)*$", RegexOptions.Compiled)]
     private static partial Regex LooseExtensionListRegex();
 
-    [GeneratedRegex("\"(?<value>[^\"]{2,64})\"", RegexOptions.Compiled)]
+    [GeneratedRegex(@"(?<quote>[""'])(?<value>[^""']{2,64})\k<quote>", RegexOptions.Compiled)]
     private static partial Regex QuotedStringRegex();
 
     [GeneratedRegex(@"(?:0x)?(?<byte>[0-9A-Fa-f]{2})(?![0-9A-Fa-f])", RegexOptions.Compiled)]
@@ -854,6 +1037,12 @@ internal static partial class MimeTypeSyncTool
 
     [GeneratedRegex(@"^\s*(?:[0-9A-Fa-f]{2}\s*){2,}$", RegexOptions.Compiled)]
     private static partial Regex HexByteListRegex();
+
+    [GeneratedRegex(@"(?<![A-Za-z0-9])0x(?<hex>[0-9A-Fa-f]{2,})(?![A-Za-z0-9])", RegexOptions.Compiled | RegexOptions.IgnoreCase)]
+    private static partial Regex ExplicitHexRegex();
+
+    [GeneratedRegex(@"(?<![A-Za-z0-9])(?<offset>\d+)\s*:\s*(?:(?<quote>[""'])(?<ascii>[^""']{2,64})\k<quote>|0x(?<hex>[0-9A-Fa-f]{2,})(?![A-Za-z0-9]))", RegexOptions.Compiled | RegexOptions.IgnoreCase)]
+    private static partial Regex OffsetQualifiedSignatureRegex();
 
     [GeneratedRegex(@"offset\s+(?<offset>\d+)", RegexOptions.Compiled | RegexOptions.IgnoreCase)]
     private static partial Regex OffsetRegex();
@@ -867,10 +1056,12 @@ internal static partial class MimeTypeSyncTool
     internal sealed record SyncOptions(
         string IanaSource,
         IReadOnlyList<string> SupplementalSources,
+        IReadOnlyList<string> CuratedSources,
         string OutputPath,
         string MetadataOutputPath,
         bool PreferRemote,
         bool UseIana,
+        bool UseCurated,
         bool SkipIanaTemplates,
         bool PreserveExisting,
         int TemplateConcurrency)
@@ -879,10 +1070,12 @@ internal static partial class MimeTypeSyncTool
         {
             var ianaSource = DefaultIanaSource;
             var supplementalSources = new List<string>(DefaultSupplementalSources);
+            var curatedSources = new List<string> { ResolveDefaultCuratedSource() };
             string? output = null;
             string? metadataOutput = null;
             bool preferRemote = false;
             bool useIana = true;
+            bool useCurated = true;
             bool skipIanaTemplates = false;
             bool preserveExisting = false;
             var templateConcurrency = 8;
@@ -897,6 +1090,10 @@ internal static partial class MimeTypeSyncTool
                         break;
                     case "--no-iana":
                         useIana = false;
+                        break;
+                    case "--no-curated":
+                        useCurated = false;
+                        curatedSources.Clear();
                         break;
                     case "--skip-iana-templates":
                         skipIanaTemplates = true;
@@ -915,6 +1112,15 @@ internal static partial class MimeTypeSyncTool
                         break;
                     case "--add-source" when i + 1 < args.Length:
                         AddSources(supplementalSources, args[++i]);
+                        break;
+                    case "--curated-source" when i + 1 < args.Length:
+                        curatedSources.Clear();
+                        AddSources(curatedSources, args[++i]);
+                        useCurated = true;
+                        break;
+                    case "--add-curated-source" when i + 1 < args.Length:
+                        AddSources(curatedSources, args[++i]);
+                        useCurated = true;
                         break;
                     case "--reset-sources":
                         supplementalSources.Clear();
@@ -938,7 +1144,7 @@ internal static partial class MimeTypeSyncTool
             output ??= Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "ManagedCode.MimeTypes", "mimeTypes.json"));
             metadataOutput ??= Path.Combine(Path.GetDirectoryName(output)!, "mimeTypes.metadata.json");
 
-            return new SyncOptions(ianaSource, supplementalSources, output, metadataOutput, preferRemote, useIana, skipIanaTemplates, preserveExisting, templateConcurrency);
+            return new SyncOptions(ianaSource, supplementalSources, curatedSources, output, metadataOutput, preferRemote, useIana, useCurated, skipIanaTemplates, preserveExisting, templateConcurrency);
         }
 
         private static void AddSources(List<string> sources, string value)
@@ -954,10 +1160,12 @@ internal static partial class MimeTypeSyncTool
 internal enum MimeSourceKind
 {
     Existing,
+    MimeDb,
     Apache,
     Custom,
     Iana,
-    ExistingPreferred
+    ExistingPreferred,
+    Curated
 }
 
 internal static class MimeSourceKindExtensions
@@ -967,10 +1175,12 @@ internal static class MimeSourceKindExtensions
         return kind switch
         {
             MimeSourceKind.Existing => 0,
-            MimeSourceKind.Apache => 10,
-            MimeSourceKind.Iana => 15,
-            MimeSourceKind.Custom => 20,
+            MimeSourceKind.Iana => 5,
+            MimeSourceKind.MimeDb => 15,
+            MimeSourceKind.Apache => 20,
+            MimeSourceKind.Custom => 30,
             MimeSourceKind.ExistingPreferred => 35,
+            MimeSourceKind.Curated => 40,
             _ => 0
         };
     }
@@ -979,10 +1189,12 @@ internal static class MimeSourceKindExtensions
     {
         return kind switch
         {
+            MimeSourceKind.MimeDb => "mime-db",
             MimeSourceKind.Apache => "apache",
             MimeSourceKind.Custom => "custom",
             MimeSourceKind.Iana => "iana",
             MimeSourceKind.ExistingPreferred => "existing",
+            MimeSourceKind.Curated => "curated",
             _ => "existing"
         };
     }

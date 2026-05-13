@@ -29,12 +29,26 @@ public class MimeMetadataTests
     }
 
     [Fact]
+    public void TryGetMimeTypeInfoByExtension_ShouldPreferEffectiveMappingOverRawTemplateExtension()
+    {
+        var effectiveMime = MimeHelper.GetMimeType("diagram.mmd");
+
+        effectiveMime.ShouldBe("application/vnd.chipnuts.karaoke-mmd");
+        MimeHelper.TryGetMimeTypeInfoByExtension("diagram.mmd", out var info).ShouldBeTrue();
+        info.Mime.ShouldBe(effectiveMime);
+    }
+
+    [Fact]
     public void GetKnownMimeTypes_ShouldIncludeIanaAndSupplementalMetadata()
     {
         var known = MimeHelper.GetKnownMimeTypes();
 
         known.ShouldContain(static info => info.Mime == "application/pdf" && info.IsIanaRegistered);
         known.ShouldContain(static info => info.Mime == "application/x-7z-compressed" && !info.IsIanaRegistered && info.Source == "apache");
+        known.ShouldContain(static info => info.Mime == "application/x-powershell" && !info.IsIanaRegistered && info.Source == "curated");
+        known.ShouldContain(static info => info.Mime == "text/event-stream" && !info.IsIanaRegistered && info.Source == "curated" && info.Extensions.Contains(".event_stream"));
+        known.ShouldContain(static info => info.Mime == "application/vnd.mermaid" && info.IsIanaRegistered && info.Extensions.Contains(".mermaid"));
+        known.ShouldContain(static info => info.Mime == "text/vnd.typst" && info.IsIanaRegistered && info.Extensions.Contains(".typ"));
     }
 
     [Fact]

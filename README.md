@@ -18,19 +18,21 @@ MIME (Multipurpose Internet Mail Extensions) values describe the media type of a
  workflows, messaging protocols and countless integrations. Unfortunately the canonical values are long strings, which makes code
  prone to typos and hard to validate.
 
-`ManagedCode.MimeTypes` ships a generated helper with official MIME data sourced from the [IANA media types registry](https://www.iana.org/assignments/media-types/)
-and [Apache's canonical `mime.types` list](https://github.com/apache/httpd/blob/trunk/docs/conf/mime.types), runtime registration APIs and rich helpers for detecting and
+`ManagedCode.MimeTypes` ships a generated helper with official MIME data sourced from the [IANA media types registry](https://www.iana.org/assignments/media-types/),
+[Apache's canonical `mime.types` list](https://github.com/apache/httpd/blob/trunk/docs/conf/mime.types), supplemental gap-fill data from
+[mime-db](https://github.com/jshttp/mime-db) and documented compatibility overrides in `ManagedCode.MimeTypes.Sync/curatedMimeTypes.json`,
+runtime registration APIs and rich helpers for detecting and
  categorising data by content.
 
 ## Feature overview
-* Generated extension → MIME map based on the official IANA registry plus Apache's maintained `mime.types` coverage.
+* Generated extension → MIME map based on the official IANA registry plus Apache's maintained `mime.types` coverage, mime-db gap-fill entries and curated compatibility mappings.
 * Generated MIME metadata API for IANA registration status, template URLs, references, extensions, intended usage and parseable magic-number prefixes.
 * Reverse lookup API that returns the extensions known for a given MIME value.
 * Runtime registration/unregistration so applications can plug in custom corporate formats.
 * Content sniffing for common file signatures (PDF, PNG, JPEG, GIF, WebP, MP4, ZIP/OOXML, ODF, APK, etc.) so applications can verify whether bytes match the claimed type, with graceful handling of short or empty streams.
 * Extended categorisation enum covering document, audio/video, script, binary, multipart and message families with convenience predicates.
 * Safe-by-default mutation model powered by immutable dictionaries, configurable fallback MIME via `MimeHelper.SetDefaultMimeType`, and an `IMimeHelper` abstraction (`MimeHelper.Instance`) for DI scenarios.
-* CLI utility to refresh `mimeTypes.json` and `mimeTypes.metadata.json` from IANA and Apache.
+* CLI utility to refresh `mimeTypes.json` and `mimeTypes.metadata.json` from IANA, Apache, mime-db and curated compatibility mappings.
 
 ## Quick start
 ```csharp
@@ -73,12 +75,15 @@ var fallback = helper.GetMimeType("file.unknownext");             // application
 
 ## Keeping the database fresh
 A small console utility is included to synchronise `mimeTypes.json` and `mimeTypes.metadata.json` with the IANA media types registry,
-Apache's canonical `mime.types` list and no unverified third-party MIME database. The scheduled GitHub Actions workflow runs weekly,
+Apache's canonical `mime.types` list, mime-db gap-fill entries and curated compatibility mappings from
+`ManagedCode.MimeTypes.Sync/curatedMimeTypes.json`. The scheduled GitHub Actions workflow runs weekly,
 validates the generated database with tests, bumps the package patch version when MIME data changes and opens a pull request whenever new
-official MIME definitions are published.
+MIME definitions are published.
 
 The IANA templates include useful metadata such as file extensions, references, intended usage and magic-number descriptions. When a magic
 number is a fixed byte prefix, the sync tool stores it as parseable metadata so content detectors can be added and tested without guessing.
+For extension lookup conflicts, curated compatibility mappings and maintained server/runtime maps take precedence over raw IANA template
+extension hints, while IANA remains the source of registration metadata.
 
 ```bash
 # Update the data file in-place
@@ -92,6 +97,10 @@ DOTNET_CLI_TELEMETRY_OPTOUT=1 dotnet run --project ManagedCode.MimeTypes.Sync --
 
 # Preserve an existing local map only when intentionally carrying compatibility data forward
 dotnet run --project ManagedCode.MimeTypes.Sync -- --preserve-existing --prefer-remote
+
+# Disable or replace the curated compatibility layer for policy experiments
+dotnet run --project ManagedCode.MimeTypes.Sync -- --no-curated
+dotnet run --project ManagedCode.MimeTypes.Sync -- --curated-source ./my-curated-mime-types.json
 ```
 
 Running the tool re-generates the JSON file, which in turn updates the generated helper during the next build.

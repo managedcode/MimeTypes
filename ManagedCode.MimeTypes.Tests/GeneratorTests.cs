@@ -15,6 +15,8 @@ public class GeneratorTests
         MimeHelper.GetMimeType("C:\\\\users\\file.txt").ShouldBe(MimeHelper.TXT);
         MimeHelper.GetMimeType("https://cdn.example.com/assets/image.png?version=1").ShouldBe(MimeHelper.PNG);
         MimeHelper.GetMimeType("ARCHIVE.TAR.GZ").ShouldBe(MimeHelper.GZ);
+        MimeHelper.GetMimeType("module.d.ts").ShouldBe(MimeHelper.D_TS);
+        MimeHelper.GetMimeType("events.event_stream").ShouldBe(MimeHelper.EVENT_STREAM);
     }
 
     [Fact]
@@ -29,11 +31,13 @@ public class GeneratorTests
     public void GeneratedPropertiesTest()
     {
         // Test static properties generated from mimeTypes.json
+        const string eventStreamMime = "text/event-stream";
         MimeHelper.PDF.ShouldBe(MimeHelper.GetMimeType(".pdf"));
         MimeHelper.DOCX.ShouldBe(MimeHelper.GetMimeType(".docx"));
         MimeHelper.PNG.ShouldBe(MimeHelper.GetMimeType(".png"));
         MimeHelper.MP4.ShouldBe(MimeHelper.GetMimeType(".mp4"));
         MimeHelper._7Z.ShouldBe(MimeHelper.GetMimeType(".7z"));
+        MimeHelper.EVENT_STREAM.ShouldBe(eventStreamMime);
     }
 
     [Fact]
@@ -43,6 +47,30 @@ public class GeneratorTests
         MimeHelper.GetMimeType(".pdf").ShouldBe(MimeHelper.PDF);
         MimeHelper.GetMimeType(".docx").ShouldBe(MimeHelper.DOCX);
         MimeHelper.GetMimeType(".7z").ShouldBe(MimeHelper._7Z);
+    }
+
+    [Theory]
+    [InlineData("index.html", "text/html")]
+    [InlineData("data.json", "application/json")]
+    [InlineData("feed.xml", "application/xml")]
+    [InlineData("clip.mp4", "video/mp4")]
+    [InlineData("song.mid", "audio/midi")]
+    [InlineData("audio.aac", "audio/aac")]
+    [InlineData("track.cda", "application/x-cdf")]
+    [InlineData("index.php", "application/x-httpd-php")]
+    public void CommonWebExtensions_ShouldPreferConventionalMappings(string fileName, string expectedMime)
+    {
+        MimeHelper.GetMimeType(fileName).ShouldBe(expectedMime);
+    }
+
+    [Theory]
+    [InlineData("diagram.mermaid", "application/vnd.mermaid")]
+    [InlineData("document.typ", "text/vnd.typst")]
+    [InlineData("notes.rst", "text/prs.fallenstein.rst")]
+    [InlineData("picture.hsj2", "image/hsj2")]
+    public void NumberedIanaTemplateExtensions_ShouldBeAvailable(string fileName, string expectedMime)
+    {
+        MimeHelper.GetMimeType(fileName).ShouldBe(expectedMime);
     }
 
     [Fact]

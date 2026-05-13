@@ -126,14 +126,14 @@ public static partial class MimeHelper
                 continue;
             }
 
-            if (MimeTypeInfosByExtension.TryGetValue(normalized, out var found))
+            if (MimeTypes.TryGetValue(normalized, out var mime) && TryGetMimeTypeInfo(mime, out info))
             {
-                info = found;
                 return true;
             }
 
-            if (MimeTypes.TryGetValue(normalized, out var mime) && TryGetMimeTypeInfo(mime, out info))
+            if (MimeTypeInfosByExtension.TryGetValue(normalized, out var found))
             {
+                info = found;
                 return true;
             }
         }
