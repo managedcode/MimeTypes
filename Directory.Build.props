@@ -17,8 +17,8 @@
     <RepositoryUrl>https://github.com/managedcode/MimeTypes</RepositoryUrl>
     <PackageProjectUrl>https://github.com/managedcode/MimeTypes</PackageProjectUrl>
     <Product>Managed Code - MimeTypes</Product>
-    <Version>10.0.5</Version>
-    <PackageVersion>10.0.5</PackageVersion>
+    <Version>10.0.6</Version>
+    <PackageVersion>10.0.6</PackageVersion>
 
 </PropertyGroup>
 <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
