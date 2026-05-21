@@ -1,5 +1,6 @@
 using System;
 using System.Buffers;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,9 +11,9 @@ public static partial class MimeHelper
 {
     private readonly record struct MagicSignature(byte[] Signature, string Mime, int Offset = 0);
 
-    private static readonly MagicSignature[] MagicSignatures =
+    private static readonly MagicSignature[] BuiltInMagicSignatures =
     {
-        new([0x25, 0x50, 0x44, 0x46], "application/pdf"),
+        new([0x25, 0x50, 0x44, 0x46, 0x2D], "application/pdf"),
         new([0xFF, 0xD8, 0xFF], "image/jpeg"),
         new([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A], "image/png"),
         new([0x47, 0x49, 0x46, 0x38], "image/gif"),
@@ -38,7 +39,9 @@ public static partial class MimeHelper
         new([0x3C, 0x00, 0x3F, 0x00], "text/xml", 0)
     };
 
-    private static readonly int MaxSignatureLength = MagicSignatures.Max(static signature => signature.Offset + signature.Signature.Length);
+    private static readonly int BuiltInMaxSignatureLength = BuiltInMagicSignatures.Max(static signature => signature.Offset + signature.Signature.Length);
+    private static MagicSignature[] RegistryMagicSignatures = Array.Empty<MagicSignature>();
+    private static int MaxContentSniffLength = Math.Max(BuiltInMaxSignatureLength, ZipProbeLength);
     private static readonly byte[] RiffSignature = [0x52, 0x49, 0x46, 0x46];
     private static readonly byte[] WebpFourCC = [0x57, 0x45, 0x42, 0x50];
     private static readonly byte[] AviFourCC = [0x41, 0x56, 0x49, 0x20];
@@ -65,7 +68,18 @@ public static partial class MimeHelper
     private static readonly byte[] RarSignature = [0x52, 0x61, 0x72, 0x21];
     private static readonly byte[] MzSignature = [0x4D, 0x5A, 0x90, 0x00];
     private static readonly byte[] RtfSignature = [0x7B, 0x5C, 0x72, 0x74];
-    private static readonly int MaxContentSniffLength = Math.Max(MaxSignatureLength, ZipProbeLength);
+
+    private static void RefreshContentDetectionSignatures()
+    {
+        var registrySignatures = BuildRegistryMagicSignatures();
+        RegistryMagicSignatures = registrySignatures;
+
+        var maxRegistryLength = registrySignatures.Length == 0
+            ? 0
+            : registrySignatures.Max(static signature => signature.Offset + signature.Signature.Length);
+
+        MaxContentSniffLength = Math.Max(Math.Max(BuiltInMaxSignatureLength, maxRegistryLength), ZipProbeLength);
+    }
 
     /// <summary>
     /// Detects the MIME type of a file by inspecting its binary signature.
@@ -75,13 +89,25 @@ public static partial class MimeHelper
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null.</exception>
     public static string GetMimeTypeByContent(string filePath)
     {
+        return TryGetMimeTypeByContent(filePath, out var mime) ? mime : DefaultMimeType;
+    }
+
+    /// <summary>
+    /// Attempts to detect the MIME type of a file by inspecting its binary signature.
+    /// </summary>
+    /// <param name="filePath">The path to the file whose content should be analysed.</param>
+    /// <param name="mime">The detected MIME type when the call succeeds; otherwise <see cref="DefaultMimeType"/>.</param>
+    /// <returns><c>true</c> when a known content signature matches; otherwise <c>false</c>.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null.</exception>
+    public static bool TryGetMimeTypeByContent(string filePath, out string mime)
+    {
         if (filePath == null)
         {
             throw new ArgumentNullException(nameof(filePath));
         }
 
         using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-        return GetMimeTypeByContent(fileStream);
+        return TryGetMimeTypeByContent(fileStream, out mime);
     }
 
     /// <summary>
@@ -92,11 +118,24 @@ public static partial class MimeHelper
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="fileStream"/> is null.</exception>
     public static string GetMimeTypeByContent(Stream fileStream)
     {
+        return TryGetMimeTypeByContent(fileStream, out var mime) ? mime : DefaultMimeType;
+    }
+
+    /// <summary>
+    /// Attempts to detect the MIME type of a stream by inspecting its initial bytes.
+    /// </summary>
+    /// <param name="fileStream">The stream whose content should be analysed.</param>
+    /// <param name="mime">The detected MIME type when the call succeeds; otherwise <see cref="DefaultMimeType"/>.</param>
+    /// <returns><c>true</c> when a known content signature matches; otherwise <c>false</c>.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="fileStream"/> is null.</exception>
+    public static bool TryGetMimeTypeByContent(Stream fileStream, out string mime)
+    {
         if (fileStream == null)
         {
             throw new ArgumentNullException(nameof(fileStream));
         }
 
+        mime = DefaultMimeType;
         var buffer = ArrayPool<byte>.Shared.Rent(MaxContentSniffLength);
         long? position = null;
 
@@ -116,12 +155,18 @@ public static partial class MimeHelper
 
             if (bytesRead <= 0)
             {
-                return DefaultMimeType;
+                return false;
             }
 
             var header = new ReadOnlySpan<byte>(buffer, 0, bytesRead);
             var detected = DetectMimeType(header);
-            return detected ?? DefaultMimeType;
+            if (detected == null)
+            {
+                return false;
+            }
+
+            mime = detected;
+            return true;
         }
         finally
         {
@@ -132,6 +177,132 @@ public static partial class MimeHelper
 
             ArrayPool<byte>.Shared.Return(buffer, true);
         }
+    }
+
+    /// <summary>
+    /// Determines whether a file's content signature matches the expected MIME type.
+    /// </summary>
+    /// <param name="filePath">The path to the file whose content should be analysed.</param>
+    /// <param name="expectedMime">The MIME type expected for the file content.</param>
+    /// <returns><c>true</c> when content detection succeeds and matches <paramref name="expectedMime"/>; otherwise <c>false</c>.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null.</exception>
+    public static bool MatchesMimeTypeByContent(string filePath, string expectedMime)
+    {
+        if (filePath == null)
+        {
+            throw new ArgumentNullException(nameof(filePath));
+        }
+
+        using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        return MatchesMimeTypeByContent(fileStream, expectedMime);
+    }
+
+    /// <summary>
+    /// Determines whether a stream's content signature matches the expected MIME type.
+    /// </summary>
+    /// <param name="fileStream">The stream whose content should be analysed.</param>
+    /// <param name="expectedMime">The MIME type expected for the stream content.</param>
+    /// <returns><c>true</c> when content detection succeeds and matches <paramref name="expectedMime"/>; otherwise <c>false</c>.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="fileStream"/> is null.</exception>
+    public static bool MatchesMimeTypeByContent(Stream fileStream, string expectedMime)
+    {
+        if (fileStream == null)
+        {
+            throw new ArgumentNullException(nameof(fileStream));
+        }
+
+        return !string.IsNullOrWhiteSpace(expectedMime) &&
+            TryGetMimeTypeByContent(fileStream, out var detectedMime) &&
+            IsSameMimeType(detectedMime, expectedMime);
+    }
+
+    /// <summary>
+    /// Determines whether a file's content signature matches the MIME type implied by its extension.
+    /// </summary>
+    /// <param name="filePath">The file path whose extension and content should be compared.</param>
+    /// <returns><c>true</c> when the file has a known extension and its content signature matches that MIME type; otherwise <c>false</c>.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="filePath"/> is null.</exception>
+    public static bool MatchesExtensionByContent(string filePath)
+    {
+        if (filePath == null)
+        {
+            throw new ArgumentNullException(nameof(filePath));
+        }
+
+        return TryGetMappedMimeType(filePath, out var expectedMime) &&
+            MatchesMimeTypeByContent(filePath, expectedMime);
+    }
+
+    /// <summary>
+    /// Determines whether a stream's content signature matches the MIME type implied by a file name or extension.
+    /// </summary>
+    /// <param name="fileName">A file name, URI, or extension used to resolve the expected MIME type.</param>
+    /// <param name="fileStream">The stream whose content should be analysed.</param>
+    /// <returns><c>true</c> when the name has a known extension and the content signature matches that MIME type; otherwise <c>false</c>.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="fileStream"/> is null.</exception>
+    public static bool MatchesExtensionByContent(string? fileName, Stream fileStream)
+    {
+        if (fileStream == null)
+        {
+            throw new ArgumentNullException(nameof(fileStream));
+        }
+
+        return TryGetMappedMimeType(fileName, out var expectedMime) &&
+            MatchesMimeTypeByContent(fileStream, expectedMime);
+    }
+
+    private static MagicSignature[] BuildRegistryMagicSignatures()
+    {
+        var candidates = new List<MagicSignature>();
+        foreach (var info in MimeTypeInfos.Values)
+        {
+            foreach (var signature in info.MagicSignatures)
+            {
+                if (signature.Offset < 0 || !signature.IsBytePrefix)
+                {
+                    continue;
+                }
+
+                candidates.Add(new MagicSignature(signature.Bytes.ToArray(), info.Mime, signature.Offset));
+            }
+        }
+
+        if (candidates.Count == 0)
+        {
+            return Array.Empty<MagicSignature>();
+        }
+
+        var mimeBySignature = new Dictionary<string, string>(StringComparer.Ordinal);
+        var conflictingSignatures = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var signature in candidates)
+        {
+            var key = CreateSignatureKey(signature);
+            if (mimeBySignature.TryGetValue(key, out var existingMime))
+            {
+                if (!string.Equals(existingMime, signature.Mime, StringComparison.OrdinalIgnoreCase))
+                {
+                    conflictingSignatures.Add(key);
+                }
+
+                continue;
+            }
+
+            mimeBySignature.Add(key, signature.Mime);
+        }
+
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        return candidates
+            .Where(signature => !conflictingSignatures.Contains(CreateSignatureKey(signature)))
+            .Where(signature => seen.Add(CreateSignatureKey(signature) + "|" + signature.Mime))
+            .OrderByDescending(static signature => signature.Signature.Length)
+            .ThenByDescending(static signature => signature.Offset)
+            .ThenBy(static signature => signature.Mime, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+    }
+
+    private static string CreateSignatureKey(MagicSignature signature)
+    {
+        return string.Concat(signature.Offset.ToString(System.Globalization.CultureInfo.InvariantCulture), ":", Convert.ToHexString(signature.Signature));
     }
 
     private static int ReadUpTo(Stream stream, byte[] buffer, int count)
@@ -153,7 +324,14 @@ public static partial class MimeHelper
 
     private static string? DetectMimeType(ReadOnlySpan<byte> header)
     {
-        foreach (var signature in MagicSignatures)
+        return DetectMagicSignature(header, BuiltInMagicSignatures) ??
+            DetectComplexSignature(header) ??
+            DetectMagicSignature(header, RegistryMagicSignatures);
+    }
+
+    private static string? DetectMagicSignature(ReadOnlySpan<byte> header, IReadOnlyList<MagicSignature> signatures)
+    {
+        foreach (var signature in signatures)
         {
             if (header.Length < signature.Offset + signature.Signature.Length)
             {
@@ -166,7 +344,12 @@ public static partial class MimeHelper
             }
         }
 
-        return DetectComplexSignature(header);
+        return null;
+    }
+
+    private static bool IsSameMimeType(string detectedMime, string expectedMime)
+    {
+        return string.Equals(detectedMime.Trim(), expectedMime.Trim(), StringComparison.OrdinalIgnoreCase);
     }
 
     private static string? DetectComplexSignature(ReadOnlySpan<byte> header)

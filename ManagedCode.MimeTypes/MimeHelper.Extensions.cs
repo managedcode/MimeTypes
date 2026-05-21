@@ -40,26 +40,7 @@ public static partial class MimeHelper
     /// <returns>A MIME type string, or <see cref="DefaultMimeType"/> if no mapping is found.</returns>
     public static string GetMimeType(string? value)
     {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return DefaultMimeType;
-        }
-
-        foreach (var candidate in EnumerateExtensionCandidates(value!))
-        {
-            var normalized = NormalizeExtensionKey(candidate);
-            if (normalized.Length == 0)
-            {
-                continue;
-            }
-
-            if (MimeTypes.TryGetValue(normalized, out var mime))
-            {
-                return mime;
-            }
-        }
-
-        return DefaultMimeType;
+        return TryGetMappedMimeType(value, out var mime) ? mime : DefaultMimeType;
     }
 
     /// <summary>
@@ -389,6 +370,33 @@ public static partial class MimeHelper
         {
             yield return sanitized;
         }
+    }
+
+    private static bool TryGetMappedMimeType(string? value, out string mime)
+    {
+        mime = DefaultMimeType;
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return false;
+        }
+
+        foreach (var candidate in EnumerateExtensionCandidates(value!))
+        {
+            var normalized = NormalizeExtensionKey(candidate);
+            if (normalized.Length == 0)
+            {
+                continue;
+            }
+
+            if (MimeTypes.TryGetValue(normalized, out var foundMime))
+            {
+                mime = foundMime;
+                return true;
+            }
+        }
+
+        mime = DefaultMimeType;
+        return false;
     }
 
     private static string NormalizeExtensionKey(string extension)

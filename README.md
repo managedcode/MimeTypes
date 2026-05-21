@@ -29,7 +29,7 @@ runtime registration APIs and rich helpers for detecting and
 * Generated MIME metadata API for IANA registration status, template URLs, references, extensions, intended usage and parseable magic-number prefixes.
 * Reverse lookup API that returns the extensions known for a given MIME value.
 * Runtime registration/unregistration so applications can plug in custom corporate formats.
-* Content sniffing for common file signatures (PDF, PNG, JPEG, GIF, WebP, MP4, ZIP/OOXML, ODF, APK, etc.) so applications can verify whether bytes match the claimed type, with graceful handling of short or empty streams.
+* Content sniffing for common file signatures (PDF, PNG, JPEG, GIF, WebP, MP4, ZIP/OOXML, ODF, APK, etc.) plus parseable registry magic-number prefixes so applications can verify whether bytes match the claimed type, with graceful handling of short or empty streams.
 * Extended categorisation enum covering document, audio/video, script, binary, multipart and message families with convenience predicates.
 * Safe-by-default mutation model powered by immutable dictionaries, configurable fallback MIME via `MimeHelper.SetDefaultMimeType`, and an `IMimeHelper` abstraction (`MimeHelper.Instance`) for DI scenarios.
 * CLI utility to refresh `mimeTypes.json` and `mimeTypes.metadata.json` from IANA, Apache, mime-db and curated compatibility mappings.
@@ -45,6 +45,9 @@ var image = MimeHelper.GetMimeType("avatar.png");                // image/png
 // Content-based detection
 using var stream = File.OpenRead("report.pdf");
 var detected = MimeHelper.GetMimeTypeByContent(stream);           // application/pdf
+var known = MimeHelper.TryGetMimeTypeByContent(stream, out var contentMime);
+var validPdf = MimeHelper.MatchesMimeTypeByContent(stream, MimeHelper.PDF);
+var extensionMatches = MimeHelper.MatchesExtensionByContent("report.pdf", stream);
 
 // Categorisation helpers
 if (MimeHelper.IsDocument(detected))

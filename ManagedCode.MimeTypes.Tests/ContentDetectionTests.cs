@@ -17,6 +17,22 @@ public class ContentDetectionTests
     }
 
     [Fact]
+    public void IncompletePdfHeader_ShouldNotBeDetected()
+    {
+        var bytes = Encoding.ASCII.GetBytes("%PDFx");
+
+        Detect(bytes).ShouldBe(MimeHelper.BIN);
+    }
+
+    [Fact]
+    public void MetadataMagicSignature_ShouldBeDetected()
+    {
+        var fdfBytes = Encoding.ASCII.GetBytes("%FDF-1.2\n");
+
+        Detect(fdfBytes).ShouldBe("application/fdf");
+    }
+
+    [Fact]
     public void PngHeader_ShouldBeDetected()
     {
         var pngBytes = new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00 };
@@ -78,6 +94,26 @@ public class ContentDetectionTests
     }
 
     [Fact]
+    public void TryGetMimeTypeByContent_ShouldReturnFalseWhenNoSignatureMatches()
+    {
+        using var stream = new MemoryStream(new byte[] { 0x01, 0x02 });
+
+        MimeHelper.TryGetMimeTypeByContent(stream, out var mime).ShouldBeFalse();
+        mime.ShouldBe(MimeHelper.BIN);
+        stream.Position.ShouldBe(0);
+    }
+
+    [Fact]
+    public void TryGetMimeTypeByContent_ShouldReturnTrueWhenSignatureMatches()
+    {
+        using var stream = new MemoryStream(Encoding.ASCII.GetBytes("%PDF-2.0\n"));
+
+        MimeHelper.TryGetMimeTypeByContent(stream, out var mime).ShouldBeTrue();
+        mime.ShouldBe(MimeHelper.PDF);
+        stream.Position.ShouldBe(0);
+    }
+
+    [Fact]
     public void FilePathOverload_ShouldDetect()
     {
         var pdfBytes = Encoding.ASCII.GetBytes("%PDF-2.0\n");
@@ -86,6 +122,49 @@ public class ContentDetectionTests
         {
             File.WriteAllBytes(tempFile, pdfBytes);
             MimeHelper.GetMimeTypeByContent(tempFile).ShouldBe(MimeHelper.PDF);
+        }
+        finally
+        {
+            File.Delete(tempFile);
+        }
+    }
+
+    [Fact]
+    public void MatchesMimeTypeByContent_ShouldValidateExpectedMime()
+    {
+        using var stream = new MemoryStream(Encoding.ASCII.GetBytes("%PDF-2.0\n"));
+
+        MimeHelper.MatchesMimeTypeByContent(stream, MimeHelper.PDF).ShouldBeTrue();
+        stream.Position.ShouldBe(0);
+
+        MimeHelper.MatchesMimeTypeByContent(stream, MimeHelper.PNG).ShouldBeFalse();
+        stream.Position.ShouldBe(0);
+    }
+
+    [Fact]
+    public void MatchesExtensionByContent_ShouldValidateFileNameAgainstStream()
+    {
+        using var stream = new MemoryStream(Encoding.ASCII.GetBytes("%PDF-2.0\n"));
+
+        MimeHelper.MatchesExtensionByContent("report.pdf", stream).ShouldBeTrue();
+        stream.Position.ShouldBe(0);
+
+        MimeHelper.MatchesExtensionByContent("report.png", stream).ShouldBeFalse();
+        stream.Position.ShouldBe(0);
+    }
+
+    [Fact]
+    public void MatchesExtensionByContent_ShouldValidateFilePathAgainstContent()
+    {
+        var tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".pdf");
+        try
+        {
+            File.WriteAllBytes(tempFile, Encoding.ASCII.GetBytes("%PDF-2.0\n"));
+
+            MimeHelper.MatchesExtensionByContent(tempFile).ShouldBeTrue();
+
+            File.WriteAllBytes(tempFile, new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A });
+            MimeHelper.MatchesExtensionByContent(tempFile).ShouldBeFalse();
         }
         finally
         {

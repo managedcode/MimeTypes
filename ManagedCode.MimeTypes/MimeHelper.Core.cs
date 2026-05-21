@@ -30,6 +30,7 @@ public static partial class MimeHelper
     static MimeHelper()
     {
         Init();
+        RefreshContentDetectionSignatures();
         Volatile.Write(ref _defaultMimeType, string.Intern(BIN));
         RefreshScriptMimeSet();
     }
