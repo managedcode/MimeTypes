@@ -26,7 +26,7 @@ public class GeneratorTests
         MimeHelper.GetMimeType("     ").ShouldBe(MimeHelper.BIN);
         MimeHelper.GetMimeType(null as string).ShouldBe(MimeHelper.BIN);
     }
-    
+
     [Fact]
     public void GeneratedPropertiesTest()
     {

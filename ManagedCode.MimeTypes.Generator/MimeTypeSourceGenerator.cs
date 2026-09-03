@@ -1,10 +1,10 @@
 using System;
+using System.Collections.Immutable;
 using System.IO;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 
@@ -14,8 +14,16 @@ namespace ManagedCode.MimeTypes.Generator;
 /// Emits source that bootstraps MIME mappings and exposes typed constants for each extension.
 /// </summary>
 [Generator]
-public class MimeTypeSourceGenerator : ISourceGenerator
+public sealed class MimeTypeSourceGenerator : IIncrementalGenerator
 {
+    private static readonly DiagnosticDescriptor MimeTypesMissingDiagnostic = new(
+        "MIME001",
+        "MIME catalog input is missing",
+        "Exactly one mimeTypes.json AdditionalFile is required",
+        "MimeTypes",
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
     private static readonly DiagnosticDescriptor MimeTypesLoadedDiagnostic = new(
         "MIME002",
         "MimeTypes loaded",
@@ -24,47 +32,52 @@ public class MimeTypeSourceGenerator : ISourceGenerator
         DiagnosticSeverity.Info,
         isEnabledByDefault: true);
 
-    /// <inheritdoc />
-    public void Initialize(GeneratorInitializationContext context)
-    {
-#if DEBUG
-        if (!Debugger.IsAttached)
-        {
-            Debugger.Launch();
-        }
-#endif
-    }
+    private static readonly DiagnosticDescriptor GeneratorErrorDiagnostic = new(
+        "MIME003",
+        "MIME source generation failed",
+        "Error generating MIME types: {0}",
+        "MimeTypes",
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
 
     /// <inheritdoc />
-    public void Execute(GeneratorExecutionContext context)
+    public void Initialize(IncrementalGeneratorInitializationContext context)
+    {
+        var mimeTypes = context.AdditionalTextsProvider
+            .Where(static file => string.Equals(Path.GetFileName(file.Path), "mimeTypes.json", StringComparison.OrdinalIgnoreCase))
+            .Select(static (file, cancellationToken) => file.GetText(cancellationToken)?.ToString())
+            .Collect();
+
+        var metadata = context.AdditionalTextsProvider
+            .Where(static file => string.Equals(Path.GetFileName(file.Path), "mimeTypes.metadata.json", StringComparison.OrdinalIgnoreCase))
+            .Select(static (file, cancellationToken) => file.GetText(cancellationToken)?.ToString())
+            .Collect();
+
+        context.RegisterSourceOutput(
+            mimeTypes.Combine(metadata),
+            static (productionContext, inputs) => Execute(productionContext, inputs.Left, inputs.Right));
+    }
+
+    private static void Execute(
+        SourceProductionContext context,
+        ImmutableArray<string?> mimeTypeSources,
+        ImmutableArray<string?> metadataSources)
     {
         try
         {
-            // Find the mimeTypes.json file
-            var mimeTypesPath = GetMimeTypesPath(context);
-            
-            if (!File.Exists(mimeTypesPath))
+            if (mimeTypeSources.Length != 1 || string.IsNullOrWhiteSpace(mimeTypeSources[0]))
             {
-                context.ReportDiagnostic(Diagnostic.Create(
-                    new DiagnosticDescriptor(
-                        "MIME001",
-                        "MimeTypes.json not found",
-                        "Could not find mimeTypes.json at {0}",
-                        "MimeTypes",
-                        DiagnosticSeverity.Error,
-                        true),
-                    Location.None,
-                    mimeTypesPath));
+                context.ReportDiagnostic(Diagnostic.Create(MimeTypesMissingDiagnostic, Location.None));
                 return;
             }
 
-            var json = File.ReadAllBytes(mimeTypesPath);
-            using var document = JsonDocument.Parse(json);
+            using var document = JsonDocument.Parse(mimeTypeSources[0]!);
 
-            StringBuilder defineDictionaryBuilder = new();
+            StringBuilder mappingBuilder = new();
             StringBuilder metadataBuilder = new();
-            StringBuilder propertyBuilder = new();
-            Dictionary<string, string> types = new(StringComparer.OrdinalIgnoreCase);
+            StringBuilder constantBuilder = new();
+            Dictionary<string, string> mappings = new(StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, string> constants = new(StringComparer.Ordinal);
 
             foreach (var item in document.RootElement.EnumerateObject())
             {
@@ -76,31 +89,40 @@ public class MimeTypeSourceGenerator : ISourceGenerator
                     continue;
                 }
 
-                defineDictionaryBuilder.AppendLine($"RegisterMimeTypeInternal(\"{Escape(extension)}\", \"{Escape(mimeValue)}\");");
-                types[ParseKey(extension)] = mimeValue;
+                mappings[NormalizeExtension(extension)] = mimeValue;
+                constants[ParseKey(extension)] = mimeValue;
             }
 
-            var metadataPath = GetMetadataPath(mimeTypesPath, context);
-            if (File.Exists(metadataPath))
+            if (metadataSources.Length > 1)
             {
-                using var metadataDocument = JsonDocument.Parse(File.ReadAllBytes(metadataPath));
+                throw new InvalidOperationException("Only one mimeTypes.metadata.json AdditionalFile is allowed.");
+            }
+
+            if (metadataSources.Length == 1 && !string.IsNullOrWhiteSpace(metadataSources[0]))
+            {
+                using var metadataDocument = JsonDocument.Parse(metadataSources[0]!);
                 foreach (var item in metadataDocument.RootElement.EnumerateObject())
                 {
                     var initializer = BuildMimeTypeInfoInitializer(item.Name, item.Value);
                     if (initializer.Length > 0)
                     {
-                        metadataBuilder.AppendLine($"RegisterMimeTypeInfoInternal({initializer});");
+                        metadataBuilder.AppendLine($"{initializer},");
                     }
                 }
             }
 
-            foreach (var item in types)
+            foreach (var item in mappings)
             {
-                propertyBuilder.AppendLine($"public static string {item.Key} => \"{Escape(item.Value)}\";");
+                mappingBuilder.AppendLine($"new(\"{Escape(item.Key)}\", \"{Escape(item.Value)}\"),");
             }
 
-            context.ReportDiagnostic(Diagnostic.Create(MimeTypesLoadedDiagnostic, Location.None, types.Count));
-            
+            foreach (var item in constants)
+            {
+                constantBuilder.AppendLine($"public const string {item.Key} = \"{Escape(item.Value)}\";");
+            }
+
+            context.ReportDiagnostic(Diagnostic.Create(MimeTypesLoadedDiagnostic, Location.None, mappings.Count));
+
             context.AddSource("MimeHelper.Properties.cs", SourceText.From(@$"
 using System;
 using System.Collections.Immutable;
@@ -111,80 +133,23 @@ public static partial class MimeHelper
 {{
 static partial void Init()
 {{
-{defineDictionaryBuilder}
+InitializeBuiltInRegistry(
+[
+{mappingBuilder}
+],
+[
 {metadataBuilder}
+]);
 }}
-{propertyBuilder}
+{constantBuilder}
 }}
 }}
 ", Encoding.UTF8));
         }
         catch (Exception ex)
         {
-            context.ReportDiagnostic(Diagnostic.Create(
-                new DiagnosticDescriptor(
-                    "MIME003",
-                    "Generator Error",
-                    "Error generating mime types: {0}",
-                    "MimeTypes",
-                    DiagnosticSeverity.Error,
-                    true),
-                Location.None,
-                ex.ToString()));
+            context.ReportDiagnostic(Diagnostic.Create(GeneratorErrorDiagnostic, Location.None, ex.ToString()));
         }
-    }
-
-    private string GetMimeTypesPath(GeneratorExecutionContext context)
-    {
-        var additionalFile = context.AdditionalFiles.FirstOrDefault(static file =>
-            string.Equals(Path.GetFileName(file.Path), "mimeTypes.json", StringComparison.OrdinalIgnoreCase));
-        if (additionalFile != null)
-        {
-            return additionalFile.Path;
-        }
-
-        // Try to find mimeTypes.json in the project directory
-        var compilation = context.Compilation;
-        var projectDir = Path.GetDirectoryName(compilation.SyntaxTrees.First().FilePath);
-        
-        var possiblePaths = new[]
-        {
-            // Try current directory
-            Path.Combine(Directory.GetCurrentDirectory(), "mimeTypes.json"),
-            // Try project directory
-            Path.Combine(projectDir ?? "", "mimeTypes.json"),
-            // Try one level up (solution directory)
-            Path.Combine(Directory.GetParent(projectDir ?? "")?.FullName ?? "", "mimeTypes.json"),
-            // Try in the Generator project
-            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mimeTypes.json")
-        };
-
-        return possiblePaths.FirstOrDefault(File.Exists) ?? possiblePaths[0];
-    }
-
-    private string GetMetadataPath(string mimeTypesPath, GeneratorExecutionContext context)
-    {
-        var additionalFile = context.AdditionalFiles.FirstOrDefault(static file =>
-            string.Equals(Path.GetFileName(file.Path), "mimeTypes.metadata.json", StringComparison.OrdinalIgnoreCase));
-        if (additionalFile != null)
-        {
-            return additionalFile.Path;
-        }
-
-        var mimeTypesDirectory = Path.GetDirectoryName(mimeTypesPath);
-        var compilation = context.Compilation;
-        var projectDir = Path.GetDirectoryName(compilation.SyntaxTrees.First().FilePath);
-
-        var possiblePaths = new[]
-        {
-            Path.Combine(mimeTypesDirectory ?? "", "mimeTypes.metadata.json"),
-            Path.Combine(Directory.GetCurrentDirectory(), "mimeTypes.metadata.json"),
-            Path.Combine(projectDir ?? "", "mimeTypes.metadata.json"),
-            Path.Combine(Directory.GetParent(projectDir ?? "")?.FullName ?? "", "mimeTypes.metadata.json"),
-            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "mimeTypes.metadata.json")
-        };
-
-        return possiblePaths.FirstOrDefault(File.Exists) ?? possiblePaths[0];
     }
 
     private static string BuildMimeTypeInfoInitializer(string fallbackMime, JsonElement element)
@@ -301,7 +266,7 @@ Offset = {offset.ToString(System.Globalization.CultureInfo.InvariantCulture)}
                 var value = item.GetString();
                 if (!string.IsNullOrWhiteSpace(value))
                 {
-                    values.Add(value);
+                    values.Add(value!);
                 }
             }
         }
@@ -366,6 +331,11 @@ Offset = {offset.ToString(System.Globalization.CultureInfo.InvariantCulture)}
         key = key.Replace("-", "_").Replace('.', '_');
 
         return key.ToUpperInvariant();
+    }
+
+    private static string NormalizeExtension(string extension)
+    {
+        return extension.Trim().TrimStart('.').ToLowerInvariant();
     }
 
     private static string Literal(string? value)

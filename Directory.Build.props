@@ -17,16 +17,16 @@
     <RepositoryUrl>https://github.com/managedcode/MimeTypes</RepositoryUrl>
     <PackageProjectUrl>https://github.com/managedcode/MimeTypes</PackageProjectUrl>
     <Product>Managed Code - MimeTypes</Product>
-    <Version>10.0.13</Version>
-    <PackageVersion>10.0.13</PackageVersion>
+    <Version>10.1.1</Version>
+    <PackageVersion>10.1.1</PackageVersion>
 
 </PropertyGroup>
 <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 </PropertyGroup>
 <ItemGroup>
-    <None Include="$(SolutionDir)\logo.png" Pack="true" Visible="false" PackagePath="\"/>
-    <None Include="$(SolutionDir)\README.md" Pack="true" Visible="false" PackagePath="\"/>
+    <None Include="$(MSBuildThisFileDirectory)logo.png" Pack="true" Visible="false" PackagePath="\"/>
+    <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" Visible="false" PackagePath="\"/>
 </ItemGroup>
 <ItemGroup>
     <PackageReference Update="DotNet.ReproducibleBuilds" Version="1.2.25">

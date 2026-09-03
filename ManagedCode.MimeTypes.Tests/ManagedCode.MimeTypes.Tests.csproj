@@ -15,6 +15,8 @@
         <None Update="xunit.runner.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Include="..\ManagedCode.MimeTypes\mimeTypes.json" Link="mimeTypes.json" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="..\ManagedCode.MimeTypes\mimeTypes.metadata.json" Link="mimeTypes.metadata.json" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1" />
@@ -40,9 +42,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ManagedCode.MimeTypes.Generator\ManagedCode.MimeTypes.Generator.csproj" />
       <ProjectReference Include="..\ManagedCode.MimeTypes\ManagedCode.MimeTypes.csproj" />
       <ProjectReference Include="..\ManagedCode.MimeTypes.Sync\ManagedCode.MimeTypes.Sync.csproj" />
+      <ProjectReference Include="..\ManagedCode.MimeTypes.StartupProbe\ManagedCode.MimeTypes.StartupProbe.csproj" ReferenceOutputAssembly="false" />
     </ItemGroup>
 
 </Project>

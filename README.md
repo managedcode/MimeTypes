@@ -30,6 +30,7 @@ Use it when you need to map file names to MIME types, inspect file content signa
 - [DI-Friendly Adapter](#di-friendly-adapter)
 - [Data Sources](#data-sources)
 - [Refreshing The Catalog](#refreshing-the-catalog)
+- [Initialization And Performance](#initialization-and-performance)
 - [Development](#development)
 
 ## Installation
@@ -336,6 +337,25 @@ dotnet run --project ManagedCode.MimeTypes.Sync -- --curated-source ./my-curated
 ```
 
 Running the tool updates the JSON inputs. The source generator consumes those files on the next build and regenerates the helper constants, mappings, and metadata.
+
+## Initialization And Performance
+
+The JSON catalogs are parsed only by the incremental source generator at build time. Generated names such as `MimeHelper.PNG` and `MimeHelper.PDF` are real `public const string` fields, so using a MIME value does not initialize or parse the registry. On the first lookup/metadata API call, the type initializer builds the generated extension, reverse, and metadata indexes in one batch and publishes static frozen/immutable caches. .NET 10 file-name lookups probe the frozen extension index directly with `ReadOnlySpan<char>`, avoiding temporary extension strings. `GetExtensions` and `GetKnownMimeTypes` reuse cached collections rather than sorting or allocating a new result on each call. `MimeHelper.WarmUp()` is an explicit, idempotent initialization boundary for hosts that want to prime the caches during composition.
+
+Run the catastrophic-regression budgets, including independent cold processes, with:
+
+```bash
+dotnet test ManagedCode.MimeTypes.Tests/ManagedCode.MimeTypes.Tests.csproj \
+    --configuration Release \
+    --filter "Category=Performance"
+```
+
+Run the BenchmarkDotNet suites with:
+
+```bash
+dotnet run --project ManagedCode.MimeTypes.Benchmarks -c Release -- \
+    --filter '*RegistryInitializationBenchmarks*' '*MimeLookupBenchmarks*'
+```
 
 ## Development
 

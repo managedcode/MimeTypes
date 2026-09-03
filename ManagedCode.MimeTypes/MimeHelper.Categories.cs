@@ -90,7 +90,7 @@ public static partial class MimeHelper
     /// </summary>
     /// <param name="mime">The MIME type to classify.</param>
     /// <returns>A <see cref="MimeTypeCategory"/> describing the type.</returns>
-    public static MimeTypeCategory GetMimeCategory(string mime)
+    public static MimeTypeCategory GetMimeCategory(string? mime)
     {
         if (string.IsNullOrWhiteSpace(mime))
         {
