@@ -46,6 +46,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: full-test-results
+        overwrite: true
         path: ./**/TestResults/*.trx
         retention-days: 5
 

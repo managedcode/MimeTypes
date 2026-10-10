@@ -147,7 +147,18 @@ public sealed class MimeHelperPerformanceTests
         result.Allocated.ShouldBeLessThanOrEqualTo(256);
     }
 
-    private (TimeSpan Duration, long Allocated, string Mime) RunStartupProbe(string? input, string runtimeMode)
+    [Fact]
+    [Trait("Category", "Performance")]
+    public void AllocationProbe_ShouldDetectRealManagedAllocations()
+    {
+        var result = RunStartupProbe("assets/photo.png", "default", allocationControl: true);
+
+        result.Mime.ShouldBe("image/png");
+        result.Allocated.ShouldBeGreaterThanOrEqualTo(1024);
+    }
+
+    private (TimeSpan Duration, long Allocated, string Mime) RunStartupProbe(
+        string? input, string runtimeMode, bool allocationControl = false)
     {
         var startInfo = new ProcessStartInfo("dotnet")
         {
@@ -159,6 +170,11 @@ public sealed class MimeHelperPerformanceTests
         if (input != null)
         {
             startInfo.ArgumentList.Add(input);
+        }
+
+        if (allocationControl)
+        {
+            startInfo.ArgumentList.Add("--allocation-control");
         }
 
         if (runtimeMode == "tiered")
