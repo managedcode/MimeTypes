@@ -17,8 +17,8 @@
     <RepositoryUrl>https://github.com/managedcode/MimeTypes</RepositoryUrl>
     <PackageProjectUrl>https://github.com/managedcode/MimeTypes</PackageProjectUrl>
     <Product>Managed Code - MimeTypes</Product>
-    <Version>10.1.1</Version>
-    <PackageVersion>10.1.1</PackageVersion>
+    <Version>10.1.2</Version>
+    <PackageVersion>10.1.2</PackageVersion>
 
 </PropertyGroup>
 <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
@@ -29,7 +29,7 @@
     <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" Visible="false" PackagePath="\"/>
 </ItemGroup>
 <ItemGroup>
-    <PackageReference Update="DotNet.ReproducibleBuilds" Version="1.2.25">
+    <PackageReference Update="DotNet.ReproducibleBuilds" Version="2.0.5">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
