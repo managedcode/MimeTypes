@@ -6,9 +6,9 @@
 [![Release](https://github.com/managedcode/MimeTypes/actions/workflows/release.yml/badge.svg)](https://github.com/managedcode/MimeTypes/actions/workflows/release.yml)
 [![CodeQL](https://github.com/managedcode/MimeTypes/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/managedcode/MimeTypes/actions/workflows/codeql-analysis.yml)
 [![Codecov](https://codecov.io/gh/managedcode/MimeTypes/branch/main/graph/badge.svg)](https://codecov.io/gh/managedcode/MimeTypes)
-[![NuGet](https://img.shields.io/nuget/v/ManagedCode.MimeTypes.svg)](https://www.nuget.org/packages/ManagedCode.MimeTypes)
-[![NuGet downloads](https://img.shields.io/nuget/dt/ManagedCode.MimeTypes.svg)](https://www.nuget.org/packages/ManagedCode.MimeTypes)
-[![License](https://img.shields.io/nuget/l/ManagedCode.MimeTypes.svg)](https://github.com/managedcode/MimeTypes/blob/main/LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/ManagedCode.MimeTypes.svg?style=flat-square&logo=nuget)](https://www.nuget.org/packages/ManagedCode.MimeTypes)
+[![NuGet downloads](https://img.shields.io/nuget/dt/ManagedCode.MimeTypes.svg?style=flat-square&logo=nuget)](https://www.nuget.org/packages/ManagedCode.MimeTypes)
+[![License](https://img.shields.io/github/license/managedcode/MimeTypes.svg?style=flat-square)](https://github.com/managedcode/MimeTypes/blob/main/LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-net8.0%20%7C%20net9.0%20%7C%20net10.0-512bd4.svg)](https://github.com/managedcode/MimeTypes/blob/main/ManagedCode.MimeTypes/ManagedCode.MimeTypes.csproj)
 
 `ManagedCode.MimeTypes` is a generated MIME/media type helper for .NET. It combines the IANA media types registry, Apache's maintained `mime.types` data, mime-db gap-fill entries, curated compatibility overrides, and registry metadata such as template URLs, references, extensions, and parseable magic-number prefixes.
@@ -34,6 +34,8 @@ Use it when you need to map file names to MIME types, inspect file content signa
 - [Development](#development)
 
 ## Installation
+
+Install the latest stable release from [NuGet](https://www.nuget.org/packages/ManagedCode.MimeTypes):
 
 ```bash
 dotnet add package ManagedCode.MimeTypes
