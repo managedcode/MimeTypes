@@ -29,8 +29,13 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
 
-    - name: Test
-      run: dotnet test --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage"
+    - name: Test including performance budgets
+      run: dotnet test --configuration Release --no-build --verbosity normal
+
+    # Coverage instrumentation changes allocations and startup timing. Keep all
+    # performance assertions in the uninstrumented full suite above.
+    - name: Collect functional coverage
+      run: dotnet test --configuration Release --no-build --verbosity normal --filter "Category!=Performance" --collect:"XPlat Code Coverage"
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5
