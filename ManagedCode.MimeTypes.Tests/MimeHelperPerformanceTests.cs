@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Shouldly;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ManagedCode.MimeTypes.Tests;
 
@@ -13,6 +14,12 @@ namespace ManagedCode.MimeTypes.Tests;
 public sealed class MimeHelperPerformanceTests
 {
     private static readonly TimeSpan HotPathBudget = TimeSpan.FromSeconds(2);
+    private readonly ITestOutputHelper _output;
+
+    public MimeHelperPerformanceTests(ITestOutputHelper output)
+    {
+        _output = output;
+    }
 
     [Fact]
     [Trait("Category", "Performance")]
@@ -107,35 +114,80 @@ public sealed class MimeHelperPerformanceTests
     [Trait("Category", "Performance")]
     public void ColdProcessStartup_ShouldStayBelowCatastrophicRegressionBudget()
     {
-        var probe = FindStartupProbe();
         var durations = new List<TimeSpan>();
 
         for (var index = 0; index < 3; index++)
         {
-            var startInfo = new ProcessStartInfo("dotnet")
-            {
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false
-            };
-            startInfo.ArgumentList.Add(probe);
-
-            var stopwatch = Stopwatch.StartNew();
-            using var process = Process.Start(startInfo);
-            process.ShouldNotBeNull();
-            var output = process.StandardOutput.ReadToEnd();
-            var error = process.StandardError.ReadToEnd();
-            process.WaitForExit();
-            stopwatch.Stop();
-
-            process.ExitCode.ShouldBe(0, error);
-            output.Trim().ShouldStartWith("image/png|");
-            var allocated = long.Parse(output.Trim().Split('|')[3], System.Globalization.CultureInfo.InvariantCulture);
-            allocated.ShouldBeLessThanOrEqualTo(256);
-            durations.Add(stopwatch.Elapsed);
+            var result = RunStartupProbe(null, "default");
+            result.Mime.ShouldBe("image/png");
+            result.Allocated.ShouldBeLessThanOrEqualTo(256);
+            durations.Add(result.Duration);
         }
 
         durations.Max().ShouldBeLessThan(TimeSpan.FromSeconds(2));
+    }
+
+    [Theory]
+    [Trait("Category", "Performance")]
+    [InlineData("default", "https://cdn.example.test/assets/photo.png?v=1", "image/png")]
+    [InlineData("tiered", "https://cdn.example.test/assets/photo.png?v=1", "image/png")]
+    [InlineData("optimized", "https://cdn.example.test/assets/photo.png?v=1", "image/png")]
+    [InlineData("default", "png", "image/png")]
+    [InlineData("tiered", "assets/photo.png", "image/png")]
+    [InlineData("tiered", "HTTPS://cdn.example.test/assets/PHOTO.PNG#preview?file=doc.pdf", "image/png")]
+    [InlineData("tiered", "types/module.d.ts", "application/typescript")]
+    [InlineData("optimized", "archive.tar.gz?download=1", "application/gzip")]
+    [InlineData("tiered", "unknown.no-extension", "application/octet-stream")]
+    public void ColdProcessLookups_ShouldPreserveAllocationBudgetAcrossJitModes(
+        string runtimeMode, string input, string expectedMime)
+    {
+        var result = RunStartupProbe(input, runtimeMode);
+
+        result.Mime.ShouldBe(expectedMime);
+        result.Allocated.ShouldBeLessThanOrEqualTo(256);
+    }
+
+    private (TimeSpan Duration, long Allocated, string Mime) RunStartupProbe(string? input, string runtimeMode)
+    {
+        var startInfo = new ProcessStartInfo("dotnet")
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false
+        };
+        startInfo.ArgumentList.Add(FindStartupProbe());
+        if (input != null)
+        {
+            startInfo.ArgumentList.Add(input);
+        }
+
+        if (runtimeMode == "tiered")
+        {
+            startInfo.Environment["DOTNET_TieredCompilation"] = "1";
+            startInfo.Environment["DOTNET_TieredPGO"] = "1";
+            startInfo.Environment["DOTNET_TC_QuickJitForLoops"] = "1";
+            startInfo.Environment["DOTNET_TC_OnStackReplacement"] = "1";
+            startInfo.Environment["DOTNET_TC_CallCountingDelayMs"] = "0";
+        }
+        else if (runtimeMode == "optimized")
+        {
+            startInfo.Environment["DOTNET_TieredCompilation"] = "0";
+        }
+
+        var stopwatch = Stopwatch.StartNew();
+        using var process = Process.Start(startInfo);
+        process.ShouldNotBeNull();
+        var output = process.StandardOutput.ReadToEnd();
+        var error = process.StandardError.ReadToEnd();
+        process.WaitForExit();
+        stopwatch.Stop();
+
+        process.ExitCode.ShouldBe(0, error);
+        var parts = output.Trim().Split('|');
+        parts.Length.ShouldBe(4, output);
+        var allocated = long.Parse(parts[3], System.Globalization.CultureInfo.InvariantCulture);
+        _output.WriteLine($"runtime={runtimeMode}; input={input ?? "default"}; result={output.Trim()}; elapsed={stopwatch.Elapsed}");
+        return (stopwatch.Elapsed, allocated, parts[0]);
     }
 
     private static TimeSpan Measure<T>(int iterations, Func<T> operation)

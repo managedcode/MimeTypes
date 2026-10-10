@@ -32,6 +32,14 @@ jobs:
     - name: Test including performance budgets
       run: dotnet test --configuration Release --no-build --verbosity normal
 
+    - name: Preserve full test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: full-test-results
+        path: ./**/TestResults/*.trx
+        retention-days: 5
+
     # Coverage instrumentation changes allocations and startup timing. Keep all
     # performance assertions in the uninstrumented full suite above.
     - name: Collect functional coverage
