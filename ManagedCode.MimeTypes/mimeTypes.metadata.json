@@ -2318,7 +2318,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/commonground",
     "source": "iana",
     "updated": "2026-10-09",
-    "encodingConsiderations": "Common Ground files are in a binary format. Some encoding will be necessary for MIME mailers as in application/octet-stream. Common Ground files for the Macintosh are encoded in the data fork of a Macintosh file. The file type is APPL, the creator is CGVM.",
     "deprecatedAliases": [],
     "references": [
       "person:David_Glazer"
@@ -3326,10 +3325,6 @@
     "source": "iana",
     "registered": "2018-08-24",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "This is a binary format. The contents are a DNS message as defined in RFC 1035. The format used here is for DNS over UDP, which is the format defined in the diagrams in RFC 1035.",
-    "publishedSpecification": "RFC 8484.",
-    "applications": "Systems that want to exchange full DNS messages.",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc8484"
@@ -3951,6 +3946,10 @@
     "source": "iana",
     "registered": "2015-12-10",
     "updated": "2026-10-09",
+    "intendedUsage": "LIMITED USE",
+    "encodingConsiderations": "Uses XML, which can contain 8-bit characters, depending on the character encoding. See Section 3.2 of RFC 7303 [RFC7303].",
+    "publishedSpecification": "RFC 7852",
+    "applications": "Emergency Services",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc7852"
@@ -6161,6 +6160,8 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/macwriteii",
     "source": "iana",
     "updated": "2026-10-09",
+    "encodingConsiderations": "MacWrite files are encoded in the data fork of a macintosh file. The type creator is MW2D, the file type is MWII. This data is in binary format. Some encoding will be necessary for MIME mailers. MacWrite files that contain external data references such as publish & subscribe services are explicitly not allowed. All such data references should be collected before tranmission.",
+    "publishedSpecification": "None known.",
     "deprecatedAliases": [],
     "references": [
       "person:Paul_Lindner"
@@ -6581,6 +6582,10 @@
     "source": "iana",
     "registered": "2026-02-27",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "binary (CBOR)",
+    "publishedSpecification": "RFC 10013",
+    "applications": "Attesters, Verifiers, and Relying Parties",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc10013"
@@ -6988,13 +6993,18 @@
   },
   "application/mpeg4-generic": {
     "mime": "application/mpeg4-generic",
-    "extensions": [],
+    "extensions": [
+      ".mp4"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/mpeg4-generic",
     "templateUrl": "https://www.iana.org/assignments/media-types/application/mpeg4-generic",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "This MIME subtype is defined for RTP transport only. System bitstreams MUST be generated according to MPEG-4 Systems specifications (ISO/IEC 14496-1). Video bitstreams MUST be generated according to MPEG-4 Visual specifications (ISO/IEC 14496-2). Audio bitstreams MUST be generated according to MPEG-4 Audio specifications (ISO/IEC 14496-3). The RTP packets MUST be packetized according to the RTP payload format defined in RFC 3640.",
+    "publishedSpecification": "The specifications for MPEG-4 streams are presented in ISO/IEC 14496-1, 14496-2, and 14496-3. The RTP payload format is described in RFC 3640.",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc3640"
@@ -7471,13 +7481,18 @@
   },
   "application/ocsp-response": {
     "mime": "application/ocsp-response",
-    "extensions": [],
+    "extensions": [
+      ".ors"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/ocsp-response",
     "templateUrl": "https://www.iana.org/assignments/media-types/application/ocsp-response",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "binary",
+    "publishedSpecification": "IETF PKIX Working Group Draft on Online Certificate Status Protocol - OCSP",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc6960"
@@ -7601,7 +7616,6 @@
   "application/ogg": {
     "mime": "application/ogg",
     "extensions": [
-      ".ogg",
       ".ogx"
     ],
     "isIanaRegistered": true,
@@ -7610,27 +7624,12 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/ogg",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "See section 6 of RFC 5334.",
-    "publishedSpecification": "RFC 3533",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc5334",
       "rfc:rfc7845"
     ],
-    "magicSignatures": [
-      {
-        "raw": "The first four bytes, 0x4f 0x67 0x67 0x53, correspond to the string \"OggS\".",
-        "bytes": [
-          79,
-          103,
-          103,
-          83
-        ],
-        "hex": "4F 67 67 53",
-        "offset": 0
-      }
-    ]
+    "magicSignatures": []
   },
   "application/ohttp-keys": {
     "mime": "application/ohttp-keys",
@@ -8591,7 +8590,9 @@
   },
   "application/prs.archive-markdown-format": {
     "mime": "application/prs.archive-markdown-format",
-    "extensions": [],
+    "extensions": [
+      ".mdz"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/prs.archive-markdown-format",
@@ -8599,6 +8600,9 @@
     "source": "iana",
     "registered": "2026-08-11",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "binary",
+    "publishedSpecification": "This specification is defined in the document \"SPEC.md, Version 1.2.0\", available at:",
     "deprecatedAliases": [],
     "references": [
       "person:Scott_Smith"
@@ -9076,6 +9080,10 @@
     "source": "iana",
     "registered": "2020-02-18",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "Encoding considerations are identical to those specified for the \"application/json\" media type.",
+    "publishedSpecification": "RFC 8801",
+    "applications": "This media type is intended to be used by networks advertising additional Provisioning Domain information, and clients looking up such information.",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc8801"
@@ -9145,6 +9153,10 @@
     "source": "iana",
     "registered": "2015-01-12",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "See Section 3.1 of [RFC6839].",
+    "publishedSpecification": "RFC 9083",
+    "applications": "Implementations of the Registration Data Access Protocol (RDAP).",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc9083"
@@ -9931,10 +9943,7 @@
   },
   "application/sarif+json": {
     "mime": "application/sarif+json",
-    "extensions": [
-      ".sarif",
-      ".sarif.json"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/sarif+json",
@@ -9942,9 +9951,6 @@
     "source": "iana",
     "registered": "2020-09-15",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "Binary: UTF8-encoded text only",
-    "publishedSpecification": "Static Analysis Results Interchange Format (SARIF) Version 2.1.0. Edited by Michael C. Fanning and Laurence J. Golding. 27 March 2020. OASIS Standard.",
     "deprecatedAliases": [],
     "references": [
       "person:Laurence_J._Golding",
@@ -10061,9 +10067,7 @@
   },
   "application/scitt-receipt+cose": {
     "mime": "application/scitt-receipt+cose",
-    "extensions": [
-      ".receipt"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/scitt-receipt+cose",
@@ -10071,10 +10075,6 @@
     "source": "iana",
     "registered": "2025-10-09",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "binary (CBOR data item)",
-    "publishedSpecification": "RFC 9943",
-    "applications": "Used to establish or verify transparency over Statements. Typically emitted by a TS for the benefit of Relying Parties wanting to ensure Non-equivocation over all or part of a Statement Sequence.",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc9943"
@@ -10397,9 +10397,7 @@
   },
   "application/senml-exi": {
     "mime": "application/senml-exi",
-    "extensions": [
-      ".senmle"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/senml-exi",
@@ -10407,10 +10405,6 @@
     "source": "iana",
     "registered": "2018-06-01",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "Must be encoded as using [W3C.REC-exi-20140211]. See RFC 8428 for details.",
-    "publishedSpecification": "RFC 8428",
-    "applications": "The type is used by systems that report, e.g., electrical power usage and environmental information such as temperature and humidity. It can be used for a wide range of sensor reporting systems.",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc8428"
@@ -10552,12 +10546,22 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/session-info",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Limited Use",
+    "encodingConsiderations": "binary",
+    "publishedSpecification": "3GPP TS 29.163 Rel-9(version 9.13.0) (http://www.3gpp.org/ftp/Specs/html-info/29163.htm)",
     "deprecatedAliases": [],
     "references": [
       "person:Dongwook_Kim",
       "person:_3GPP"
     ],
-    "magicSignatures": []
+    "magicSignatures": [
+      {
+        "raw": "none 2. File extension(s) : none 3. Macintosh",
+        "bytes": [],
+        "hex": null,
+        "offset": 0
+      }
+    ]
   },
   "application/set-payment": {
     "mime": "application/set-payment",
@@ -11081,13 +11085,19 @@
   },
   "application/sql": {
     "mime": "application/sql",
-    "extensions": [],
+    "extensions": [
+      ".sql"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/sql",
     "templateUrl": "https://www.iana.org/assignments/media-types/application/sql",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "If the \"charset\" parameter is used, the corresponding 7-bit, 8-bit, or binary encoding may be used. If the \"charset\" parameter is not used, binary encoding may be required.",
+    "publishedSpecification": "The most recent specification of SQL is available in [ISO.9075.2011].",
+    "applications": "Databases and related tools",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc6922"
@@ -11139,9 +11149,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/sru+xml",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "Identical to those of \"application/xml\" as described in [RFC3023].",
-    "publishedSpecification": "[SRU-SCHEMA], [SRU].",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc6207"
@@ -11829,6 +11836,10 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/thraud+xml",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "LIMITED USE",
+    "encodingConsiderations": "same as encoding considerations of application/xml, as specified in [RFC3023].",
+    "publishedSpecification": "the media type data format is defined in RFC 5941.",
+    "applications": "transaction and authentication fraud analysis and reporting applications, and risk-based transaction and authentication evaluation applications. Additional information",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc5941"
@@ -12527,9 +12538,6 @@
     "source": "iana",
     "registered": "2024-12-09",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "binary binary (CBOR)",
-    "publishedSpecification": "https://www.w3.org/TR/vc-jose-cose/",
     "deprecatedAliases": [],
     "references": [
       "person:Ivan_Herman",
@@ -12710,8 +12718,6 @@
     "source": "iana",
     "registered": "2017-06-06",
     "updated": "2026-10-09",
-    "intendedUsage": "Common Common",
-    "encodingConsiderations": "Same as encoding considerations of application/xml as specified in RFC 7303 section 9.",
     "deprecatedAliases": [],
     "references": [
       "person:Franz_Ombler"
@@ -13304,9 +13310,6 @@
     "source": "iana",
     "registered": "2017-09-06",
     "updated": "2026-10-09",
-    "intendedUsage": "Common see section F.4 of 24.379",
-    "encodingConsiderations": "binary",
-    "publishedSpecification": "3GPP TS 24.379 v13.5.0 available at http://www.3gpp.org/ftp//Specs/archive/24_series/24.379/",
     "deprecatedAliases": [],
     "references": [
       "person:Dongwook_Kim"
@@ -13380,9 +13383,6 @@
     "source": "iana",
     "registered": "2017-08-22",
     "updated": "2026-10-09",
-    "intendedUsage": "Common see section F.2 of 24.379",
-    "encodingConsiderations": "binary",
-    "publishedSpecification": "3GPP TS 24.379 v13.5.0 available at http://www.3gpp.org/ftp//Specs/archive/24_series/24.379/",
     "deprecatedAliases": [],
     "references": [
       "person:Dongwook_Kim"
@@ -13475,9 +13475,6 @@
     "source": "iana",
     "registered": "2018-11-01",
     "updated": "2026-10-09",
-    "intendedUsage": "Common see 3GPP TS 24.484",
-    "encodingConsiderations": "binary",
-    "publishedSpecification": "3GPP TS 24.484 \"Mission Critical Services (MCS) configuration management; Protocol specification\" version 13.8.0, available via http://www.3gpp.org/specs/numbering.htm.",
     "deprecatedAliases": [],
     "references": [
       "person:Dongwook_Kim"
@@ -13879,6 +13876,9 @@
     "source": "iana",
     "registered": "2025-05-05",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "binary",
+    "publishedSpecification": "3GPP TS 24.548 \"Network Resource Management - Service Enabler Architecture Layer for Verticals (SEAL); Protocol specification\" version 18.5.0, available via http://www.3gpp.org/specs/numbering.htm.",
     "deprecatedAliases": [],
     "references": [
       "person:_3GPP"
@@ -14033,6 +14033,9 @@
     "source": "iana",
     "registered": "2025-05-05",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "binary",
+    "publishedSpecification": "3GPP TS 24.548 \"Network Resource Management - Service Enabler Architecture Layer for Verticals (SEAL); Protocol specification\" version 18.5.0, available via http://www.3gpp.org/specs/numbering.htm.",
     "deprecatedAliases": [],
     "references": [
       "person:_3GPP"
@@ -14147,9 +14150,6 @@
     "source": "iana",
     "registered": "2023-03-20",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "binary",
-    "publishedSpecification": "3GPP TS 24.546 \"Configuration management - Service Enabler Architecture Layer for Verticals (SEAL); Protocol specification\" available at",
     "deprecatedAliases": [],
     "references": [
       "person:Sapan_Shah"
@@ -14158,13 +14158,17 @@
   },
   "application/vnd.3gpp.sms": {
     "mime": "application/vnd.3gpp.sms",
-    "extensions": [],
+    "extensions": [
+      ".sms"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.3gpp.sms",
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.3gpp.sms",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common The Short Messaging Service is a very common messaging service available on most mobile networks. The registration of the associated MIME type allows a SMS message to be incorporated in messages from other messaging systems.",
+    "encodingConsiderations": "binary This media type may require encoding on transports not capable of handling binary.",
     "deprecatedAliases": [],
     "references": [
       "person:Dongwook_Kim"
@@ -15147,11 +15151,35 @@
     "source": "iana",
     "registered": "2019-10-14",
     "updated": "2026-10-09",
+    "intendedUsage": "Limited use",
+    "encodingConsiderations": "binary (framed transport)",
+    "publishedSpecification": "As part of \"MO:DCA Reference (Mixed Object Document Content Architecture Reference)\", AFP Consortium publication AFPC-0004-09.",
     "deprecatedAliases": [],
     "references": [
       "person:Jörg_Palmer"
     ],
-    "magicSignatures": []
+    "magicSignatures": [
+      {
+        "raw": "0xD3A892 - Begin Object Container (BOC) Structured Field 0xD3A992 - End Object Container (EOC) Structured Field",
+        "bytes": [
+          211,
+          168,
+          146
+        ],
+        "hex": "D3 A8 92",
+        "offset": 0
+      },
+      {
+        "raw": "0xD3A892 - Begin Object Container (BOC) Structured Field 0xD3A992 - End Object Container (EOC) Structured Field",
+        "bytes": [
+          211,
+          169,
+          146
+        ],
+        "hex": "D3 A9 92",
+        "offset": 0
+      }
+    ]
   },
   "application/vnd.afpc.modca-overlay": {
     "mime": "application/vnd.afpc.modca-overlay",
@@ -15425,12 +15453,27 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.airzip.filesecure.azf",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common Intended for widespread dissemination of FileSECURE secured files.",
+    "encodingConsiderations": "binary This media type may require encoding on transports not capable of handling binary.",
+    "publishedSpecification": "The specifications are proprietary and confidential.",
     "deprecatedAliases": [],
     "references": [
       "person:Daniel_Mould",
       "person:Gary_Clueit"
     ],
-    "magicSignatures": []
+    "magicSignatures": [
+      {
+        "raw": "0x415A4617",
+        "bytes": [
+          65,
+          90,
+          70,
+          23
+        ],
+        "hex": "41 5A 46 17",
+        "offset": 0
+      }
+    ]
   },
   "application/vnd.airzip.filesecure.azs": {
     "mime": "application/vnd.airzip.filesecure.azs",
@@ -16400,13 +16443,17 @@
   },
   "application/vnd.avistar+xml": {
     "mime": "application/vnd.avistar+xml",
-    "extensions": [],
+    "extensions": [
+      ".xml"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.avistar+xml",
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.avistar+xml",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Limited Use",
+    "encodingConsiderations": "binary Applications should always include the encoding declaration and optionally the BOM in MIME entities of this media type. Procedures similar to those described in RFC 3023, sections 8.9-8.11 should be used to determine the charset of a document. This media type is intended to be transported over HTTP/HTTPS or stored in files or databases. For transports not capable of handling binary content, encoding considerations from RFC 3023, section 3.2 will apply. It is RECOMMENDED to use UTF-8 for entities of this media type.",
     "deprecatedAliases": [],
     "references": [
       "person:Vladimir_Vysotsky"
@@ -16611,10 +16658,7 @@
   },
   "application/vnd.biopax.rdf+xml": {
     "mime": "application/vnd.biopax.rdf+xml",
-    "extensions": [
-      ".owl",
-      ".rdf"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.biopax.rdf+xml",
@@ -16622,9 +16666,6 @@
     "source": "iana",
     "registered": "2015-06-09",
     "updated": "2026-10-09",
-    "intendedUsage": "Common",
-    "encodingConsiderations": "8bit (utf-8 is the preferred)",
-    "publishedSpecification": "Demir E, Cary MP, Paley S, et al. BioPAX – A community standard for pathway data sharing. Nature biotechnology. 2010;28(9):935-942. doi:10.1038/nbt.1666.",
     "deprecatedAliases": [],
     "references": [
       "person:Pathway_Commons"
@@ -16651,9 +16692,7 @@
   },
   "application/vnd.blockfact.facts": {
     "mime": "application/vnd.blockfact.facts",
-    "extensions": [
-      ".facts"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.blockfact.facts",
@@ -16661,26 +16700,11 @@
     "source": "iana",
     "registered": "2026-07-15",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "binary",
-    "publishedSpecification": "https://github.com/BlockFact/facts-format-specs/blob/main/SPECIFICATION.md",
     "deprecatedAliases": [],
     "references": [
       "person:Egbert_von_Frankenberg"
     ],
-    "magicSignatures": [
-      {
-        "raw": "0xFA 0x53 0x41 0x00",
-        "bytes": [
-          250,
-          83,
-          65,
-          0
-        ],
-        "hex": "FA 53 41 00",
-        "offset": 0
-      }
-    ]
+    "magicSignatures": []
   },
   "application/vnd.blueice.multipass": {
     "mime": "application/vnd.blueice.multipass",
@@ -16864,7 +16888,9 @@
   },
   "application/vnd.c3voc.schedule+xml": {
     "mime": "application/vnd.c3voc.schedule+xml",
-    "extensions": [],
+    "extensions": [
+      ".xml"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.c3voc.schedule+xml",
@@ -16872,6 +16898,9 @@
     "source": "iana",
     "registered": "2024-04-01",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "binary",
+    "publishedSpecification": "This media type registration is for the XML representation of a conference schedule as specified by https://c3voc.de/schedule/schema.xsd – previous versions can be found at https://github.com/voc/schedule/blob/master/validator/xsd/schedule.xml.xsd It is also appropriate to use this media type with earlier and later versions this XSD.",
     "deprecatedAliases": [],
     "references": [
       "person:Andreas_Hubel"
@@ -16975,13 +17004,18 @@
   },
   "application/vnd.cendio.thinlinc.clientconf": {
     "mime": "application/vnd.cendio.thinlinc.clientconf",
-    "extensions": [],
+    "extensions": [
+      ".tlclient"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.cendio.thinlinc.clientconf",
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.cendio.thinlinc.clientconf",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Limited Use This type is intended for the ThinLinc system and compatible clients.",
+    "encodingConsiderations": "8bit This media type may require encoding on transports not capable of handling 8 bit text.",
+    "publishedSpecification": "A full specification is not available at this time. The file format and allowed configuration parameters are however documented in the ThinLinc Administrator's Guide, available from",
     "deprecatedAliases": [],
     "references": [
       "person:Peter_Astrand"
@@ -18752,7 +18786,9 @@
   },
   "application/vnd.cyclonedx+json": {
     "mime": "application/vnd.cyclonedx+json",
-    "extensions": [],
+    "extensions": [
+      ".json"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.cyclonedx+json",
@@ -18760,6 +18796,9 @@
     "source": "iana",
     "registered": "2021-01-28",
     "updated": "2026-10-09",
+    "intendedUsage": "Common CycloneDX is an open source software bill of materials specification. And is intended to be exchanged between different parties of the software supply chain.",
+    "encodingConsiderations": "binary This media type has all of the same encoding considerations of application/json as described in [RFC8259].",
+    "publishedSpecification": "The specification can be found on the CycloneDX website, https://cyclonedx.org/ The current JSON schema version, 1.2, can be found at",
     "deprecatedAliases": [],
     "references": [
       "person:Patrick_Dwyer"
@@ -19335,6 +19374,8 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.dna",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common DNA is intended to instantly Web enable any 32-bit Windows application.",
+    "encodingConsiderations": "We are transferring binary data.",
     "deprecatedAliases": [],
     "references": [
       "person:Meredith_Searcy"
@@ -19755,6 +19796,9 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.dvb.ipdcesgaccess",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "binary This media type may require encoding on transports not capable of handling binary.",
+    "publishedSpecification": "This MIME type is described fully in ETSI 102 471 IP Datacastover DVB-",
     "deprecatedAliases": [],
     "references": [
       "person:Joerg_Heuer"
@@ -19824,6 +19868,9 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.dvb.iptv.alfec-base",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "binary This media type may require encoding on transports not capable of handling binary.",
+    "publishedSpecification": "ETSI TS 102 034 v1.3.1",
     "deprecatedAliases": [],
     "references": [
       "person:Jean-Baptiste_Henry"
@@ -20143,9 +20190,7 @@
   },
   "application/vnd.eclipse.ditto+json": {
     "mime": "application/vnd.eclipse.ditto+json",
-    "extensions": [
-      ".json"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.eclipse.ditto+json",
@@ -20153,8 +20198,6 @@
     "source": "iana",
     "registered": "2022-01-26",
     "updated": "2026-10-09",
-    "intendedUsage": "Common Consumed and produced by IoT applications interacting with digital twins served by an Eclipse Ditto backend.",
-    "encodingConsiderations": "8bit",
     "deprecatedAliases": [],
     "references": [
       "person:Eclipse_Ditto_developers"
@@ -22475,9 +22518,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.fujitsu.oasysgp",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "Common This media type will be using HTTP.",
-    "encodingConsiderations": "nothing, using \"binary\".",
-    "publishedSpecification": "nothing",
     "deprecatedAliases": [],
     "references": [
       "person:Masahiko_Sugimoto"
@@ -22954,9 +22994,6 @@
     "source": "iana",
     "registered": "2022-10-04",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "binary Always encoded as UTF-8, the format technically permits encoding all Unicode characters as 7-bit escape codes.",
-    "publishedSpecification": "GLEP 74: Full-tree verification using Manifest files",
     "deprecatedAliases": [],
     "references": [
       "person:Michał_Górny"
@@ -23791,9 +23828,7 @@
   },
   "application/vnd.gpxsee.map+xml": {
     "mime": "application/vnd.gpxsee.map+xml",
-    "extensions": [
-      ".xml"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.gpxsee.map+xml",
@@ -23801,8 +23836,6 @@
     "source": "iana",
     "registered": "2023-02-09",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "binary",
     "deprecatedAliases": [],
     "references": [
       "person:Martin_Tůma"
@@ -23896,8 +23929,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.groove-identity-message",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "Common",
-    "encodingConsiderations": "quoted-printable \"This media type is mostly ASCII characters but also contains binary material. Quoted-printable is therefore the most appropriate choice for transports that cannot handle binary material directly.\"",
     "deprecatedAliases": [],
     "references": [
       "person:Todd_Joseph"
@@ -24392,9 +24423,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.httphone",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "Common",
-    "encodingConsiderations": "binary",
-    "publishedSpecification": "not yet",
     "deprecatedAliases": [],
     "references": [
       "person:Franck_Lefevre"
@@ -24546,6 +24574,7 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.ibm.MiniPay",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
     "deprecatedAliases": [],
     "references": [
       "person:Amir_Herzberg"
@@ -25491,6 +25520,9 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.irepository.package+xml",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Limited Use Use of this MIME type is limited to users of Lucidoc and associated document management tools published by iRepository.net, Inc.",
+    "encodingConsiderations": "Files of type application/vnd.irepository.package+xml are XML documents and as such have the same encoding considerations as application/xml, described in RFC 3023. Since the package may contain embedded base64, a base64 codec may be required to generate/interpret some parts of the package.",
+    "publishedSpecification": "application/vnd.irepository.package+xml is an XML document with a presently proprietary and evolving DTD.",
     "deprecatedAliases": [],
     "references": [
       "person:Martin_Knowles"
@@ -26156,7 +26188,8 @@
     "mime": "application/vnd.Kinar",
     "extensions": [
       ".kne",
-      ".knp"
+      ".knp",
+      ".sdf"
     ],
     "isIanaRegistered": true,
     "isObsolete": false,
@@ -26164,11 +26197,21 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.Kinar",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "binary This media type may require encoding on transports not capable of handling binary.",
+    "publishedSpecification": "Private.",
     "deprecatedAliases": [],
     "references": [
       "person:Hemant_Thakkar"
     ],
-    "magicSignatures": []
+    "magicSignatures": [
+      {
+        "raw": "KNRO",
+        "bytes": [],
+        "hex": null,
+        "offset": 0
+      }
+    ]
   },
   "application/vnd.klypix+zip": {
     "mime": "application/vnd.klypix+zip",
@@ -26229,6 +26272,8 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.kodak-descriptor",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "8bit This media type may require encoding on transports not capable of handling 8 bit text.",
     "deprecatedAliases": [],
     "references": [
       "person:Michael_J._Donahue"
@@ -26302,6 +26347,7 @@
     "source": "iana",
     "registered": "2019-08-21",
     "updated": "2026-10-09",
+    "intendedUsage": "LIMITED USE For the transmission and indication of Point Cloud Data (typically LiDAR-based, but also from other sources) in the ASPRS' compressed variation of LAS format.",
     "deprecatedAliases": [],
     "references": [
       "person:Bryan_Blank",
@@ -26568,8 +26614,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.lotus-screencam",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "common",
-    "encodingConsiderations": "base64 preferred",
     "deprecatedAliases": [],
     "references": [
       "person:Paul_Wattenberger"
@@ -26718,9 +26762,7 @@
   },
   "application/vnd.majikah.mjksig": {
     "mime": "application/vnd.majikah.mjksig",
-    "extensions": [
-      ".mjksig"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.majikah.mjksig",
@@ -26728,27 +26770,11 @@
     "source": "iana",
     "registered": "2026-08-12",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "binary",
     "deprecatedAliases": [],
     "references": [
       "person:Josef_Elijah_Fabian"
     ],
-    "magicSignatures": [
-      {
-        "raw": "0x4D 0x4A 0x4B 0x53 0x49 0x47 (MJKSIG in ASCII) at offset 0",
-        "bytes": [
-          77,
-          74,
-          75,
-          83,
-          73,
-          71
-        ],
-        "hex": "4D 4A 4B 53 49 47",
-        "offset": 0
-      }
-    ]
+    "magicSignatures": []
   },
   "application/vnd.majikah.mjksmap": {
     "mime": "application/vnd.majikah.mjksmap",
@@ -27244,9 +27270,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.micrografx.igx",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "Common To permit exchange of iGrafx Professional files.",
-    "encodingConsiderations": "Binary (this media type may require encoding on transports not capable of handling binary)",
-    "publishedSpecification": "The specifications for this media type are proprietary to Micrografx, Inc.",
     "deprecatedAliases": [],
     "references": [
       "person:Joe_Prevo"
@@ -27893,8 +27916,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.ms-excel.addin.macroEnabled.12",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "Common This type will be used to represent Microsoft Office Excel add-ins.",
-    "encodingConsiderations": "8bit This media type may require encoding on transports not capable of handling 8 bit text.",
     "deprecatedAliases": [],
     "references": [
       "person:Chris_Rae"
@@ -28912,6 +28933,9 @@
     "source": "iana",
     "registered": "2023-11-27",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "binary",
+    "publishedSpecification": "Allied Data Publication (ADatP-4778) Metadata Binding Mechanism",
     "deprecatedAliases": [],
     "references": [
       "person:Aidan_Murdock"
@@ -28984,7 +29008,9 @@
   },
   "application/vnd.nearst.inv+json": {
     "mime": "application/vnd.nearst.inv+json",
-    "extensions": [],
+    "extensions": [
+      ".json"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.nearst.inv+json",
@@ -28992,6 +29018,9 @@
     "source": "iana",
     "registered": "2016-08-12",
     "updated": "2026-10-09",
+    "intendedUsage": "Common Exchange of information related the the availability and price of products in shops. Primary usage will be uploading stock information from inventory management systems to a server for processing or display on a website.",
+    "encodingConsiderations": "binary",
+    "publishedSpecification": "The specification is not published yet.",
     "deprecatedAliases": [],
     "references": [
       "person:Thomas_Schoffelen"
@@ -29000,7 +29029,10 @@
   },
   "application/vnd.nebumind.line": {
     "mime": "application/vnd.nebumind.line",
-    "extensions": [],
+    "extensions": [
+      ".line",
+      ".nebul"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.nebumind.line",
@@ -29008,7 +29040,11 @@
     "source": "iana",
     "registered": "2021-03-17",
     "updated": "2026-10-09",
-    "deprecatedAliases": [],
+    "intendedUsage": "Common The Nebumind Line Protocol aggregates tagged, multivalued spatial sensor data from industrial, automated manufacturing systems.",
+    "encodingConsiderations": "8bit",
+    "deprecatedAliases": [
+      "x.nebumind.line"
+    ],
     "references": [
       "person:Andreas_Molzer"
     ],
@@ -29768,7 +29804,9 @@
   },
   "application/vnd.oai.workflows+json": {
     "mime": "application/vnd.oai.workflows+json",
-    "extensions": [],
+    "extensions": [
+      ".json"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.oai.workflows+json",
@@ -29776,6 +29814,8 @@
     "source": "iana",
     "registered": "2023-11-29",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "Encoding considerations are identical to those specified for the \"application/json\" media type.",
     "deprecatedAliases": [],
     "references": [
       "person:Frank_Kilcommins"
@@ -30008,12 +30048,21 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.oasis.opendocument.graphics-template",
     "source": "iana",
     "updated": "2022-06-07",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "binary This media type may require encoding on transports not capable of handling binary.",
     "deprecatedAliases": [],
     "references": [
       "person:OASIS",
       "person:OASIS_TC_Admin"
     ],
-    "magicSignatures": []
+    "magicSignatures": [
+      {
+        "raw": "0:PK,30:mimetype,38:vnd.oasis.opendocument.graphics-template",
+        "bytes": [],
+        "hex": null,
+        "offset": 0
+      }
+    ]
   },
   "application/vnd.oasis.opendocument.image": {
     "mime": "application/vnd.oasis.opendocument.image",
@@ -30760,9 +30809,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.oma.bcast.notification+xml",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "Limited Use Only for usage with the BCAST Notification message, which meet the semantics given in the mentioned specification.",
-    "encodingConsiderations": "binary This media type may require encoding on transports not capable of handling binary.",
-    "publishedSpecification": "OMA BCAST 1.0 Enabler Specification - Mobile Broadcast Services, especially section 5.14. Available from",
     "deprecatedAliases": [],
     "references": [
       "person:Open_Mobile_Naming_Authority",
@@ -31243,6 +31289,9 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.oma.poc.groups+xml",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "8bit The UTF-8 charset is used in the content of this XML-based media type.",
+    "publishedSpecification": "The OMA PoC XDM Specification is published at",
     "deprecatedAliases": [],
     "references": [
       "person:OMA_Push_to_Talk_over_Cellular_POC_WG",
@@ -31350,6 +31399,9 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.omads-email+xml",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "8bit This media type may require encoding on transports not capable of handling 8 bit text.",
+    "publishedSpecification": "Email Data Object Specification (v1.2), http://www.openmobilealliance.org/",
     "deprecatedAliases": [],
     "references": [
       "person:OMA_Data_Synchronization_WG"
@@ -31970,17 +32022,13 @@
   },
   "application/vnd.openxmlformats-officedocument.presentationml.comments+xml": {
     "mime": "application/vnd.openxmlformats-officedocument.presentationml.comments+xml",
-    "extensions": [
-      ".xml"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.openxmlformats-officedocument.presentationml.comments+xml",
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.presentationml.comments+xml",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "Common",
-    "encodingConsiderations": "binary This media type may require encoding on transports not capable of handling binary.",
     "deprecatedAliases": [],
     "references": [
       "person:Makoto_Murata"
@@ -32713,13 +32761,17 @@
   },
   "application/vnd.openxmlformats-officedocument.spreadsheetml.tableSingleCells+xml": {
     "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.tableSingleCells+xml",
-    "extensions": [],
+    "extensions": [
+      ".xml"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.openxmlformats-officedocument.spreadsheetml.tableSingleCells+xml",
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.tableSingleCells+xml",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "binary This media type may require encoding on transports not capable of handling binary.",
     "deprecatedAliases": [],
     "references": [
       "person:Makoto_Murata"
@@ -32737,11 +32789,21 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.openxmlformats-officedocument.spreadsheetml.template",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "binary",
+    "publishedSpecification": "ISO/IEC 29500",
     "deprecatedAliases": [],
     "references": [
       "person:Makoto_Murata"
     ],
-    "magicSignatures": []
+    "magicSignatures": [
+      {
+        "raw": "50 4b 03 04 as in ZIP",
+        "bytes": [],
+        "hex": null,
+        "offset": 0
+      }
+    ]
   },
   "application/vnd.openxmlformats-officedocument.spreadsheetml.template.main+xml": {
     "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.template.main+xml",
@@ -33362,11 +33424,26 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.osgi.subsystem",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common As a deployment format for OSGi Subsystems, specifically next generation Java application servers.",
+    "encodingConsiderations": "binary",
+    "publishedSpecification": "The OSGi R5 specification (Summer 2012) will contain a detailed specification of this format.",
     "deprecatedAliases": [],
     "references": [
       "person:Peter_Kriens"
     ],
-    "magicSignatures": []
+    "magicSignatures": [
+      {
+        "raw": "0x04034b50 (from ZIP)",
+        "bytes": [
+          4,
+          3,
+          75,
+          80
+        ],
+        "hex": "04 03 4B 50",
+        "offset": 0
+      }
+    ]
   },
   "application/vnd.otps.ct-kip+xml": {
     "mime": "application/vnd.otps.ct-kip+xml",
@@ -33663,7 +33740,9 @@
   },
   "application/vnd.phbk+xml": {
     "mime": "application/vnd.phbk+xml",
-    "extensions": [],
+    "extensions": [
+      ".phbk"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.phbk+xml",
@@ -33671,11 +33750,22 @@
     "source": "iana",
     "registered": "2026-04-07",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "8bit Since this is a text-based XML format, 8bit encoding is sufficient for transporting contact data like names and addresses.",
+    "publishedSpecification": "https://github.com/afifashamsadvivo/phbk",
+    "applications": "Custom phonebook managers and contact backup utilities.",
     "deprecatedAliases": [],
     "references": [
       "person:Lost_Idea_Experiments"
     ],
-    "magicSignatures": []
+    "magicSignatures": [
+      {
+        "raw": "None. Identification is based on the .phbk file extension or the <phonebook> root element.",
+        "bytes": [],
+        "hex": null,
+        "offset": 0
+      }
+    ]
   },
   "application/vnd.piaccess.application-licence": {
     "mime": "application/vnd.piaccess.application-licence",
@@ -33815,7 +33905,9 @@
   },
   "application/vnd.portableweb+zip": {
     "mime": "application/vnd.portableweb+zip",
-    "extensions": [],
+    "extensions": [
+      ".pweb"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.portableweb+zip",
@@ -33823,11 +33915,21 @@
     "source": "iana",
     "registered": "2026-07-21",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "binary",
+    "publishedSpecification": "https://portableweb.org/spec/",
     "deprecatedAliases": [],
     "references": [
       "person:Omprakash_Selvaraj"
     ],
-    "magicSignatures": []
+    "magicSignatures": [
+      {
+        "raw": "50 4B 03 04 (PK\\003\\004) (.pweb files are ZIP-based containers and therefore use the ZIP container signatures)",
+        "bytes": [],
+        "hex": null,
+        "offset": 0
+      }
+    ]
   },
   "application/vnd.powerbuilder6": {
     "mime": "application/vnd.powerbuilder6",
@@ -34391,9 +34493,7 @@
   },
   "application/vnd.R74n.sandboxels+json": {
     "mime": "application/vnd.R74n.sandboxels+json",
-    "extensions": [
-      ".sbxls"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.R74n.sandboxels+json",
@@ -34401,46 +34501,11 @@
     "source": "iana",
     "registered": "2025-08-11",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON Used for storing saved canvas states for Sandboxels, a chemistry and science simulator developed by R74n.",
-    "encodingConsiderations": "8bit",
-    "publishedSpecification": "N/A (Not required in vendor type registrations)",
     "deprecatedAliases": [],
     "references": [
       "person:R74n"
     ],
-    "magicSignatures": [
-      {
-        "raw": "7b 22 6d 65 74 61 22 3a 7b 22 73 61 76 65 56 65 72 73 69 6f 6e 22 3a 22",
-        "bytes": [
-          123,
-          34,
-          109,
-          101,
-          116,
-          97,
-          34,
-          58,
-          123,
-          34,
-          115,
-          97,
-          118,
-          101,
-          86,
-          101,
-          114,
-          115,
-          105,
-          111,
-          110,
-          34,
-          58,
-          34
-        ],
-        "hex": "7B 22 6D 65 74 61 22 3A 7B 22 73 61 76 65 56 65 72 73 69 6F 6E 22 3A 22",
-        "offset": 0
-      }
-    ]
+    "magicSignatures": []
   },
   "application/vnd.radisys.moml+xml": {
     "mime": "application/vnd.radisys.moml+xml",
@@ -34469,9 +34534,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.radisys.msml+xml",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "As specified in RFC 3023 [i2].",
-    "publishedSpecification": "RFC 5707",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc5707"
@@ -34649,6 +34711,9 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.radisys.msml-dialog-fax-sendrecv+xml",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "As specified in RFC 3023 [i2].",
+    "publishedSpecification": "RFC 5707",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc5707"
@@ -34711,13 +34776,18 @@
   },
   "application/vnd.rainstor.data": {
     "mime": "application/vnd.rainstor.data",
-    "extensions": [],
+    "extensions": [
+      ".tree"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.rainstor.data",
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.rainstor.data",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "binary",
+    "publishedSpecification": "Proprietory.",
     "deprecatedAliases": [],
     "references": [
       "person:Kevin_Crook"
@@ -36964,9 +37034,7 @@
   },
   "application/vnd.tablafocus.notation": {
     "mime": "application/vnd.tablafocus.notation",
-    "extensions": [
-      ".tabla"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.tablafocus.notation",
@@ -36974,21 +37042,11 @@
     "source": "iana",
     "registered": "2026-08-13",
     "updated": "2026-10-09",
-    "intendedUsage": "LIMITED USE Use is limited to sharing tabla compositions and phrases between Tabla Focus installations.",
-    "encodingConsiderations": "binary",
-    "publishedSpecification": "https://www.tablafocus.com/formats/tabla",
     "deprecatedAliases": [],
     "references": [
       "person:Sreeram_Kongeseri"
     ],
-    "magicSignatures": [
-      {
-        "raw": "54 42 4C 41 00 02 0D 0A at offset 0",
-        "bytes": [],
-        "hex": null,
-        "offset": 0
-      }
-    ]
+    "magicSignatures": []
   },
   "application/vnd.tableschema+json": {
     "mime": "application/vnd.tableschema+json",
@@ -37469,6 +37527,9 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.uplanet.alert",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "This content type is an XML application. This content is 8 bit text and, as such, may require encoding on 7bit transport when 8bit characters are present.",
+    "publishedSpecification": "Not available at this time",
     "deprecatedAliases": [],
     "references": [
       "person:Bruce_Martin"
@@ -37756,21 +37817,13 @@
   },
   "application/vnd.vd-study": {
     "mime": "application/vnd.vd-study",
-    "extensions": [
-      ".model-inter",
-      ".mxi",
-      ".study-inter",
-      ".sxi"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.vd-study",
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.vd-study",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "Common Exchange of queries on syndicated data.",
-    "encodingConsiderations": "binary This media type may require encoding on transports not capable of handling binary.",
-    "publishedSpecification": "None. The media is used only by the applications here below, all provided by the same vendor.",
     "deprecatedAliases": [],
     "references": [
       "person:Luc_Rogge"
@@ -37986,7 +38039,9 @@
   },
   "application/vnd.ves.encrypted": {
     "mime": "application/vnd.ves.encrypted",
-    "extensions": [],
+    "extensions": [
+      ".ves"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.ves.encrypted",
@@ -37994,7 +38049,12 @@
     "source": "iana",
     "registered": "2019-05-02",
     "updated": "2026-10-09",
-    "deprecatedAliases": [],
+    "intendedUsage": "Common Encrypted content with the cipher key being stored in the VESvault online repository in an end-to-end encrypted form. The encryption and decryption can be done using libVES.c [https://ves.host/docs/libVES-c], VES utility [https://ves.host/docs/ves-util], or an equivalent tool.",
+    "encodingConsiderations": "binary",
+    "publishedSpecification": "The specifications related to VESvault",
+    "deprecatedAliases": [
+      "application/x-ves-encrypted"
+    ],
     "references": [
       "person:Jim_Zubov"
     ],
@@ -38082,6 +38142,8 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.visionary",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "This is a binary media type",
     "deprecatedAliases": [],
     "references": [
       "person:Gayatri_Aravindakumar"
@@ -38301,50 +38363,11 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vnd.wap.wbxml",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON.",
-    "encodingConsiderations": "This is binary material and suitable encoding must be used when transferring over protocols that cannot handle binary.",
-    "publishedSpecification": "see [WBXML].",
     "deprecatedAliases": [],
     "references": [
       "person:Peter_Stark"
     ],
-    "magicSignatures": [
-      {
-        "raw": "none The first byte of an WBXML entity is always the WBXML version number, followed by a public Id that identifies the XML document type. For version number 1.1 and WML documents, the first two bytes are 01 04. The public Id represents the XML document type identifier for the XML application; e.g. \"-//WAPFORUM//DTD WML 1.1//EN\" (WML 1.1)) for WML 1.1 documents. Public Ids are registered by the WAP Naming Authority [WAP], and published in [WBXML].",
-        "bytes": [
-          45,
-          47,
-          47,
-          87,
-          65,
-          80,
-          70,
-          79,
-          82,
-          85,
-          77,
-          47,
-          47,
-          68,
-          84,
-          68,
-          32,
-          87,
-          77,
-          76,
-          32,
-          49,
-          46,
-          49,
-          47,
-          47,
-          69,
-          78
-        ],
-        "hex": "2D 2F 2F 57 41 50 46 4F 52 55 4D 2F 2F 44 54 44 20 57 4D 4C 20 31 2E 31 2F 2F 45 4E",
-        "offset": 0
-      }
-    ]
+    "magicSignatures": []
   },
   "application/vnd.wap.wmlc": {
     "mime": "application/vnd.wap.wmlc",
@@ -39351,7 +39374,9 @@
   },
   "application/vnd.zoho-document.writer": {
     "mime": "application/vnd.zoho-document.writer",
-    "extensions": [],
+    "extensions": [
+      ".zdoc"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.zoho-document.writer",
@@ -39359,11 +39384,20 @@
     "source": "iana",
     "registered": "2026-03-24",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "binary This media type may require encoding on transports not capable of handling binary.",
     "deprecatedAliases": [],
     "references": [
       "person:Ganeshprabhu_Rajendran"
     ],
-    "magicSignatures": []
+    "magicSignatures": [
+      {
+        "raw": "50 4b 03 04 as in ZIP",
+        "bytes": [],
+        "hex": null,
+        "offset": 0
+      }
+    ]
   },
   "application/vnd.zoho-presentation.show": {
     "mime": "application/vnd.zoho-presentation.show",
@@ -39394,9 +39428,7 @@
   },
   "application/vnd.zoho.spreadsheetml.sheet": {
     "mime": "application/vnd.zoho.spreadsheetml.sheet",
-    "extensions": [
-      ".zsheet"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "application/vnd.zoho.spreadsheetml.sheet",
@@ -39404,20 +39436,11 @@
     "source": "iana",
     "registered": "2026-03-24",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "binary",
     "deprecatedAliases": [],
     "references": [
       "person:Srikanth_Sankar"
     ],
-    "magicSignatures": [
-      {
-        "raw": "50 4B 03 04 as in ZIP",
-        "bytes": [],
-        "hex": null,
-        "offset": 0
-      }
-    ]
+    "magicSignatures": []
   },
   "application/vnd.zul": {
     "mime": "application/vnd.zul",
@@ -39617,10 +39640,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/vq-rtcpxr",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "7 bit",
-    "publishedSpecification": "This document.",
-    "applications": "This document type is being used in notifications of VoIP quality reports.",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc6035"
@@ -42150,7 +42169,17 @@
     "source": "iana",
     "registered": "2023-06-02",
     "updated": "2026-10-09",
-    "deprecatedAliases": [],
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "binary",
+    "publishedSpecification": "[YAML], [RFC9512]",
+    "applications": "Applications that need a human-friendly, cross-language, and Unicode-based data serialization language designed around the common data types of dynamic programming languages.",
+    "deprecatedAliases": [
+      "and text/x-yaml. These names are used but are not",
+      "application/x-yaml",
+      "registered.",
+      "text/",
+      "yaml"
+    ],
     "references": [
       "rfc:rfc9512",
       "uri:https://yaml.org/spec/1.2.2/"
@@ -42309,6 +42338,10 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/application/yin+xml",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "Identical to those of \"application/xml\" as described in [RFC3023], Section 3.2.",
+    "publishedSpecification": "RFC 6020",
+    "applications": "YANG module validators, web servers used for downloading YANG modules, email clients, etc.",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc6020"
@@ -42628,6 +42661,8 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/audio/amr-wb+",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON. It is expected that many IP-based streaming applications will use this type.",
+    "encodingConsiderations": "An RTP payload according to this format is binary data and thus may need to be appropriately encoded in non- binary environments. However, as long as used within RTP, no encoding is necessary.",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc4352"
@@ -43079,6 +43114,10 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/audio/EVRC1",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "This media type is framed binary data (see RFC 4288, Section 4.8) and is defined for transfer of EVRC-encoded data via RTP, using the compact bundled format as described in RFC 4788.",
+    "publishedSpecification": "The EVRC vocoder is specified in 3GPP2 C.S0014 [2]. Transfer method with compact bundled RTP format is specified in RFC 4788.",
+    "applications": "It is expected that many VoIP applications (as well as mobile applications) will use this type.",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc4788"
@@ -43649,6 +43688,10 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/audio/GSM",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "This media type is framed binary data (see Section 4.8 in RFC 4288).",
+    "publishedSpecification": "RFC 3551",
+    "applications": "Audio and video streaming and conferencing tools.",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc4856"
@@ -44011,6 +44054,9 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/audio/mobile-xmf",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "mobile-xmf data is binary data and must be encoded for non-binary transport; Base64 [9] is suitable for Email.",
+    "publishedSpecification": "Mobile XMF Content Format Specification, MMA specification v1.0., RP-42, Los Angeles, CA, USA. 2004.",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc4723"
@@ -44660,13 +44706,18 @@
   },
   "audio/sp-midi": {
     "mime": "audio/sp-midi",
-    "extensions": [],
+    "extensions": [
+      ".mid"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "audio/sp-midi",
     "templateUrl": "https://www.iana.org/assignments/media-types/audio/sp-midi",
     "source": "iana",
     "updated": "2022-10-04",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "sp-midi data is binary data and must be encoded for non-binary transport; Base64 is suitable for Email.",
+    "publishedSpecification": "Scalable Polyphony MIDI Specification. December 2001, RP-034, The MIDI Manufacturers Association, Los Angeles, CA, USA.",
     "deprecatedAliases": [],
     "references": [
       "person:Athan_Billias",
@@ -44720,11 +44771,21 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/audio/t38",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "The encoding of the IFP RTP packets is defined in ITU-T Recommendation T.38. This sub-type is not intended for use with e-mail.",
+    "publishedSpecification": "ITU-T Recommendation T.38, \"Procedures for real-time Group 3 facsimile communication over IP networks\", September 2005",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc4612"
     ],
-    "magicSignatures": []
+    "magicSignatures": [
+      {
+        "raw": "File extension(s): Macintosh File Type Code(s):",
+        "bytes": [],
+        "hex": null,
+        "offset": 0
+      }
+    ]
   },
   "audio/telephone-event": {
     "mime": "audio/telephone-event",
@@ -45045,9 +45106,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/audio/vnd.cmles.radio-events",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "Limited Use CML Emergency Services radio events(cmles.radio-events) are intended to be used to communicate the events of a analog radio. A gateway will interface with the analog radio and will propagate radio events using RTP as described in rfc3550.",
-    "encodingConsiderations": "binary This media type may require encoding on transports not capable of handling binary.",
-    "publishedSpecification": "None at this time. Documentation for CML Emergency Services radio events is available to customers and partners. Contact name below.",
     "deprecatedAliases": [],
     "references": [
       "person:Jean-Philippe_Goulet"
@@ -45281,9 +45339,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/audio/vnd.dolby.pl2z",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "Common This media type is intended for use by those licensing and implementing Dolby Pro-Logic II technologies on mobile devices; specifically to provide mobile handset manufacturers with a media type that may be used in User Agent Profiles (UAProfs) in the mobile eco-system without being mis-interpreted. In User Agent Profiles, this media type identifies clients and/or devices that are able to process content encoded to the proprietary Dolby Pro-Logic IIz standard.",
-    "encodingConsiderations": "binary This media type may require encoding on transports not capable of handling binary.",
-    "publishedSpecification": "Dolby Pro-Logic is a proprietary format. This media type is intended for use by those licensing Dolby Pro-Logic IIz technologies.",
     "deprecatedAliases": [],
     "references": [
       "person:Steve_Hattersley"
@@ -45422,33 +45477,45 @@
   },
   "audio/vnd.everad.plj": {
     "mime": "audio/vnd.everad.plj",
-    "extensions": [],
+    "extensions": [
+      ".plj"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "audio/vnd.everad.plj",
     "templateUrl": "https://www.iana.org/assignments/media-types/audio/vnd.everad.plj",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "Binary or Base-64 generally preferred",
+    "publishedSpecification": "Proprietary EverAD audio encoding",
     "deprecatedAliases": [],
     "references": [
       "person:Shay_Cicelsky"
     ],
-    "magicSignatures": []
+    "magicSignatures": [
+      {
+        "raw": "First DWORD is 0x4B539DFF",
+        "bytes": [
+          75,
+          83,
+          157,
+          255
+        ],
+        "hex": "4B 53 9D FF",
+        "offset": 0
+      }
+    ]
   },
   "audio/vnd.hns.audio": {
     "mime": "audio/vnd.hns.audio",
-    "extensions": [
-      ".rm"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "audio/vnd.hns.audio",
     "templateUrl": "https://www.iana.org/assignments/media-types/audio/vnd.hns.audio",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "Limited Use Intended for use by HNS developed products and services.",
-    "encodingConsiderations": "binary This media type may require encoding on transports not capable of handling binary.",
-    "publishedSpecification": "Intended for use by HNS products and services. For further information please contact Kumar Swaminathan at 301-428-5705 or kswami&hns.com.",
     "deprecatedAliases": [],
     "references": [
       "person:Swaminathan"
@@ -45781,9 +45848,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/audio/vnd.vmx.cvsd",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "Common",
-    "encodingConsiderations": "This is binary data. Binary or Base-64 generally encoding is preferred.",
-    "publishedSpecification": "None at this time",
     "deprecatedAliases": [],
     "references": [
       "person:Greg_Vaudreuil"
@@ -46492,11 +46556,24 @@
     "source": "iana",
     "registered": "2016-05-16",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON Provisional registration? No",
+    "encodingConsiderations": "Binary.",
+    "applications": "Office productivity applications; clip art applications; desktop publishing applications; web browsers; graphics processing applications.",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc7903"
     ],
-    "magicSignatures": []
+    "magicSignatures": [
+      {
+        "raw": "42 4D (\"BM\"), meaning \"bitmap\". The next field (BITMAPFILEHEADER bfSize) is a little-endian DWORD indicating the size of the bitmap content in bytes.",
+        "bytes": [
+          66,
+          77
+        ],
+        "hex": "42 4D",
+        "offset": 0
+      }
+    ]
   },
   "image/cgm": {
     "mime": "image/cgm",
@@ -46509,6 +46586,8 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/image/cgm",
     "source": "iana",
     "updated": "2026-10-09",
+    "encodingConsiderations": "Recommend Base64 MIME encoding where transport not 8 bit clean",
+    "publishedSpecification": "ISO 8632:1992, IS 8632:1992 Amendment 1 (1994)",
     "deprecatedAliases": [],
     "references": [
       "person:Alan_Francis"
@@ -47126,51 +47205,11 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/image/jpm",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "files are binary and should be transmitted in a suitable encoding without CR/LF conversion, 7-bit stripping etc.; base64 is a suitable encoding;",
-    "publishedSpecification": "ISO/IEC 15444-6, JPEG 2000 Compound Image File Format",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc3745"
     ],
-    "magicSignatures": [
-      {
-        "raw": "12 byte string: X'0000 000C 6A50 2020 0D0A 870A' (for all JPEG-2000 family files)",
-        "bytes": [
-          48,
-          48,
-          48,
-          48,
-          32,
-          48,
-          48,
-          48,
-          67,
-          32,
-          54,
-          65,
-          53,
-          48,
-          32,
-          50,
-          48,
-          50,
-          48,
-          32,
-          48,
-          68,
-          48,
-          65,
-          32,
-          56,
-          55,
-          48,
-          65
-        ],
-        "hex": "30 30 30 30 20 30 30 30 43 20 36 41 35 30 20 32 30 32 30 20 30 44 30 41 20 38 37 30 41",
-        "offset": 0
-      }
-    ]
+    "magicSignatures": []
   },
   "image/jpx": {
     "mime": "image/jpx",
@@ -47184,52 +47223,12 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/image/jpx",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "files are binary and should be transmitted in a suitable encoding without CR/LF conversion, 7-bit stripping etc.; base64 is a suitable encoding;",
-    "publishedSpecification": "Rec. ITU-T T.801 | ISO/IEC 15444-2, JPEG 2000 Extensions",
     "deprecatedAliases": [],
     "references": [
       "person:ISO-IEC_JTC_1_SC_29_WG_1",
       "rfc:rfc3745"
     ],
-    "magicSignatures": [
-      {
-        "raw": "12 byte string: X'0000 000C 6A50 2020 0D0A 870A' (for all JPEG-2000 family files)",
-        "bytes": [
-          48,
-          48,
-          48,
-          48,
-          32,
-          48,
-          48,
-          48,
-          67,
-          32,
-          54,
-          65,
-          53,
-          48,
-          32,
-          50,
-          48,
-          50,
-          48,
-          32,
-          48,
-          68,
-          48,
-          65,
-          32,
-          56,
-          55,
-          48,
-          65
-        ],
-        "hex": "30 30 30 30 20 30 30 30 43 20 36 41 35 30 20 32 30 32 30 20 30 44 30 41 20 38 37 30 41",
-        "offset": 0
-      }
-    ]
+    "magicSignatures": []
   },
   "image/jxl": {
     "mime": "image/jxl",
@@ -47809,6 +47808,8 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/image/tiff-fx",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "This media type consists of binary data. The base64 encoding should be used on transports that cannot accommodate binary data directly.",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc3950"
@@ -48216,30 +48217,18 @@
   },
   "image/vnd.globalgraphics.pgb": {
     "mime": "image/vnd.globalgraphics.pgb",
-    "extensions": [
-      ".pgb"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "image/vnd.globalgraphics.pgb",
     "templateUrl": "https://www.iana.org/assignments/media-types/image/vnd.globalgraphics.pgb",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "Limited Use For use in extended file transfers within prepress workflows only.",
-    "encodingConsiderations": "binary This media type may require encoding on transports not capable of handling binary.",
-    "publishedSpecification": "The specification is privately held and made available to Global Graphics’ technology partners under non-disclosure agreements only.",
     "deprecatedAliases": [],
     "references": [
       "person:Martin_Bailey"
     ],
-    "magicSignatures": [
-      {
-        "raw": "2F 50 47 42 20 hex (“/PGB “)",
-        "bytes": [],
-        "hex": null,
-        "offset": 0
-      }
-    ]
+    "magicSignatures": []
   },
   "image/vnd.microsoft.icon": {
     "mime": "image/vnd.microsoft.icon",
@@ -49716,6 +49705,9 @@
     "source": "iana",
     "registered": "2020-02-13",
     "updated": "2022-09-20",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "8bit",
+    "publishedSpecification": "Wavefront Technologies. 1992. Object Files (.obj), Advanced Visualizer",
     "deprecatedAliases": [],
     "references": [
       "person:Carolyn_Hull",
@@ -49796,9 +49788,6 @@
     "source": "iana",
     "registered": "2021-08-05",
     "updated": "2026-10-09",
-    "intendedUsage": "Common",
-    "encodingConsiderations": "binary",
-    "publishedSpecification": "The specification is published in various parts of the ISO 10303 series. The most recent specification is available from the ISO website or from National standardization bodies for a nominal fee.",
     "deprecatedAliases": [],
     "references": [
       "person:Dana_Tripp",
@@ -49862,9 +49851,6 @@
     "source": "iana",
     "registered": "2021-07-20",
     "updated": "2026-10-09",
-    "intendedUsage": "Common",
-    "encodingConsiderations": "binary",
-    "publishedSpecification": "The specification is published in various parts of the ISO 10303 series. The most recent specification is available from the ISO website or from National standardization bodies for a nominal fee.",
     "deprecatedAliases": [],
     "references": [
       "person:Dana_Tripp",
@@ -49907,26 +49893,12 @@
     "source": "iana",
     "registered": "2022-02-25",
     "updated": "2026-10-09",
-    "intendedUsage": "Common U3D is a 3D model format that can be embedded inside PDF 1.6 and later files.",
-    "encodingConsiderations": "binary",
-    "publishedSpecification": "U3D is defined by \"ECMA-363 Universal 3D file format\" (https://www.ecma-international.org/publications-and-standards/standards/ecma-363/). There are 4 editions of the U3D ECMA-363 specification, with the 3rd edition (dated June 2006) being the most widely used. ISO 32000-2 (PDF 2.0) only supports U3D as defined by ECMA-363 3rd Edition. See also",
     "deprecatedAliases": [],
     "references": [
       "person:PDF_Association",
       "person:Peter_Wyatt"
     ],
-    "magicSignatures": [
-      {
-        "raw": "First 4 bytes of the file are Hex: 55 33 44 00 (ASCII: \"U3D\"+\\000)",
-        "bytes": [
-          85,
-          51,
-          68
-        ],
-        "hex": "55 33 44",
-        "offset": 0
-      }
-    ]
+    "magicSignatures": []
   },
   "model/vnd.bary": {
     "mime": "model/vnd.bary",
@@ -50184,6 +50156,9 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/model/vnd.gtw",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "Generally, base64 encoding is recommended. The gtw type is an ASCII text data. The gtw is a 3D model data which contains 3D polygons and URLs for those texture images. When viewer application reads the gtw data, the viewer reads the texture image from the it. Texture image format can be various known image formats. But, application should support JPEG at least. File extention part of URI should indicate it's encoding format. Binary encoding on texture images must obey its image format specification.",
+    "publishedSpecification": "Not available.",
     "deprecatedAliases": [],
     "references": [
       "person:Yutaka_Ozaki"
@@ -51904,6 +51879,9 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/text/RED",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "See restrictions on Usage above; this section is included per the requirements in RFC 3555 [7].",
+    "publishedSpecification": "RFC 2198",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc4102"
@@ -52008,9 +51986,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/text/rtx",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON",
-    "encodingConsiderations": "this type is only defined for transfer via RTP.",
-    "publishedSpecification": "RFC 4588",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc4588"
@@ -52342,9 +52317,7 @@
   },
   "text/vnd.a": {
     "mime": "text/vnd.a",
-    "extensions": [
-      ".a"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "text/vnd.a",
@@ -52352,8 +52325,6 @@
     "source": "iana",
     "registered": "2014-02-07",
     "updated": "2026-10-09",
-    "intendedUsage": "Common",
-    "encodingConsiderations": "8bit",
     "deprecatedAliases": [],
     "references": [
       "person:Regis_Dehoux"
@@ -52395,7 +52366,9 @@
   },
   "text/vnd.ascii-art": {
     "mime": "text/vnd.ascii-art",
-    "extensions": [],
+    "extensions": [
+      ".ascii"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "text/vnd.ascii-art",
@@ -52403,7 +52376,12 @@
     "source": "iana",
     "registered": "2016-08-12",
     "updated": "2026-10-09",
-    "deprecatedAliases": [],
+    "intendedUsage": "Common COMMON",
+    "encodingConsiderations": "7bit ASCII art is 7-bit ASCII-encoded plaintext content; any octet sequence is invalid and any ASCII art file containing such should be rejected.",
+    "deprecatedAliases": [
+      "image/ascii-art",
+      "text/x-ascii-art"
+    ],
     "references": [
       "person:Kim_Scarborough"
     ],
@@ -52536,6 +52514,9 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/text/vnd.dvb.subtitle",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "binary",
+    "publishedSpecification": "GEM 1.2.2 - ETSI TS 102 728 v.1.1.1 (February 2010) available at",
     "deprecatedAliases": [],
     "references": [
       "person:Michael_Lagally",
@@ -52545,13 +52526,17 @@
   },
   "text/vnd.esmertec.theme-descriptor": {
     "mime": "text/vnd.esmertec.theme-descriptor",
-    "extensions": [],
+    "extensions": [
+      ".jtd"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "text/vnd.esmertec.theme-descriptor",
     "templateUrl": "https://www.iana.org/assignments/media-types/text/vnd.esmertec.theme-descriptor",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Limited Use",
+    "encodingConsiderations": "8bit This media type may require encoding on transports not capable of handling 8 bit text.",
     "deprecatedAliases": [],
     "references": [
       "person:Stefan_Eilemann"
@@ -52836,7 +52821,9 @@
   },
   "text/vnd.hekaya": {
     "mime": "text/vnd.hekaya",
-    "extensions": [],
+    "extensions": [
+      ".hekaya"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "text/vnd.hekaya",
@@ -52844,6 +52831,9 @@
     "source": "iana",
     "registered": "2026-05-11",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON Hekaya (حكاية, Arabic for \"story\") was created to fill the gap left by discontinued Arabic screenplay tools (Seyaq, Miktab) and the lack of RTL support in the Fountain ecosystem. It serves Egyptian and Arabic-speaking screenwriters through the Cairo Indie Filmmakers Club (https://cairoindie.com/).",
+    "encodingConsiderations": "8bit Hekaya files are UTF-8 encoded plain text. Line endings may be LF or CRLF (both are accepted and normalized during parsing). Content may include Arabic, Latin, and mixed-script text with Unicode bidirectional characters.",
+    "publishedSpecification": "The Hekaya Markup Specification is published at: https://michaelkmalak.github.io/hekaya/docs/spec/hekaya-markup-spec",
     "deprecatedAliases": [],
     "references": [
       "person:Michael_K_Malak"
@@ -52895,6 +52885,7 @@
   "text/vnd.in3d.spot": {
     "mime": "text/vnd.in3d.spot",
     "extensions": [
+      ".spo",
       ".spot"
     ],
     "isIanaRegistered": true,
@@ -52903,6 +52894,9 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/text/vnd.in3d.spot",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common",
+    "encodingConsiderations": "quoted-printable generally preferred if an encoding is needed and the character set is mostly an ASCII superset.",
+    "publishedSpecification": "In patent process - not publicly published - 3DML is a fully XML compliant format",
     "deprecatedAliases": [],
     "references": [
       "person:Michael_Powers"
@@ -53080,17 +53074,13 @@
   },
   "text/vnd.si.uricatalogue": {
     "mime": "text/vnd.si.uricatalogue",
-    "extensions": [
-      ".uric"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": true,
     "template": "text/vnd.si.uricatalogue",
     "templateUrl": "https://www.iana.org/assignments/media-types/text/vnd.si.uricatalogue",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "OBSOLETE",
-    "encodingConsiderations": "7bit See section 5.4 of SSD3",
     "deprecatedAliases": [],
     "references": [
       "person:Nicholas_Parks_Young"
@@ -53099,9 +53089,7 @@
   },
   "text/vnd.sosi": {
     "mime": "text/vnd.sosi",
-    "extensions": [
-      ".sos"
-    ],
+    "extensions": [],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "text/vnd.sosi",
@@ -53109,12 +53097,7 @@
     "source": "iana",
     "registered": "2019-06-03",
     "updated": "2026-10-09",
-    "intendedUsage": "Common The SOSI format is in regular use in Norway. There are intentions to replace its use with GML, but maps are still provided by the Norwegian mapping authority in SOSI format and used by map integrators and service providers.",
-    "encodingConsiderations": "8bit",
-    "publishedSpecification": "Information about the SOSI format can be",
-    "deprecatedAliases": [
-      "none known"
-    ],
+    "deprecatedAliases": [],
     "references": [
       "person:Petter_Reinholdtsen"
     ],
@@ -53910,6 +53893,9 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/video/3gpp-tt",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "This media type is framed (see Section 4.8 in [29]) and partially contains binary data.",
+    "publishedSpecification": "RFC 4396",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc4396"
@@ -53955,6 +53941,8 @@
     "source": "iana",
     "registered": "2021-01-21",
     "updated": "2026-10-09",
+    "intendedUsage": "Common Intended for widespread use on the open internet, and the scope is not limited to a certain environment.",
+    "encodingConsiderations": "binary This media type contains binary data; see Section 4.8 of RFC6838.",
     "deprecatedAliases": [],
     "references": [
       "person:Alliance_for_Open_Media"
@@ -54042,9 +54030,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/video/encaprtp",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "LIMITED USE",
-    "encodingConsiderations": "This media type is framed.",
-    "publishedSpecification": "[RFC6849].",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc6849"
@@ -54120,10 +54105,6 @@
     "source": "iana",
     "registered": "2019-05-23",
     "updated": "2026-10-09",
-    "intendedUsage": "COMMON.",
-    "encodingConsiderations": "This media type is framed (see Section 4.8 in the template document [RFC6838]) and contains binary data.",
-    "publishedSpecification": "[RFC8627].",
-    "applications": "Multimedia applications that want to improve resiliency against packet loss by sending redundant data in addition to the source media.",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc8627"
@@ -54377,6 +54358,10 @@
     "source": "iana",
     "registered": "2025-06-16",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "This media type is framed and binary. See Section 4.8 of [RFC6838].",
+    "publishedSpecification": "RFC 9828",
+    "applications": "video streaming and communication",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc9828"
@@ -55031,6 +55016,10 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/video/vc1",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "This media type is framed and contains binary data.",
+    "publishedSpecification": "RFC 4425.",
+    "applications": "Multimedia streaming and conferencing tools.",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc4425"
@@ -55047,6 +55036,10 @@
     "source": "iana",
     "registered": "2018-08-29",
     "updated": "2026-10-09",
+    "intendedUsage": "COMMON",
+    "encodingConsiderations": "This media type is framed and binary, see section 4.8 in RFC6838.",
+    "publishedSpecification": "RFC8450",
+    "applications": "Video Communication.",
     "deprecatedAliases": [],
     "references": [
       "rfc:rfc8450"
@@ -55111,8 +55104,6 @@
     "templateUrl": "https://www.iana.org/assignments/media-types/video/vnd.dece.hd",
     "source": "iana",
     "updated": "2026-10-09",
-    "intendedUsage": "Common",
-    "encodingConsiderations": "binary This media type may require encoding on transports not capable of handling binary.",
     "deprecatedAliases": [],
     "references": [
       "person:Michael_A_Dolan"
@@ -55406,13 +55397,18 @@
   },
   "video/vnd.iptvforum.2dparityfec-2005": {
     "mime": "video/vnd.iptvforum.2dparityfec-2005",
-    "extensions": [],
+    "extensions": [
+      ".undefined"
+    ],
     "isIanaRegistered": true,
     "isObsolete": false,
     "template": "video/vnd.iptvforum.2dparityfec-2005",
     "templateUrl": "https://www.iana.org/assignments/media-types/video/vnd.iptvforum.2dparityfec-2005",
     "source": "iana",
     "updated": "2026-10-09",
+    "intendedUsage": "Common Audio and video streaming tools which seek to improve resiliency to loss bysending additional data with the media stream.",
+    "encodingConsiderations": "binary",
+    "publishedSpecification": "Currently not publicly available. To be published by IPTV Forum.",
     "deprecatedAliases": [],
     "references": [
       "person:Shuji_Nakamura"
