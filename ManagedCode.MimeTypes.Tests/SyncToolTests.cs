@@ -228,6 +228,30 @@ public class SyncToolTests
     }
 
     [Fact]
+    public void UnknownOption_ShouldFailBeforeSelectingAnOutput()
+    {
+        Should.Throw<ArgumentException>(() => MimeTypeSyncTool.SyncOptions.Parse(["--outpt", "map.json"]))
+            .Message.ShouldContain("--outpt");
+    }
+
+    [Theory]
+    [InlineData("--iana-source", null)]
+    [InlineData("--source", null)]
+    [InlineData("--add-source", null)]
+    [InlineData("--curated-source", null)]
+    [InlineData("--add-curated-source", null)]
+    [InlineData("--output", null)]
+    [InlineData("--metadata-output", null)]
+    [InlineData("--output", "--no-iana")]
+    [InlineData("--source", "--no-curated")]
+    public void ValueOptions_ShouldRejectMissingValues(string option, string? nextOption)
+    {
+        string[] args = nextOption == null ? [option] : [option, nextOption];
+        Should.Throw<ArgumentException>(() => MimeTypeSyncTool.SyncOptions.Parse(args))
+            .Message.ShouldContain(option);
+    }
+
+    [Fact]
     public void DefaultOptions_ShouldLoadBundledCuratedMappings()
     {
         var options = MimeTypeSyncTool.SyncOptions.Parse(Array.Empty<string>());

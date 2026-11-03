@@ -56,6 +56,26 @@ public class ContentDetectionTests
         Detect(webpBytes).ShouldBe("image/webp");
     }
 
+    [Theory]
+    [InlineData("GIF87a", true)]
+    [InlineData("GIF89a", true)]
+    [InlineData("GIF8", false)]
+    [InlineData("GIF88a", false)]
+    public void GifProbe_ShouldRequireTheCompleteVersionedHeader(string header, bool expectedMatch)
+    {
+        (Detect(Encoding.ASCII.GetBytes(header)) == MimeHelper.GIF).ShouldBe(expectedMatch);
+    }
+
+    [Theory]
+    [InlineData("526172211A0700", true)]
+    [InlineData("526172211A070100", true)]
+    [InlineData("52617221", false)]
+    [InlineData("526172211A0701", false)]
+    public void RarProbe_ShouldRequireTheCompleteVersionedHeader(string header, bool expectedMatch)
+    {
+        (Detect(Convert.FromHexString(header)) == "application/x-rar-compressed").ShouldBe(expectedMatch);
+    }
+
     [Fact]
     public void Mp4Header_ShouldBeDetected()
     {

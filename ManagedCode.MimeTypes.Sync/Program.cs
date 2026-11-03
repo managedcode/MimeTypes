@@ -1080,8 +1080,8 @@ internal static partial class MimeTypeSyncTool
             {
                 switch (args[i])
                 {
-                    case "--iana-source" when i + 1 < args.Length:
-                        ianaSource = args[++i];
+                    case "--iana-source":
+                        ianaSource = ReadOptionValue(args, ref i);
                         break;
                     case "--no-iana":
                         useIana = false;
@@ -1094,44 +1094,43 @@ internal static partial class MimeTypeSyncTool
                         skipIanaTemplates = true;
                         break;
                     case "--template-concurrency":
-                        if (i + 1 >= args.Length || !int.TryParse(args[i + 1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var concurrency))
+                        if (!int.TryParse(ReadOptionValue(args, ref i), NumberStyles.Integer, CultureInfo.InvariantCulture, out var concurrency))
                         {
                             throw new ArgumentException("--template-concurrency requires an integer.");
                         }
 
-                        i++;
                         templateConcurrency = Math.Clamp(concurrency, 1, 32);
                         break;
-                    case "--source" when i + 1 < args.Length:
+                    case "--source":
                         if (!customSupplementalSources)
                         {
                             supplementalSources.Clear();
                             customSupplementalSources = true;
                         }
 
-                        AddSources(supplementalSources, args[++i]);
+                        AddSources(supplementalSources, ReadOptionValue(args, ref i));
                         break;
-                    case "--add-source" when i + 1 < args.Length:
-                        AddSources(supplementalSources, args[++i]);
+                    case "--add-source":
+                        AddSources(supplementalSources, ReadOptionValue(args, ref i));
                         break;
-                    case "--curated-source" when i + 1 < args.Length:
+                    case "--curated-source":
                         curatedSources.Clear();
-                        AddSources(curatedSources, args[++i]);
+                        AddSources(curatedSources, ReadOptionValue(args, ref i));
                         useCurated = true;
                         break;
-                    case "--add-curated-source" when i + 1 < args.Length:
-                        AddSources(curatedSources, args[++i]);
+                    case "--add-curated-source":
+                        AddSources(curatedSources, ReadOptionValue(args, ref i));
                         useCurated = true;
                         break;
                     case "--reset-sources":
                         supplementalSources.Clear();
                         customSupplementalSources = true;
                         break;
-                    case "--output" when i + 1 < args.Length:
-                        output = args[++i];
+                    case "--output":
+                        output = ReadOptionValue(args, ref i);
                         break;
-                    case "--metadata-output" when i + 1 < args.Length:
-                        metadataOutput = args[++i];
+                    case "--metadata-output":
+                        metadataOutput = ReadOptionValue(args, ref i);
                         break;
                     case "--prefer-remote":
                         preferRemote = true;
@@ -1139,6 +1138,8 @@ internal static partial class MimeTypeSyncTool
                     case "--preserve-existing":
                         preserveExisting = true;
                         break;
+                    default:
+                        throw new ArgumentException($"Unknown option '{args[i]}'.");
                 }
             }
 
@@ -1152,6 +1153,16 @@ internal static partial class MimeTypeSyncTool
             }
 
             return new SyncOptions(ianaSource, supplementalSources, curatedSources, output, metadataOutput, preferRemote, useIana, useCurated, skipIanaTemplates, preserveExisting, templateConcurrency);
+        }
+
+        private static string ReadOptionValue(string[] args, ref int index)
+        {
+            if (index + 1 >= args.Length || args[index + 1].StartsWith("--", StringComparison.Ordinal))
+            {
+                throw new ArgumentException($"Option '{args[index]}' requires a value.");
+            }
+
+            return args[++index];
         }
 
         private static void AddSources(List<string> sources, string value)

@@ -26,7 +26,8 @@ public static partial class MimeHelper
         ImmutableDictionary<int, ImmutableDictionary<int, ImmutableArray<ExtensionOverride>>>.Empty,
         ImmutableDictionary.Create<string, ImmutableSortedSet<string>>(StringComparer.OrdinalIgnoreCase));
     private static FrozenDictionary<string, string> BuiltInMimeTypes = FrozenDictionary<string, string>.Empty;
-    private static ImmutableDictionary<string, MimeTypeInfo> MimeTypeInfos = ImmutableDictionary.Create<string, MimeTypeInfo>(StringComparer.OrdinalIgnoreCase);
+    // Populated during type initialization and read-only after publication.
+    private static Dictionary<string, MimeTypeInfo> MimeTypeInfos = new(StringComparer.OrdinalIgnoreCase);
     private static FrozenDictionary<string, MimeTypeInfo> MimeTypeInfosByExtension = FrozenDictionary<string, MimeTypeInfo>.Empty;
     private static int MaxCatalogExtensionLength;
     private static IReadOnlyCollection<MimeTypeInfo> KnownMimeTypes = ImmutableArray<MimeTypeInfo>.Empty;
@@ -83,7 +84,7 @@ public static partial class MimeHelper
             extensionsByMime.Add(pair.Key, pair.Value.ToImmutable());
         }
 
-        var mimeTypeInfos = ImmutableDictionary.CreateBuilder<string, MimeTypeInfo>(StringComparer.OrdinalIgnoreCase);
+        var mimeTypeInfos = new Dictionary<string, MimeTypeInfo>(metadata.Length, StringComparer.OrdinalIgnoreCase);
         var mimeTypeInfosByExtension = new Dictionary<string, MimeTypeInfo>(StringComparer.OrdinalIgnoreCase);
         foreach (var info in metadata)
         {
@@ -102,7 +103,7 @@ public static partial class MimeHelper
 
         Registry = Registry with { ExtensionsByMime = extensionsByMime.ToImmutable() };
         BuiltInMimeTypes = mimeTypes.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
-        MimeTypeInfos = mimeTypeInfos.ToImmutable();
+        MimeTypeInfos = mimeTypeInfos;
         MimeTypeInfosByExtension = mimeTypeInfosByExtension.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
         Array.Sort(metadata, static (left, right) => StringComparer.OrdinalIgnoreCase.Compare(left.Mime, right.Mime));

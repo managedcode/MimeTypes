@@ -20,6 +20,17 @@ public class MimeMetadataTests
     }
 
     [Fact]
+    public void MetadataLookup_ShouldTrimUnicodeWhitespaceAndReturnTheCachedRecord()
+    {
+        MimeHelper.TryGetMimeTypeInfo(MimeHelper.PDF, out var original).ShouldBeTrue();
+        MimeHelper.TryGetMimeTypeInfo("  APPLICATION/PDF\u00A0", out var trimmed).ShouldBeTrue();
+        ReferenceEquals(trimmed, original).ShouldBeTrue();
+
+        MimeHelper.TryGetMimeTypeInfo("\u00A0 \t", out var missing).ShouldBeFalse();
+        missing.ShouldBeNull();
+    }
+
+    [Fact]
     public void TryGetMimeTypeInfoByExtension_ShouldUseSameCandidateRulesAsMimeLookup()
     {
         MimeHelper.TryGetMimeTypeInfoByExtension("https://cdn.example.com/files/report.PDF?version=1", out var info).ShouldBeTrue();

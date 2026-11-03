@@ -33,7 +33,8 @@ public static partial class MimeHelper
         new([0x25, 0x50, 0x44, 0x46, 0x2D], "application/pdf"),
         new([0xFF, 0xD8, 0xFF], "image/jpeg"),
         new([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A], "image/png"),
-        new([0x47, 0x49, 0x46, 0x38], "image/gif"),
+        new([0x47, 0x49, 0x46, 0x38, 0x37, 0x61], "image/gif"),
+        new([0x47, 0x49, 0x46, 0x38, 0x39, 0x61], "image/gif"),
         new([0x42, 0x4D], "image/bmp"),
         new([0x49, 0x49, 0x2A, 0x00], "image/tiff"),
         new([0x4D, 0x4D, 0x00, 0x2A], "image/tiff"),
@@ -42,6 +43,7 @@ public static partial class MimeHelper
         new([0x1F, 0x8B], "application/gzip"),
         new([0x42, 0x5A, 0x68], "application/x-bzip2"),
         new([0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x00], "application/x-rar-compressed"),
+        new([0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x01, 0x00], "application/x-rar-compressed"),
         new([0x37, 0x7A, 0xBC, 0xAF, 0x27, 0x1C], "application/x-7z-compressed"),
         new([0xFD, 0x37, 0x7A, 0x58, 0x5A, 0x00], "application/x-xz"),
         new([0x4F, 0x67, 0x67, 0x53], "audio/ogg"),
@@ -82,7 +84,6 @@ public static partial class MimeHelper
     private static readonly byte[] TorrentPrefix = Encoding.ASCII.GetBytes("d8:announce");
     private static readonly byte[] ZipSignature = [0x50, 0x4B, 0x03, 0x04];
     private static readonly byte[] ZipEmptySignature = [0x50, 0x4B, 0x05, 0x06];
-    private static readonly byte[] RarSignature = [0x52, 0x61, 0x72, 0x21];
     private static readonly byte[] MzSignature = [0x4D, 0x5A, 0x90, 0x00];
     private static readonly byte[] RtfSignature = [0x7B, 0x5C, 0x72, 0x74];
 
@@ -390,11 +391,6 @@ public static partial class MimeHelper
         if (header.Length >= 4 && (header[..4].SequenceEqual(ZipSignature) || header[..4].SequenceEqual(ZipEmptySignature)))
         {
             return DetectZipBasedType(header) ?? "application/zip";
-        }
-
-        if (header.Length >= 4 && header[..4].SequenceEqual(RarSignature))
-        {
-            return "application/x-rar-compressed";
         }
 
         if (header.Length >= 4 && header[..4].SequenceEqual(MzSignature))

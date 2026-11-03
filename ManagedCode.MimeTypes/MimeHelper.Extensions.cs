@@ -70,19 +70,23 @@ public static partial class MimeHelper
     /// <returns><c>true</c> when metadata exists; otherwise <c>false</c>.</returns>
     public static bool TryGetMimeTypeInfo(string mime, out MimeTypeInfo info)
     {
-        info = null!;
-        if (string.IsNullOrWhiteSpace(mime))
+        var key = mime.AsSpan().Trim();
+        if (key.IsEmpty)
         {
+            info = null!;
             return false;
         }
 
-        if (MimeTypeInfos.TryGetValue(mime.Trim(), out var found))
+        if (key.Length == mime.Length)
         {
-            info = found;
-            return true;
+            return MimeTypeInfos.TryGetValue(mime, out info!);
         }
 
-        return false;
+#if NET9_0_OR_GREATER
+        return MimeTypeInfos.GetAlternateLookup<ReadOnlySpan<char>>().TryGetValue(key, out info!);
+#else
+        return MimeTypeInfos.TryGetValue(key.ToString(), out info!);
+#endif
     }
 
     /// <summary>
@@ -145,7 +149,7 @@ public static partial class MimeHelper
             candidate = NormalizeExtensionKey(candidate.ToString());
         }
 
-        if (TryGetEffectiveMimeType(candidate, snapshot, out var mime) && TryGetMimeTypeInfo(mime, out info))
+        if (TryGetEffectiveMimeType(candidate, snapshot, out var mime) && MimeTypeInfos.TryGetValue(mime, out info!))
         {
             return true;
         }
