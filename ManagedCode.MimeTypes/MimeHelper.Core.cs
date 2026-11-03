@@ -16,18 +16,19 @@ public static partial class MimeHelper
     private readonly record struct ExtensionOverride(string Extension, string? Mime);
 
     private sealed record RegistrySnapshot(
-        ImmutableDictionary<int, ImmutableArray<ExtensionOverride>> Overrides,
+        ImmutableDictionary<int, ImmutableDictionary<int, ImmutableArray<ExtensionOverride>>> Overrides,
         ImmutableDictionary<string, ImmutableSortedSet<string>> ExtensionsByMime);
 
     private const int ZipProbeLength = 560;
     private static string _defaultMimeType = BIN;
 
     private static RegistrySnapshot Registry = new(
-        ImmutableDictionary<int, ImmutableArray<ExtensionOverride>>.Empty,
+        ImmutableDictionary<int, ImmutableDictionary<int, ImmutableArray<ExtensionOverride>>>.Empty,
         ImmutableDictionary.Create<string, ImmutableSortedSet<string>>(StringComparer.OrdinalIgnoreCase));
     private static FrozenDictionary<string, string> BuiltInMimeTypes = FrozenDictionary<string, string>.Empty;
     private static ImmutableDictionary<string, MimeTypeInfo> MimeTypeInfos = ImmutableDictionary.Create<string, MimeTypeInfo>(StringComparer.OrdinalIgnoreCase);
     private static FrozenDictionary<string, MimeTypeInfo> MimeTypeInfosByExtension = FrozenDictionary<string, MimeTypeInfo>.Empty;
+    private static int MaxCatalogExtensionLength;
     private static IReadOnlyCollection<MimeTypeInfo> KnownMimeTypes = ImmutableArray<MimeTypeInfo>.Empty;
 
     /// <summary>
@@ -65,6 +66,7 @@ public static partial class MimeHelper
         foreach (var mapping in mappings)
         {
             mimeTypes[mapping.Extension] = mapping.Mime;
+            MaxCatalogExtensionLength = Math.Max(MaxCatalogExtensionLength, mapping.Extension.Length);
 
             if (!extensionSets.TryGetValue(mapping.Mime, out var extensions))
             {
@@ -93,6 +95,7 @@ public static partial class MimeHelper
                 if (normalizedExtension.Length > 0)
                 {
                     mimeTypeInfosByExtension[normalizedExtension] = info;
+                    MaxCatalogExtensionLength = Math.Max(MaxCatalogExtensionLength, normalizedExtension.Length);
                 }
             }
         }

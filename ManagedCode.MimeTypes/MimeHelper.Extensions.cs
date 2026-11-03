@@ -106,25 +106,27 @@ public static partial class MimeHelper
             fileName = input;
         }
 
-        fileName = fileName.Trim();
+        fileName = fileName.Trim().TrimEnd('.');
         var snapshot = Volatile.Read(ref Registry);
         var suffix = fileName;
         while (suffix.IndexOf('.') is var dot && dot >= 0)
         {
             suffix = suffix[(dot + 1)..].TrimStart('.');
-            if (TryGetCandidateMetadata(suffix.TrimEnd('.'), snapshot, out info))
+            if (TryGetCandidateMetadata(suffix, snapshot, out info))
             {
                 return true;
             }
         }
 
-        return TryGetCandidateMetadata(fileName.Trim('.'), snapshot, out info);
+        return TryGetCandidateMetadata(fileName.TrimStart('.'), snapshot, out info);
     }
 
     private static bool TryGetCandidateMetadata(ReadOnlySpan<char> candidate, RegistrySnapshot snapshot, out MimeTypeInfo info)
     {
         candidate = candidate.Trim().TrimStart('.');
-        if (candidate.IsEmpty)
+        if (candidate.IsEmpty ||
+            (candidate.Length > MaxCatalogExtensionLength && !char.IsWhiteSpace(candidate[0]) &&
+             !snapshot.Overrides.ContainsKey(candidate.Length)))
         {
             info = null!;
             return false;
@@ -141,7 +143,7 @@ public static partial class MimeHelper
             return true;
         }
 
-#if NET10_0_OR_GREATER
+#if NET9_0_OR_GREATER
         return MimeTypeInfosByExtension.GetAlternateLookup<ReadOnlySpan<char>>().TryGetValue(candidate, out info!);
 #else
         return MimeTypeInfosByExtension.TryGetValue(candidate.ToString(), out info!);
@@ -310,15 +312,12 @@ public static partial class MimeHelper
             }
         }
 
-        for (var index = fileNameStart; index < end; index++)
+        var suffix = input.AsSpan(fileNameStart, end - fileNameStart).TrimEnd('.');
+        while (suffix.IndexOf('.') is var dot && dot >= 0)
         {
-            if (input[index] != '.' || index + 1 >= end)
-            {
-                continue;
-            }
-
-            var candidate = input.AsSpan(index + 1, end - index - 1).Trim('.');
-            if (!candidate.IsEmpty && TryGetEffectiveMimeType(candidate, snapshot, out var foundMime))
+            // Consecutive separators produce the same trimmed candidate.
+            suffix = suffix[(dot + 1)..].TrimStart('.');
+            if (!suffix.IsEmpty && TryGetEffectiveMimeType(suffix, snapshot, out var foundMime))
             {
                 mime = foundMime;
                 return true;
@@ -336,6 +335,12 @@ public static partial class MimeHelper
             return overriddenMime != null;
         }
 
+        if (extension.Length > MaxCatalogExtensionLength)
+        {
+            mime = null!;
+            return false;
+        }
+
 #if NET9_0_OR_GREATER
         return BuiltInMimeTypes.GetAlternateLookup<ReadOnlySpan<char>>().TryGetValue(extension, out mime!);
 #else
@@ -345,9 +350,9 @@ public static partial class MimeHelper
 
     private static bool TryGetExtensionOverride(RegistrySnapshot snapshot, ReadOnlySpan<char> extension, out string? mime)
     {
-        // Hash buckets keep span lookups allocation-free and retain exact keys for collision checks.
-        if (!snapshot.Overrides.IsEmpty &&
-            snapshot.Overrides.TryGetValue(string.GetHashCode(extension, StringComparison.OrdinalIgnoreCase), out var entries))
+        // Reject unregistered lengths before hashing a potentially long suffix.
+        if (snapshot.Overrides.TryGetValue(extension.Length, out var hashes) &&
+            hashes.TryGetValue(string.GetHashCode(extension, StringComparison.OrdinalIgnoreCase), out var entries))
         {
             foreach (var entry in entries)
             {
@@ -363,31 +368,36 @@ public static partial class MimeHelper
         return false;
     }
 
-    private static ImmutableDictionary<int, ImmutableArray<ExtensionOverride>> SetExtensionOverride(
-        ImmutableDictionary<int, ImmutableArray<ExtensionOverride>> overrides, string extension, string? mime, bool remove)
+    private static ImmutableDictionary<int, ImmutableDictionary<int, ImmutableArray<ExtensionOverride>>> SetExtensionOverride(
+        ImmutableDictionary<int, ImmutableDictionary<int, ImmutableArray<ExtensionOverride>>> overrides,
+        string extension,
+        string? mime,
+        bool remove)
     {
+        var hashes = overrides.GetValueOrDefault(extension.Length, ImmutableDictionary<int, ImmutableArray<ExtensionOverride>>.Empty);
         var hash = string.GetHashCode(extension.AsSpan(), StringComparison.OrdinalIgnoreCase);
-        if (!overrides.TryGetValue(hash, out var entries))
+        var entries = hashes.GetValueOrDefault(hash, ImmutableArray<ExtensionOverride>.Empty);
+
+        var index = 0;
+        while (index < entries.Length && !string.Equals(entries[index].Extension, extension, StringComparison.OrdinalIgnoreCase))
         {
-            return remove ? overrides : overrides.Add(hash, [new(extension, mime)]);
+            index++;
         }
 
-        for (var index = 0; index < entries.Length; index++)
+        if (remove)
         {
-            if (!string.Equals(entries[index].Extension, extension, StringComparison.OrdinalIgnoreCase))
+            if (index == entries.Length)
             {
-                continue;
+                return overrides;
             }
 
-            if (remove)
-            {
-                return entries.Length == 1 ? overrides.Remove(hash) : overrides.SetItem(hash, entries.RemoveAt(index));
-            }
-
-            return overrides.SetItem(hash, entries.SetItem(index, new(extension, mime)));
+            hashes = entries.Length == 1 ? hashes.Remove(hash) : hashes.SetItem(hash, entries.RemoveAt(index));
+            return hashes.IsEmpty ? overrides.Remove(extension.Length) : overrides.SetItem(extension.Length, hashes);
         }
 
-        return remove ? overrides : overrides.SetItem(hash, entries.Add(new(extension, mime)));
+        var entry = new ExtensionOverride(extension, mime);
+        entries = index == entries.Length ? entries.Add(entry) : entries.SetItem(index, entry);
+        return overrides.SetItem(extension.Length, hashes.SetItem(hash, entries));
     }
 
     private static bool IsBareExtension(string value)

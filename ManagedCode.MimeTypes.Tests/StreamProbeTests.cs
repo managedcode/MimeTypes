@@ -55,4 +55,27 @@ public class StreamProbeTests
 
         detected.ShouldBe(expected);
     }
+
+    [Fact]
+    [Trait("Category", "Performance")]
+    public void FilePathProbe_ShouldStayBelowAnAdditionalFileBufferPerCall()
+    {
+        var path = Path.GetFullPath(Path.Combine(SamplesDirectory, "sample.pdf"));
+        MimeHelper.GetMimeTypeByContent(path).ShouldBe(MimeHelper.PDF);
+        const int iterations = 256;
+        var matches = 0;
+        var before = GC.GetAllocatedBytesForCurrentThread();
+
+        for (var index = 0; index < iterations; index++)
+        {
+            if (MimeHelper.GetMimeTypeByContent(path) == MimeHelper.PDF)
+            {
+                matches++;
+            }
+        }
+
+        var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
+        matches.ShouldBe(iterations);
+        allocated.ShouldBeLessThan(iterations * 1_536L);
+    }
 }

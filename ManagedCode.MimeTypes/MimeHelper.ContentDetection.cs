@@ -123,7 +123,8 @@ public static partial class MimeHelper
             throw new ArgumentNullException(nameof(filePath));
         }
 
-        using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        // The stream probe already supplies a buffer for the bounded header read.
+        using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, bufferSize: 0);
         return TryGetMimeTypeByContent(fileStream, out mime);
     }
 
@@ -210,7 +211,7 @@ public static partial class MimeHelper
             throw new ArgumentNullException(nameof(filePath));
         }
 
-        using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, bufferSize: 0);
         return MatchesMimeTypeByContent(fileStream, expectedMime);
     }
 

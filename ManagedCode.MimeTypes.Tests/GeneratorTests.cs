@@ -20,6 +20,19 @@ public class GeneratorTests
     }
 
     [Fact]
+    public void RepeatedDots_ShouldPreserveCompoundExtensionAndMetadataLookup()
+    {
+        var dots = new string('.', 16_384);
+        var name = $"https://example.test/assets/module{dots}d.ts{dots}?version=1";
+
+        MimeHelper.GetMimeType(name).ShouldBe(MimeHelper.D_TS);
+        MimeHelper.TryGetMimeTypeInfoByExtension(name, out var info).ShouldBeTrue();
+        info.Mime.ShouldBe(MimeHelper.D_TS);
+
+        MimeHelper.GetMimeType($"asset{dots}unregistered{dots}").ShouldBe(MimeHelper.BIN);
+    }
+
+    [Fact]
     public void EmptyExtensionsTest()
     {
         MimeHelper.GetMimeType("").ShouldBe(MimeHelper.BIN);

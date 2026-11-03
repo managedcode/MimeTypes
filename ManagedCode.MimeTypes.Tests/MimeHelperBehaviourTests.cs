@@ -67,6 +67,35 @@ public class MimeHelperBehaviourTests
     }
 
     [Fact]
+    public void LongCustomCompoundExtensions_ShouldKeepIndependentMappings()
+    {
+        var first = new string('a', 256) + ".followuptail";
+        var second = new string('b', 256) + ".followuptail";
+        var firstPath = "folder/item." + first.ToUpperInvariant();
+        var secondPath = "folder/item." + second;
+
+        try
+        {
+            MimeHelper.RegisterMimeType(first, MimeHelper.PDF);
+            MimeHelper.RegisterMimeType(second, MimeHelper.PNG);
+
+            MimeHelper.GetMimeType(firstPath).ShouldBe(MimeHelper.PDF);
+            MimeHelper.TryGetMimeTypeInfoByExtension(firstPath, out var info).ShouldBeTrue();
+            info.Mime.ShouldBe(MimeHelper.PDF);
+
+            MimeHelper.UnregisterMimeType(first).ShouldBeTrue();
+            MimeHelper.GetMimeType(firstPath).ShouldBe(MimeHelper.BIN);
+            MimeHelper.TryGetMimeTypeInfoByExtension(firstPath, out _).ShouldBeFalse();
+            MimeHelper.GetMimeType(secondPath).ShouldBe(MimeHelper.PNG);
+        }
+        finally
+        {
+            MimeHelper.UnregisterMimeType(first);
+            MimeHelper.UnregisterMimeType(second);
+        }
+    }
+
+    [Fact]
     public void CustomMimeValues_ShouldNotEnterTheProcessInternPool()
     {
         const string extension = "intern-probe";
