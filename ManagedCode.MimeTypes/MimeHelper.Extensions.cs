@@ -100,7 +100,14 @@ public static partial class MimeHelper
             input = input[..separator];
         }
 
-        var fileName = Path.GetFileName(input);
+        // The input can be a URI or a path from a different operating system.
+        var nameStart = input.LastIndexOfAny('/', '\\') + 1;
+        if (nameStart == 0 && input.Length >= 2 && char.IsAsciiLetter(input[0]) && input[1] == ':')
+        {
+            nameStart = 2;
+        }
+
+        var fileName = input[nameStart..];
         if (fileName.IsEmpty)
         {
             fileName = input;
@@ -193,7 +200,7 @@ public static partial class MimeHelper
 
         var normalizedMime = mime.Trim();
         BuiltInMimeTypes.TryGetValue(normalized, out var builtInMime);
-        var dotted = "." + normalized;
+        string? dotted = null;
         while (true)
         {
             var snapshot = Volatile.Read(ref Registry);
@@ -206,6 +213,7 @@ public static partial class MimeHelper
             var reverse = snapshot.ExtensionsByMime;
             if (!string.Equals(previousMime, normalizedMime, StringComparison.OrdinalIgnoreCase))
             {
+                dotted ??= "." + normalized;
                 if (previousMime != null)
                 {
                     reverse = RemoveExtensionFromMimeMap(reverse, previousMime, dotted);
@@ -248,7 +256,7 @@ public static partial class MimeHelper
         }
 
         BuiltInMimeTypes.TryGetValue(normalized, out var builtInMime);
-        var dotted = "." + normalized;
+        string? dotted = null;
         while (true)
         {
             var snapshot = Volatile.Read(ref Registry);
@@ -258,6 +266,7 @@ public static partial class MimeHelper
                 return false;
             }
 
+            dotted ??= "." + normalized;
             var overrides = SetExtensionOverride(snapshot.Overrides, normalized, mime: null, remove: builtInMime == null);
             var updated = new RegistrySnapshot(overrides,
                 RemoveExtensionFromMimeMap(snapshot.ExtensionsByMime, mime, dotted));
@@ -447,14 +456,24 @@ public static partial class MimeHelper
 
         var length = end - start + 1;
 
-        return string.Create(length, (extension, start, length), static (destination, state) =>
+        for (var index = start; index <= end; index++)
         {
-            var (source, offset, count) = state;
-            for (var i = 0; i < count; i++)
+            if (span[index] == char.ToLowerInvariant(span[index]))
             {
-                destination[i] = char.ToLowerInvariant(source[offset + i]);
+                continue;
             }
-        });
+
+            return string.Create(length, (extension, start), static (destination, state) =>
+            {
+                var (source, offset) = state;
+                for (var i = 0; i < destination.Length; i++)
+                {
+                    destination[i] = char.ToLowerInvariant(source[offset + i]);
+                }
+            });
+        }
+
+        return length == extension.Length ? extension : extension.Substring(start, length);
     }
 
     private static ImmutableDictionary<string, ImmutableSortedSet<string>> RemoveExtensionFromMimeMap(

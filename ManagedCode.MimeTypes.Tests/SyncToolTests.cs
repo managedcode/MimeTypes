@@ -34,6 +34,22 @@ public class SyncToolTests
         pdf.MagicSignatures[0].Hex.ShouldBe("25 50 44 46 2D");
     }
 
+    [Theory]
+    [InlineData("utf-8")]
+    [InlineData("utf-16")]
+    [InlineData("utf-16BE")]
+    public void IanaRegistryParser_ShouldHonorTheXmlEncoding(string encodingName)
+    {
+        var encoding = Encoding.GetEncoding(encodingName);
+        var xml = IanaXml.Replace("UTF-8", encoding.WebName, StringComparison.Ordinal);
+        var data = encoding.GetPreamble().Concat(encoding.GetBytes(xml)).ToArray();
+
+        var registry = MimeTypeSyncTool.ParseIanaRegistry(data, "https://www.iana.org/assignments/media-types/media-types.xml");
+
+        registry.Entries.Count.ShouldBe(4);
+        registry.Entries.ShouldContain(static entry => entry.Mime == "application/pdf");
+    }
+
     [Fact]
     public void IanaTemplateParser_ShouldHandleUppercaseExtensionsMissingExtensionsObsoleteAndUnparseableMagic()
     {

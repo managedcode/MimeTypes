@@ -89,7 +89,8 @@ internal static partial class MimeTypeSyncTool
 
     internal static IanaRegistry ParseIanaRegistry(byte[] data, string source)
     {
-        var document = XDocument.Parse(Encoding.UTF8.GetString(data), LoadOptions.PreserveWhitespace);
+        using var stream = new MemoryStream(data, writable: false);
+        var document = XDocument.Load(stream, LoadOptions.PreserveWhitespace);
         XNamespace ns = IanaAssignmentsNamespace;
         var root = document.Root ?? throw new InvalidOperationException("IANA registry XML has no root element.");
         var updated = root.Element(ns + "updated")?.Value.Trim();

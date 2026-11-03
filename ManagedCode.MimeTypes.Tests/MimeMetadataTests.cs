@@ -28,6 +28,18 @@ public class MimeMetadataTests
         info.Extensions.ShouldContain(".pdf");
     }
 
+    [Theory]
+    [InlineData(@"C:\docs\PDF")]
+    [InlineData(@"C:/docs\PDF?download=.png")]
+    [InlineData(@"\\server\share\pdf")]
+    [InlineData("C:pdf")]
+    [InlineData("/docs/pdf")]
+    public void MetadataLookup_ShouldRecognizePathSeparatorsOnAnyHost(string path)
+    {
+        MimeHelper.TryGetMimeTypeInfoByExtension(path, out var info).ShouldBeTrue();
+        info.Mime.ShouldBe(MimeHelper.PDF);
+    }
+
     [Fact]
     public void TryGetMimeTypeInfoByExtension_ShouldPreferEffectiveMappingOverRawTemplateExtension()
     {

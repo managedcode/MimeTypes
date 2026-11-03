@@ -67,6 +67,20 @@ public class ContentDetectionTests
         Detect(mp4Bytes).ShouldBe("video/mp4");
     }
 
+    [Theory]
+    [InlineData(0xFB, 0x90, true)]
+    [InlineData(0xE3, 0x80, true)]
+    [InlineData(0xFB, 0x00, true)]
+    [InlineData(0xEB, 0x90, false)]
+    [InlineData(0xF1, 0x50, false)]
+    [InlineData(0xFB, 0xF0, false)]
+    [InlineData(0xFB, 0x9C, false)]
+    public void MpegAudioSyncWord_ShouldRequireValidFrameFields(int versionAndLayer, int rates, bool expectedMatch)
+    {
+        var mime = Detect([0xFF, (byte)versionAndLayer, (byte)rates, 0]);
+        (mime == MimeHelper.MP3).ShouldBe(expectedMatch);
+    }
+
     [Fact]
     public void ZipHeader_ShouldFallbackToZip()
     {

@@ -382,7 +382,7 @@ public static partial class MimeHelper
             }
         }
 
-        if (header.Length >= 4 && header[0] == 0xFF && (header[1] & 0xE0) == 0xE0)
+        if (IsMpegAudioHeader(header))
         {
             return "audio/mpeg";
         }
@@ -413,6 +413,22 @@ public static partial class MimeHelper
         }
 
         return null;
+    }
+
+    private static bool IsMpegAudioHeader(ReadOnlySpan<byte> header)
+    {
+        if (header.Length < 4 || header[0] != 0xFF || (header[1] >> 5) != 0b111)
+        {
+            return false;
+        }
+
+        var version = (header[1] >> 3) & 0b11;
+        var layer = (header[1] >> 1) & 0b11;
+        var bitrateIndex = header[2] >> 4;
+        var sampleRateIndex = (header[2] >> 2) & 0b11;
+
+        // Reject reserved fields while allowing the free-format bitrate index of zero.
+        return version != 0b01 && layer != 0 && bitrateIndex != 0b1111 && sampleRateIndex != 0b11;
     }
 
     private static bool IsMp4Brand(ReadOnlySpan<byte> brand)

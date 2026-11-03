@@ -67,6 +67,26 @@ public class MimeHelperBehaviourTests
     }
 
     [Fact]
+    public void RepeatedNormalizedRegistration_ShouldKeepTheCachedReverseCollection()
+    {
+        const string extension = "ä-four-review";
+        try
+        {
+            MimeHelper.RegisterMimeType("  ..Ä-Four-Review ", MimeHelper.PDF);
+            var extensions = MimeHelper.GetExtensions(MimeHelper.PDF);
+            extensions.ShouldContain("." + extension);
+
+            MimeHelper.RegisterMimeType(extension, MimeHelper.PDF);
+            MimeHelper.GetMimeType("asset.Ä-FOUR-REVIEW").ShouldBe(MimeHelper.PDF);
+            ReferenceEquals(extensions, MimeHelper.GetExtensions(MimeHelper.PDF)).ShouldBeTrue();
+        }
+        finally
+        {
+            MimeHelper.UnregisterMimeType(extension);
+        }
+    }
+
+    [Fact]
     public void LongCustomCompoundExtensions_ShouldKeepIndependentMappings()
     {
         var first = new string('a', 256) + ".followuptail";
