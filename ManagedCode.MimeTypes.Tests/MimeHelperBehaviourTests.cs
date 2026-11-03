@@ -44,7 +44,55 @@ public class MimeHelperBehaviourTests
     }
 
     [Fact]
-    public void RegisterScriptMimeType_ShouldUpdateCaches()
+    public void BuiltInMappings_ShouldSupportRemovalOverrideAndRestoration()
+    {
+        try
+        {
+            MimeHelper.UnregisterMimeType(".PnG").ShouldBeTrue();
+            MimeHelper.GetMimeType("asset.PNG").ShouldBe(MimeHelper.DefaultMimeType);
+            MimeHelper.GetExtensions(MimeHelper.PNG).ShouldNotContain(".png");
+
+            MimeHelper.RegisterMimeType(".pNG", MimeHelper.PDF);
+            MimeHelper.GetMimeType("asset.PNG").ShouldBe(MimeHelper.PDF);
+            MimeHelper.GetExtensions(MimeHelper.PDF).ShouldContain(".png");
+        }
+        finally
+        {
+            MimeHelper.RegisterMimeType("png", MimeHelper.PNG);
+        }
+
+        MimeHelper.GetMimeType("asset.PNG").ShouldBe(MimeHelper.PNG);
+        MimeHelper.GetExtensions(MimeHelper.PNG).ShouldContain(".png");
+        MimeHelper.GetExtensions(MimeHelper.PDF).ShouldNotContain(".png");
+    }
+
+    [Fact]
+    public void CustomMimeValues_ShouldNotEnterTheProcessInternPool()
+    {
+        const string extension = "intern-probe";
+        var mime = $"application/x-test-{Guid.NewGuid():N}";
+        var original = MimeHelper.DefaultMimeType;
+
+        try
+        {
+            MimeHelper.RegisterMimeType(extension, mime);
+            MimeHelper.GetMimeType(extension).ShouldBe(mime);
+            string.IsInterned(mime).ShouldBeNull();
+
+            var fallback = mime + "-fallback";
+            MimeHelper.SetDefaultMimeType(fallback);
+            MimeHelper.DefaultMimeType.ShouldBe(fallback);
+            string.IsInterned(fallback).ShouldBeNull();
+        }
+        finally
+        {
+            MimeHelper.UnregisterMimeType(extension);
+            MimeHelper.SetDefaultMimeType(original);
+        }
+    }
+
+    [Fact]
+    public void RegisteredScriptMimeType_ShouldBeClassified()
     {
         const string extension = "myscript";
         const string mime = "application/x-shellscript";

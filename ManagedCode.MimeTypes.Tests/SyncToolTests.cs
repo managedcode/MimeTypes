@@ -191,6 +191,27 @@ public class SyncToolTests
     }
 
     [Fact]
+    public void OutputFileNames_ShouldResolveAgainstTheCurrentDirectory()
+    {
+        var options = MimeTypeSyncTool.SyncOptions.Parse(["--output", "map.json"]);
+
+        options.OutputPath.ShouldBe(Path.GetFullPath("map.json"));
+        options.MetadataOutputPath.ShouldBe(Path.GetFullPath("mimeTypes.metadata.json"));
+    }
+
+    [Fact]
+    public void InvalidTemplateConcurrency_ShouldFailBeforeSelectingAnOutput()
+    {
+        Should.Throw<ArgumentException>(() => MimeTypeSyncTool.SyncOptions.Parse(["--template-concurrency", "--output", "map.json"]));
+    }
+
+    [Fact]
+    public void SameOutputPaths_ShouldBeRejected()
+    {
+        Should.Throw<ArgumentException>(() => MimeTypeSyncTool.SyncOptions.Parse(["--output", "./map.json", "--metadata-output", "map.json"]));
+    }
+
+    [Fact]
     public void DefaultOptions_ShouldLoadBundledCuratedMappings()
     {
         var options = MimeTypeSyncTool.SyncOptions.Parse(Array.Empty<string>());

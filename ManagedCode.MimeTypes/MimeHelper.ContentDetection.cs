@@ -1,6 +1,7 @@
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,23 @@ namespace ManagedCode.MimeTypes;
 
 public static partial class MimeHelper
 {
-    private readonly record struct MagicSignature(byte[] Signature, string Mime, int Offset = 0);
+    private readonly record struct MagicSignature(ImmutableArray<byte> Signature, string Mime, int Offset = 0);
+
+    private readonly record struct MagicSignatureKey(int Offset, ImmutableArray<byte> Bytes)
+    {
+        public bool Equals(MagicSignatureKey other)
+        {
+            return Offset == other.Offset && Bytes.AsSpan().SequenceEqual(other.Bytes.AsSpan());
+        }
+
+        public override int GetHashCode()
+        {
+            var hash = new HashCode();
+            hash.Add(Offset);
+            hash.AddBytes(Bytes.AsSpan());
+            return hash.ToHashCode();
+        }
+    }
 
     private static readonly MagicSignature[] BuiltInMagicSignatures =
     {
@@ -148,11 +165,6 @@ public static partial class MimeHelper
 
             var bytesRead = ReadUpTo(fileStream, buffer, MaxContentSniffLength);
 
-            if (position.HasValue && fileStream.CanSeek)
-            {
-                fileStream.Seek(position.Value, SeekOrigin.Begin);
-            }
-
             if (bytesRead <= 0)
             {
                 return false;
@@ -170,12 +182,17 @@ public static partial class MimeHelper
         }
         finally
         {
-            if (position.HasValue && fileStream.CanSeek)
+            try
             {
-                fileStream.Seek(position.Value, SeekOrigin.Begin);
+                if (position.HasValue)
+                {
+                    fileStream.Seek(position.Value, SeekOrigin.Begin);
+                }
             }
-
-            ArrayPool<byte>.Shared.Return(buffer, true);
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer, true);
+            }
         }
     }
 
@@ -253,56 +270,33 @@ public static partial class MimeHelper
 
     private static MagicSignature[] BuildRegistryMagicSignatures()
     {
-        var candidates = new List<MagicSignature>();
+        var mimeBySignature = new Dictionary<MagicSignatureKey, string?>();
         foreach (var info in MimeTypeInfos.Values)
         {
             foreach (var signature in info.MagicSignatures)
             {
-                if (signature.Offset < 0 || !signature.IsBytePrefix)
+                if (signature.Offset < 0 || !signature.IsBytePrefix || signature.Offset > int.MaxValue - signature.Bytes.Length)
                 {
                     continue;
                 }
 
-                candidates.Add(new MagicSignature(signature.Bytes.ToArray(), info.Mime, signature.Offset));
-            }
-        }
-
-        if (candidates.Count == 0)
-        {
-            return Array.Empty<MagicSignature>();
-        }
-
-        var mimeBySignature = new Dictionary<string, string>(StringComparer.Ordinal);
-        var conflictingSignatures = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var signature in candidates)
-        {
-            var key = CreateSignatureKey(signature);
-            if (mimeBySignature.TryGetValue(key, out var existingMime))
-            {
-                if (!string.Equals(existingMime, signature.Mime, StringComparison.OrdinalIgnoreCase))
+                var key = new MagicSignatureKey(signature.Offset, signature.Bytes);
+                if (!mimeBySignature.TryAdd(key, info.Mime) &&
+                    !string.Equals(mimeBySignature[key], info.Mime, StringComparison.OrdinalIgnoreCase))
                 {
-                    conflictingSignatures.Add(key);
+                    // A signature shared by different media types is ambiguous.
+                    mimeBySignature[key] = null;
                 }
-
-                continue;
             }
-
-            mimeBySignature.Add(key, signature.Mime);
         }
 
-        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        return candidates
-            .Where(signature => !conflictingSignatures.Contains(CreateSignatureKey(signature)))
-            .Where(signature => seen.Add(CreateSignatureKey(signature) + "|" + signature.Mime))
+        return mimeBySignature
+            .Where(static pair => pair.Value != null)
+            .Select(static pair => new MagicSignature(pair.Key.Bytes, pair.Value!, pair.Key.Offset))
             .OrderByDescending(static signature => signature.Signature.Length)
             .ThenByDescending(static signature => signature.Offset)
             .ThenBy(static signature => signature.Mime, StringComparer.OrdinalIgnoreCase)
             .ToArray();
-    }
-
-    private static string CreateSignatureKey(MagicSignature signature)
-    {
-        return string.Concat(signature.Offset.ToString(System.Globalization.CultureInfo.InvariantCulture), ":", Convert.ToHexString(signature.Signature));
     }
 
     private static int ReadUpTo(Stream stream, byte[] buffer, int count)
@@ -329,7 +323,7 @@ public static partial class MimeHelper
             DetectMagicSignature(header, RegistryMagicSignatures);
     }
 
-    private static string? DetectMagicSignature(ReadOnlySpan<byte> header, IReadOnlyList<MagicSignature> signatures)
+    private static string? DetectMagicSignature(ReadOnlySpan<byte> header, ReadOnlySpan<MagicSignature> signatures)
     {
         foreach (var signature in signatures)
         {
@@ -338,7 +332,7 @@ public static partial class MimeHelper
                 continue;
             }
 
-            if (header.Slice(signature.Offset, signature.Signature.Length).SequenceEqual(signature.Signature))
+            if (header.Slice(signature.Offset, signature.Signature.Length).SequenceEqual(signature.Signature.AsSpan()))
             {
                 return signature.Mime;
             }
@@ -488,40 +482,23 @@ public static partial class MimeHelper
 
     private static bool ContainsAsciiIgnoreCase(ReadOnlySpan<byte> span, ReadOnlySpan<byte> pattern)
     {
-        if (pattern.Length == 0 || pattern.Length > span.Length)
+        // ZIP markers start with ASCII letters, so skip bytes that cannot start a match.
+        var lower = (byte)(pattern[0] | 0x20);
+        var upper = (byte)(lower & ~0x20);
+        while (span.Length >= pattern.Length)
         {
-            return false;
-        }
-
-        for (var i = 0; i <= span.Length - pattern.Length; i++)
-        {
-            var j = 0;
-
-            for (; j < pattern.Length; j++)
+            var index = span[..(span.Length - pattern.Length + 1)].IndexOfAny(lower, upper);
+            if (index < 0)
             {
-                byte a = span[i + j];
-                byte b = pattern[j];
-
-                if ((uint)(a - 'A') <= 'Z' - 'A')
-                {
-                    a = (byte)(a + 32);
-                }
-
-                if ((uint)(b - 'A') <= 'Z' - 'A')
-                {
-                    b = (byte)(b + 32);
-                }
-
-                if (a != b)
-                {
-                    break;
-                }
+                return false;
             }
 
-            if (j == pattern.Length)
+            if (Ascii.EqualsIgnoreCase(span.Slice(index, pattern.Length), pattern))
             {
                 return true;
             }
+
+            span = span[(index + 1)..];
         }
 
         return false;

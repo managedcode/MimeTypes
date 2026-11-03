@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using CSharp = Microsoft.CodeAnalysis.CSharp;
 
 namespace ManagedCode.MimeTypes.Generator;
 
@@ -16,6 +17,8 @@ namespace ManagedCode.MimeTypes.Generator;
 [Generator]
 public sealed class MimeTypeSourceGenerator : IIncrementalGenerator
 {
+    private const int InitializerBatchSize = 128;
+
     private static readonly DiagnosticDescriptor MimeTypesMissingDiagnostic = new(
         "MIME001",
         "MIME catalog input is missing",
@@ -73,9 +76,8 @@ public sealed class MimeTypeSourceGenerator : IIncrementalGenerator
 
             using var document = JsonDocument.Parse(mimeTypeSources[0]!);
 
-            StringBuilder mappingBuilder = new();
-            StringBuilder metadataBuilder = new();
             StringBuilder constantBuilder = new();
+            List<string> metadataInitializers = new();
             Dictionary<string, string> mappings = new(StringComparer.OrdinalIgnoreCase);
             Dictionary<string, string> constants = new(StringComparer.Ordinal);
 
@@ -106,19 +108,20 @@ public sealed class MimeTypeSourceGenerator : IIncrementalGenerator
                     var initializer = BuildMimeTypeInfoInitializer(item.Name, item.Value);
                     if (initializer.Length > 0)
                     {
-                        metadataBuilder.AppendLine($"{initializer},");
+                        metadataInitializers.Add(initializer);
                     }
                 }
             }
 
-            foreach (var item in mappings)
-            {
-                mappingBuilder.AppendLine($"new(\"{Escape(item.Key)}\", \"{Escape(item.Value)}\"),");
-            }
+            var mappingInitializers = mappings.Select(static item => $"new({Literal(item.Key)}, {Literal(item.Value)})").ToArray();
+            var initialization = new StringBuilder();
+            var initializerMethods = new StringBuilder();
+            AppendBatchedInitializer(initialization, initializerMethods, mappingInitializers, "mappings", "BuiltInMimeMapping");
+            AppendBatchedInitializer(initialization, initializerMethods, metadataInitializers, "metadata", "MimeTypeInfo");
 
             foreach (var item in constants)
             {
-                constantBuilder.AppendLine($"public const string {item.Key} = \"{Escape(item.Value)}\";");
+                constantBuilder.AppendLine($"public const string {item.Key} = {Literal(item.Value)};");
             }
 
             context.ReportDiagnostic(Diagnostic.Create(MimeTypesLoadedDiagnostic, Location.None, mappings.Count));
@@ -126,6 +129,7 @@ public sealed class MimeTypeSourceGenerator : IIncrementalGenerator
             context.AddSource("MimeHelper.Properties.cs", SourceText.From(@$"
 using System;
 using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 
 namespace ManagedCode.MimeTypes
 {{
@@ -133,14 +137,10 @@ public static partial class MimeHelper
 {{
 static partial void Init()
 {{
-InitializeBuiltInRegistry(
-[
-{mappingBuilder}
-],
-[
-{metadataBuilder}
-]);
+{initialization}
+InitializeBuiltInRegistry(mappings, metadata);
 }}
+{initializerMethods}
 {constantBuilder}
 }}
 }}
@@ -149,6 +149,39 @@ InitializeBuiltInRegistry(
         catch (Exception ex)
         {
             context.ReportDiagnostic(Diagnostic.Create(GeneratorErrorDiagnostic, Location.None, ex.ToString()));
+        }
+    }
+
+    private static void AppendBatchedInitializer(
+        StringBuilder initialization,
+        StringBuilder methods,
+        IReadOnlyList<string> initializers,
+        string variable,
+        string elementType)
+    {
+        if (initializers.Count == 0)
+        {
+            initialization.AppendLine($"var {variable} = Array.Empty<{elementType}>();");
+            return;
+        }
+
+        initialization.AppendLine($"var {variable} = new {elementType}[{initializers.Count}];");
+        // Keep catalog size from growing a single method the JIT must compile at startup.
+        for (var start = 0; start < initializers.Count; start += InitializerBatchSize)
+        {
+            var method = $"Fill_{variable}_{start}";
+            initialization.AppendLine($"{method}({variable});");
+            // These methods run once. Optimizing thousands of initializer instructions adds startup time.
+            methods.AppendLine("[MethodImpl(MethodImplOptions.NoOptimization)]");
+            methods.AppendLine($"private static void {method}({elementType}[] values)");
+            methods.AppendLine("{");
+            var end = Math.Min(start + InitializerBatchSize, initializers.Count);
+            for (var index = start; index < end; index++)
+            {
+                methods.AppendLine($"values[{index}] = {initializers[index]};");
+            }
+
+            methods.AppendLine("}");
         }
     }
 
@@ -323,14 +356,18 @@ Offset = {offset.ToString(System.Globalization.CultureInfo.InvariantCulture)}
 
     private static string ParseKey(string key)
     {
-        if (char.IsDigit(key[0]))
+        var identifier = new StringBuilder(key.Length + 1);
+        foreach (var character in key.ToUpperInvariant())
         {
-            key = "_" + key;
+            identifier.Append(CSharp.SyntaxFacts.IsIdentifierPartCharacter(character) ? character : '_');
         }
 
-        key = key.Replace("-", "_").Replace('.', '_');
+        if (!CSharp.SyntaxFacts.IsIdentifierStartCharacter(identifier[0]))
+        {
+            identifier.Insert(0, '_');
+        }
 
-        return key.ToUpperInvariant();
+        return identifier.ToString();
     }
 
     private static string NormalizeExtension(string extension)
@@ -340,15 +377,6 @@ Offset = {offset.ToString(System.Globalization.CultureInfo.InvariantCulture)}
 
     private static string Literal(string? value)
     {
-        return value == null ? "null" : $"\"{Escape(value)}\"";
-    }
-
-    private static string Escape(string value)
-    {
-        return value
-            .Replace("\\", "\\\\")
-            .Replace("\"", "\\\"")
-            .Replace("\r", "\\r")
-            .Replace("\n", "\\n");
+        return value == null ? "null" : CSharp.SymbolDisplay.FormatLiteral(value, quote: true);
     }
 }

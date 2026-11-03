@@ -33,6 +33,13 @@ public class ContentDetectionTests
     }
 
     [Fact]
+    public void SharedRegistryMagicSignature_ShouldNotChooseAnArbitraryMime()
+    {
+        // AC-3 and E-AC-3 share this signature.
+        Detect([0x0B, 0x77]).ShouldBe(MimeHelper.BIN);
+    }
+
+    [Fact]
     public void PngHeader_ShouldBeDetected()
     {
         var pngBytes = new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00 };
@@ -79,6 +86,16 @@ public class ContentDetectionTests
     }
 
     [Fact]
+    public void ZipMarker_ShouldMatchMixedCaseAtTheEndOfTheProbe()
+    {
+        var header = new byte[560];
+        new byte[] { 0x50, 0x4B, 0x03, 0x04 }.CopyTo(header, 0);
+        "WoRd/"u8.CopyTo(header.AsSpan(header.Length - 5));
+
+        Detect(header).ShouldBe(MimeHelper.DOCX);
+    }
+
+    [Fact]
     public void ShortStream_ShouldReturnDefault()
     {
         using var stream = new MemoryStream(new byte[] { 0x01, 0x02 });
@@ -111,6 +128,18 @@ public class ContentDetectionTests
         MimeHelper.TryGetMimeTypeByContent(stream, out var mime).ShouldBeTrue();
         mime.ShouldBe(MimeHelper.PDF);
         stream.Position.ShouldBe(0);
+    }
+
+    [Fact]
+    public void SeekableStream_ShouldRestoreTheOriginalPositionOnce()
+    {
+        using var stream = new SeekCountingStream("xx%PDF-1.7"u8.ToArray());
+        stream.Position = 2;
+
+        MimeHelper.GetMimeTypeByContent(stream).ShouldBe(MimeHelper.PDF);
+
+        stream.Position.ShouldBe(2);
+        stream.SeekCount.ShouldBe(1);
     }
 
     [Fact]
@@ -169,6 +198,17 @@ public class ContentDetectionTests
         finally
         {
             File.Delete(tempFile);
+        }
+    }
+
+    private sealed class SeekCountingStream(byte[] bytes) : MemoryStream(bytes)
+    {
+        public int SeekCount { get; private set; }
+
+        public override long Seek(long offset, SeekOrigin loc)
+        {
+            SeekCount++;
+            return base.Seek(offset, loc);
         }
     }
 

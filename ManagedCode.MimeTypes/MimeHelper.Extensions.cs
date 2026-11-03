@@ -3,6 +3,7 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
+using System.Text;
 using System.Threading;
 
 namespace ManagedCode.MimeTypes;
@@ -92,33 +93,59 @@ public static partial class MimeHelper
     /// <returns><c>true</c> when metadata exists; otherwise <c>false</c>.</returns>
     public static bool TryGetMimeTypeInfoByExtension(string? value, out MimeTypeInfo info)
     {
-        info = null!;
-        if (string.IsNullOrWhiteSpace(value))
+        var input = value.AsSpan().Trim();
+        var separator = input.IndexOfAny(QueryFragmentSeparators);
+        if (separator >= 0)
         {
+            input = input[..separator];
+        }
+
+        var fileName = Path.GetFileName(input);
+        if (fileName.IsEmpty)
+        {
+            fileName = input;
+        }
+
+        fileName = fileName.Trim();
+        var snapshot = Volatile.Read(ref Registry);
+        var suffix = fileName;
+        while (suffix.IndexOf('.') is var dot && dot >= 0)
+        {
+            suffix = suffix[(dot + 1)..].TrimStart('.');
+            if (TryGetCandidateMetadata(suffix.TrimEnd('.'), snapshot, out info))
+            {
+                return true;
+            }
+        }
+
+        return TryGetCandidateMetadata(fileName.Trim('.'), snapshot, out info);
+    }
+
+    private static bool TryGetCandidateMetadata(ReadOnlySpan<char> candidate, RegistrySnapshot snapshot, out MimeTypeInfo info)
+    {
+        candidate = candidate.Trim().TrimStart('.');
+        if (candidate.IsEmpty)
+        {
+            info = null!;
             return false;
         }
 
-        foreach (var candidate in EnumerateExtensionCandidates(value!))
+        // Preserve the registry's invariant normalization for non-ASCII custom extensions.
+        if (!Ascii.IsValid(candidate))
         {
-            var normalized = NormalizeExtensionKey(candidate);
-            if (normalized.Length == 0)
-            {
-                continue;
-            }
-
-            if (MimeTypes.TryGetValue(normalized, out var mime) && TryGetMimeTypeInfo(mime, out info))
-            {
-                return true;
-            }
-
-            if (MimeTypeInfosByExtension.TryGetValue(normalized, out var found))
-            {
-                info = found;
-                return true;
-            }
+            candidate = NormalizeExtensionKey(candidate.ToString());
         }
 
-        return false;
+        if (TryGetEffectiveMimeType(candidate, snapshot, out var mime) && TryGetMimeTypeInfo(mime, out info))
+        {
+            return true;
+        }
+
+#if NET10_0_OR_GREATER
+        return MimeTypeInfosByExtension.GetAlternateLookup<ReadOnlySpan<char>>().TryGetValue(candidate, out info!);
+#else
+        return MimeTypeInfosByExtension.TryGetValue(candidate.ToString(), out info!);
+#endif
     }
 
     /// <summary>
@@ -135,7 +162,7 @@ public static partial class MimeHelper
             return false;
         }
 
-        if (ExtensionsByMime.TryGetValue(mime.Trim(), out var set) && set.Count > 0)
+        if (Volatile.Read(ref Registry).ExtensionsByMime.TryGetValue(mime.Trim(), out var set) && set.Count > 0)
         {
             extensions = set;
             return true;
@@ -151,7 +178,53 @@ public static partial class MimeHelper
     /// <param name="mime">The MIME value to associate with the extension.</param>
     public static void RegisterMimeType(string extension, string mime)
     {
-        RegisterMimeTypeInternal(extension, mime, overwrite: true);
+        if (string.IsNullOrWhiteSpace(extension) || string.IsNullOrWhiteSpace(mime))
+        {
+            return;
+        }
+
+        var normalized = NormalizeExtensionKey(extension);
+        if (normalized.Length == 0)
+        {
+            return;
+        }
+
+        var normalizedMime = mime.Trim();
+        BuiltInMimeTypes.TryGetValue(normalized, out var builtInMime);
+        var dotted = "." + normalized;
+        while (true)
+        {
+            var snapshot = Volatile.Read(ref Registry);
+            var previousMime = TryGetExtensionOverride(snapshot, normalized, out var overriddenMime) ? overriddenMime : builtInMime;
+            if (string.Equals(previousMime, normalizedMime, StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            var reverse = snapshot.ExtensionsByMime;
+            if (!string.Equals(previousMime, normalizedMime, StringComparison.OrdinalIgnoreCase))
+            {
+                if (previousMime != null)
+                {
+                    reverse = RemoveExtensionFromMimeMap(reverse, previousMime, dotted);
+                }
+
+                if (!reverse.TryGetValue(normalizedMime, out var extensions))
+                {
+                    extensions = ImmutableSortedSet.Create<string>(StringComparer.OrdinalIgnoreCase);
+                }
+
+                reverse = reverse.SetItem(normalizedMime, extensions.Add(dotted));
+            }
+
+            var overrides = SetExtensionOverride(snapshot.Overrides, normalized, normalizedMime,
+                remove: string.Equals(normalizedMime, builtInMime, StringComparison.Ordinal));
+            var updated = new RegistrySnapshot(overrides, reverse);
+            if (ReferenceEquals(Interlocked.CompareExchange(ref Registry, updated, snapshot), snapshot))
+            {
+                return;
+            }
+        }
     }
 
     /// <summary>
@@ -172,204 +245,24 @@ public static partial class MimeHelper
             return false;
         }
 
+        BuiltInMimeTypes.TryGetValue(normalized, out var builtInMime);
+        var dotted = "." + normalized;
         while (true)
         {
-            var snapshot = MimeTypes;
-            if (!snapshot.TryGetValue(normalized, out var mime))
+            var snapshot = Volatile.Read(ref Registry);
+            var mime = TryGetExtensionOverride(snapshot, normalized, out var overriddenMime) ? overriddenMime : builtInMime;
+            if (mime == null)
             {
                 return false;
             }
 
-            var updated = snapshot.Remove(normalized);
-            if (!ReferenceEquals(Interlocked.CompareExchange(ref MimeTypes, updated, snapshot), snapshot))
+            var overrides = SetExtensionOverride(snapshot.Overrides, normalized, mime: null, remove: builtInMime == null);
+            var updated = new RegistrySnapshot(overrides,
+                RemoveExtensionFromMimeMap(snapshot.ExtensionsByMime, mime, dotted));
+            if (ReferenceEquals(Interlocked.CompareExchange(ref Registry, updated, snapshot), snapshot))
             {
-                continue;
+                return true;
             }
-
-            RemoveExtensionFromMimeMap(mime, normalized);
-            Volatile.Write(ref _registryMutated, 1);
-            RefreshScriptMimeSet();
-            return true;
-        }
-    }
-
-    private static void RegisterMimeTypeInternal(string extension, string mime)
-    {
-        RegisterMimeTypeInternal(extension, mime, overwrite: true);
-    }
-
-    private static void RegisterMimeTypeInternal(string extension, string mime, bool overwrite)
-    {
-        if (string.IsNullOrWhiteSpace(extension) || string.IsNullOrWhiteSpace(mime))
-        {
-            return;
-        }
-
-        var normalizedExtension = NormalizeExtensionKey(extension);
-        if (normalizedExtension.Length == 0)
-        {
-            return;
-        }
-
-        var normalizedMime = string.Intern(mime.Trim());
-
-        string? previousMime = null;
-        string? effectiveMime = null;
-        var mappingApplied = false;
-        var mappingChanged = false;
-
-        while (true)
-        {
-            var snapshot = MimeTypes;
-
-            if (snapshot.TryGetValue(normalizedExtension, out var existingMime))
-            {
-                if (!overwrite)
-                {
-                    return;
-                }
-
-                if (string.Equals(existingMime, normalizedMime, StringComparison.Ordinal))
-                {
-                    effectiveMime = normalizedMime;
-                    mappingApplied = true;
-                    break;
-                }
-
-                var updated = snapshot.SetItem(normalizedExtension, normalizedMime);
-                if (!ReferenceEquals(Interlocked.CompareExchange(ref MimeTypes, updated, snapshot), snapshot))
-                {
-                    continue;
-                }
-
-                previousMime = existingMime;
-                effectiveMime = normalizedMime;
-                mappingApplied = true;
-                mappingChanged = true;
-                break;
-            }
-            else
-            {
-                var updated = snapshot.Add(normalizedExtension, normalizedMime);
-                if (!ReferenceEquals(Interlocked.CompareExchange(ref MimeTypes, updated, snapshot), snapshot))
-                {
-                    continue;
-                }
-
-                effectiveMime = normalizedMime;
-                mappingApplied = true;
-                mappingChanged = true;
-                break;
-            }
-        }
-
-        if (!mappingApplied || effectiveMime == null)
-        {
-            return;
-        }
-
-        AddExtensionToMimeMap(effectiveMime, normalizedExtension);
-
-        if (mappingChanged && previousMime != null && !string.Equals(previousMime, effectiveMime, StringComparison.Ordinal))
-        {
-            RemoveExtensionFromMimeMap(previousMime, normalizedExtension);
-        }
-
-        if (mappingChanged)
-        {
-            Volatile.Write(ref _registryMutated, 1);
-            RefreshScriptMimeSet();
-        }
-    }
-
-    private static void RegisterMimeTypeInfoInternal(MimeTypeInfo info)
-    {
-        if (string.IsNullOrWhiteSpace(info.Mime))
-        {
-            return;
-        }
-
-        var normalizedMime = string.Intern(info.Mime.Trim());
-        if (!string.Equals(normalizedMime, info.Mime, StringComparison.Ordinal))
-        {
-            info = info with { Mime = normalizedMime };
-        }
-
-        MimeTypeInfos = MimeTypeInfos.SetItem(normalizedMime, info);
-
-        foreach (var extension in info.Extensions)
-        {
-            var normalizedExtension = NormalizeExtensionKey(extension);
-            if (normalizedExtension.Length > 0)
-            {
-                MimeTypeInfosByExtension = MimeTypeInfosByExtension.SetItem(normalizedExtension, info);
-            }
-        }
-    }
-
-    private static IEnumerable<string> EnumerateExtensionCandidates(string value)
-    {
-        var trimmed = value.Trim();
-        if (trimmed.Length == 0)
-        {
-            yield break;
-        }
-
-        var separatorIndex = trimmed.AsSpan().IndexOfAny(QueryFragmentSeparators);
-        if (separatorIndex >= 0)
-        {
-            trimmed = trimmed[..separatorIndex];
-        }
-
-        string fileName;
-        try
-        {
-            fileName = Path.GetFileName(trimmed);
-        }
-        catch (ArgumentException)
-        {
-            fileName = trimmed;
-        }
-
-        if (string.IsNullOrEmpty(fileName))
-        {
-            fileName = trimmed;
-        }
-
-        fileName = fileName.Trim();
-        if (fileName.Length == 0)
-        {
-            yield break;
-        }
-
-        if (!fileName.Contains('.'))
-        {
-            var bare = fileName.Trim('.');
-            if (bare.Length > 0)
-            {
-                yield return bare;
-            }
-            yield break;
-        }
-
-        var yielded = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        var sanitized = fileName.Trim('.');
-        var index = fileName.IndexOf('.');
-        while (index >= 0 && index < fileName.Length - 1)
-        {
-            var remainder = fileName[(index + 1)..];
-            var candidate = remainder.Trim('.');
-            if (candidate.Length > 0 && yielded.Add(candidate))
-            {
-                yield return candidate;
-            }
-
-            index = fileName.IndexOf('.', index + 1);
-        }
-
-        if (sanitized.Length > 0 && yielded.Add(sanitized))
-        {
-            yield return sanitized;
         }
     }
 
@@ -382,7 +275,8 @@ public static partial class MimeHelper
         }
 
         var input = value!;
-        if (IsBareExtension(input) && TryGetEffectiveMimeType(input.AsSpan(), out var directMime))
+        var snapshot = Volatile.Read(ref Registry);
+        if (IsBareExtension(input) && TryGetEffectiveMimeType(input.AsSpan(), snapshot, out var directMime))
         {
             mime = directMime;
             return true;
@@ -424,7 +318,7 @@ public static partial class MimeHelper
             }
 
             var candidate = input.AsSpan(index + 1, end - index - 1).Trim('.');
-            if (!candidate.IsEmpty && TryGetEffectiveMimeType(candidate, out var foundMime))
+            if (!candidate.IsEmpty && TryGetEffectiveMimeType(candidate, snapshot, out var foundMime))
             {
                 mime = foundMime;
                 return true;
@@ -434,20 +328,66 @@ public static partial class MimeHelper
         return false;
     }
 
-    private static bool TryGetEffectiveMimeType(ReadOnlySpan<char> extension, out string mime)
+    private static bool TryGetEffectiveMimeType(ReadOnlySpan<char> extension, RegistrySnapshot snapshot, out string mime)
     {
-        if (Volatile.Read(ref _registryMutated) == 0)
+        if (TryGetExtensionOverride(snapshot, extension, out var overriddenMime))
         {
-#if NET10_0_OR_GREATER
-            return BuiltInMimeTypes
-                .GetAlternateLookup<ReadOnlySpan<char>>()
-                .TryGetValue(extension, out mime!);
-#else
-            return BuiltInMimeTypes.TryGetValue(extension.ToString(), out mime!);
-#endif
+            mime = overriddenMime!;
+            return overriddenMime != null;
         }
 
-        return MimeTypes.TryGetValue(extension.ToString(), out mime!);
+#if NET9_0_OR_GREATER
+        return BuiltInMimeTypes.GetAlternateLookup<ReadOnlySpan<char>>().TryGetValue(extension, out mime!);
+#else
+        return BuiltInMimeTypes.TryGetValue(extension.ToString(), out mime!);
+#endif
+    }
+
+    private static bool TryGetExtensionOverride(RegistrySnapshot snapshot, ReadOnlySpan<char> extension, out string? mime)
+    {
+        // Hash buckets keep span lookups allocation-free and retain exact keys for collision checks.
+        if (!snapshot.Overrides.IsEmpty &&
+            snapshot.Overrides.TryGetValue(string.GetHashCode(extension, StringComparison.OrdinalIgnoreCase), out var entries))
+        {
+            foreach (var entry in entries)
+            {
+                if (extension.Equals(entry.Extension, StringComparison.OrdinalIgnoreCase))
+                {
+                    mime = entry.Mime;
+                    return true;
+                }
+            }
+        }
+
+        mime = null;
+        return false;
+    }
+
+    private static ImmutableDictionary<int, ImmutableArray<ExtensionOverride>> SetExtensionOverride(
+        ImmutableDictionary<int, ImmutableArray<ExtensionOverride>> overrides, string extension, string? mime, bool remove)
+    {
+        var hash = string.GetHashCode(extension.AsSpan(), StringComparison.OrdinalIgnoreCase);
+        if (!overrides.TryGetValue(hash, out var entries))
+        {
+            return remove ? overrides : overrides.Add(hash, [new(extension, mime)]);
+        }
+
+        for (var index = 0; index < entries.Length; index++)
+        {
+            if (!string.Equals(entries[index].Extension, extension, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            if (remove)
+            {
+                return entries.Length == 1 ? overrides.Remove(hash) : overrides.SetItem(hash, entries.RemoveAt(index));
+            }
+
+            return overrides.SetItem(hash, entries.SetItem(index, new(extension, mime)));
+        }
+
+        return remove ? overrides : overrides.SetItem(hash, entries.Add(new(extension, mime)));
     }
 
     private static bool IsBareExtension(string value)
@@ -507,55 +447,11 @@ public static partial class MimeHelper
         });
     }
 
-    private static void AddExtensionToMimeMap(string mime, string extension)
+    private static ImmutableDictionary<string, ImmutableSortedSet<string>> RemoveExtensionFromMimeMap(
+        ImmutableDictionary<string, ImmutableSortedSet<string>> reverse, string mime, string dottedExtension)
     {
-        var dottedExtension = "." + extension;
-        while (true)
-        {
-            var snapshot = ExtensionsByMime;
-            snapshot.TryGetValue(mime, out var existingSet);
-            existingSet ??= ImmutableSortedSet.Create<string>(StringComparer.OrdinalIgnoreCase);
-
-            var updatedSet = existingSet.Add(dottedExtension);
-            if (ReferenceEquals(updatedSet, existingSet))
-            {
-                return;
-            }
-
-            var updatedMap = snapshot.SetItem(mime, updatedSet);
-            if (ReferenceEquals(Interlocked.CompareExchange(ref ExtensionsByMime, updatedMap, snapshot), snapshot))
-            {
-                return;
-            }
-        }
-    }
-
-    private static void RemoveExtensionFromMimeMap(string mime, string extension)
-    {
-        var dottedExtension = "." + extension;
-        while (true)
-        {
-            var snapshot = ExtensionsByMime;
-            if (!snapshot.TryGetValue(mime, out var existingSet))
-            {
-                return;
-            }
-
-            var updatedSet = existingSet.Remove(dottedExtension);
-            if (ReferenceEquals(updatedSet, existingSet))
-            {
-                return;
-            }
-
-            var updatedMap = updatedSet.Count == 0
-                ? snapshot.Remove(mime)
-                : snapshot.SetItem(mime, updatedSet);
-
-            if (ReferenceEquals(Interlocked.CompareExchange(ref ExtensionsByMime, updatedMap, snapshot), snapshot))
-            {
-                return;
-            }
-        }
+        var updatedSet = reverse[mime].Remove(dottedExtension);
+        return updatedSet.Count == 0 ? reverse.Remove(mime) : reverse.SetItem(mime, updatedSet);
     }
 
     private sealed class MimeHelperAdapter : IMimeHelper

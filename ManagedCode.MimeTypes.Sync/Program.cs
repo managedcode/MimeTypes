@@ -319,14 +319,14 @@ internal static partial class MimeTypeSyncTool
 
     private static async Task FetchIanaTemplatesAsync(HttpClient client, IanaRegistry registry, int concurrency, string ianaSource)
     {
-        var throttler = new SemaphoreSlim(Math.Max(1, concurrency));
         var errors = new ConcurrentBag<string>();
+        var entries = registry.Entries.Where(static entry => !string.IsNullOrWhiteSpace(entry.Template));
 
-        var tasks = registry.Entries
-            .Where(static entry => !string.IsNullOrWhiteSpace(entry.Template))
-            .Select(async entry =>
+        await Parallel.ForEachAsync(
+            entries,
+            new ParallelOptions { MaxDegreeOfParallelism = Math.Max(1, concurrency) },
+            async (entry, _) =>
             {
-                await throttler.WaitAsync();
                 try
                 {
                     var templateUrl = ResolveTemplateUrl(ianaSource, entry.Template);
@@ -343,13 +343,7 @@ internal static partial class MimeTypeSyncTool
                 {
                     errors.Add($"{entry.Mime}: {ex.Message}");
                 }
-                finally
-                {
-                    throttler.Release();
-                }
             });
-
-        await Task.WhenAll(tasks);
 
         foreach (var error in errors.OrderBy(static value => value, StringComparer.OrdinalIgnoreCase).Take(20))
         {
@@ -1098,7 +1092,13 @@ internal static partial class MimeTypeSyncTool
                     case "--skip-iana-templates":
                         skipIanaTemplates = true;
                         break;
-                    case "--template-concurrency" when i + 1 < args.Length && int.TryParse(args[++i], NumberStyles.Integer, CultureInfo.InvariantCulture, out var concurrency):
+                    case "--template-concurrency":
+                        if (i + 1 >= args.Length || !int.TryParse(args[i + 1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var concurrency))
+                        {
+                            throw new ArgumentException("--template-concurrency requires an integer.");
+                        }
+
+                        i++;
                         templateConcurrency = Math.Clamp(concurrency, 1, 32);
                         break;
                     case "--source" when i + 1 < args.Length:
@@ -1142,7 +1142,13 @@ internal static partial class MimeTypeSyncTool
             }
 
             output ??= Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "ManagedCode.MimeTypes", "mimeTypes.json"));
-            metadataOutput ??= Path.Combine(Path.GetDirectoryName(output)!, "mimeTypes.metadata.json");
+            output = Path.GetFullPath(output);
+            metadataOutput = Path.GetFullPath(metadataOutput ?? Path.Combine(Path.GetDirectoryName(output)!, "mimeTypes.metadata.json"));
+            var pathComparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+            if (string.Equals(output, metadataOutput, pathComparison))
+            {
+                throw new ArgumentException("The MIME map and metadata must use separate output paths.");
+            }
 
             return new SyncOptions(ianaSource, supplementalSources, curatedSources, output, metadataOutput, preferRemote, useIana, useCurated, skipIanaTemplates, preserveExisting, templateConcurrency);
         }

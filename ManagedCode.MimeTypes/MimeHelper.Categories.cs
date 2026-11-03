@@ -1,36 +1,48 @@
 using System;
 using System.Collections.Frozen;
-using System.Collections.Immutable;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace ManagedCode.MimeTypes;
 
 public static partial class MimeHelper
 {
-    private static readonly Regex XmlPattern = new(@"^(?:application|text)/.*?\+?xml$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-    private static readonly Regex JsonPattern = new(@"^application/(?:.*?\+)?json5?$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-    private static readonly Regex ArchivePattern = new(@"^application/(?:zip|x-(?:7z|rar|tar|bzip2|gzip)-compressed|gzip|vnd\.rar)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-    private static readonly Regex ExecutablePattern = new(@"^application/(?:x-msdownload|x-executable|x-msi|x-apple-diskimage)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-    private static readonly Regex CertificatePattern = new(@"^application/(?:x-x509-ca-cert|pkix-cert|x-pkcs12)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-    private static readonly Regex CalendarPattern = new(@"^(?:text/calendar|application/ics)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-    private static readonly Regex EmailPattern = new(@"^(?:message/(?:rfc822|global)|application/(?:mbox|x-msmessage))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-    private static readonly Regex WordPattern = new(@"^application/(?:msword|vnd\.openxmlformats-officedocument\.wordprocessingml\.|vnd\.ms-word\.|vnd\.oasis\.opendocument\.text)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-    private static readonly Regex SpreadsheetPattern = new(@"^application/(?:vnd\.ms-excel|vnd\.openxmlformats-officedocument\.spreadsheetml\.|vnd\.oasis\.opendocument\.spreadsheet)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-    private static readonly Regex PresentationPattern = new(@"^application/(?:vnd\.ms-powerpoint|vnd\.openxmlformats-officedocument\.presentationml\.|vnd\.oasis\.opendocument\.presentation)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    [GeneratedRegex(@"^(?:application|text)/.*?\+?xml$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex XmlPattern();
 
-    private static readonly Regex ScriptPattern = new(@"^(?:application|text)/(?:javascript|x-javascript|ecmascript|x-ecmascript|typescript|x-typescript|coffeescript|x-php|php|x-httpd-php|x-sh|x-shellscript|shellscript|x-python|x-ruby|x-perl|x-lua|lua|x-tcl|tcl|x-vbs|vbscript|x-vbscript|powershell|x-powershell|x-powershellscript|x-wsh)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    [GeneratedRegex(@"^application/(?:.*?\+)?json5?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex JsonPattern();
 
-    private static readonly ImmutableHashSet<string> ScriptSuffixBlacklist = ImmutableHashSet.CreateRange(StringComparer.OrdinalIgnoreCase, new[]
-    {
-        "postscript",
-        "vnd.adobe.postscript",
-        "vnd.cups-postscript",
-        "x-font-ghostscript"
-    });
+    [GeneratedRegex(@"^application/(?:zip|x-(?:7z|rar|tar|bzip2|gzip)-compressed|gzip|vnd\.rar)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex ArchivePattern();
 
-    private static readonly ImmutableHashSet<string> ScriptExactSuffixes = ImmutableHashSet.CreateRange(StringComparer.OrdinalIgnoreCase, new[]
+    [GeneratedRegex(@"^application/(?:x-msdownload|x-executable|x-msi|x-apple-diskimage)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex ExecutablePattern();
+
+    [GeneratedRegex(@"^application/(?:x-x509-ca-cert|pkix-cert|x-pkcs12)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex CertificatePattern();
+
+    [GeneratedRegex(@"^(?:text/calendar|application/ics)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex CalendarPattern();
+
+    [GeneratedRegex(@"^(?:message/(?:rfc822|global)|application/(?:mbox|x-msmessage))", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex EmailPattern();
+
+    [GeneratedRegex(@"^application/(?:msword|vnd\.openxmlformats-officedocument\.wordprocessingml\.|vnd\.ms-word\.|vnd\.oasis\.opendocument\.text)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex WordPattern();
+
+    [GeneratedRegex(@"^application/(?:vnd\.ms-excel|vnd\.openxmlformats-officedocument\.spreadsheetml\.|vnd\.oasis\.opendocument\.spreadsheet)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex SpreadsheetPattern();
+
+    [GeneratedRegex(@"^application/(?:vnd\.ms-powerpoint|vnd\.openxmlformats-officedocument\.presentationml\.|vnd\.oasis\.opendocument\.presentation)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex PresentationPattern();
+
+
+    [GeneratedRegex(@"^(?:application|text)/(?:javascript|x-javascript|ecmascript|x-ecmascript|typescript|x-typescript|coffeescript|x-php|php|x-httpd-php|x-sh|x-shellscript|shellscript|x-python|x-ruby|x-perl|x-lua|lua|x-tcl|tcl|x-vbs|vbscript|x-vbscript|powershell|x-powershell|x-powershellscript|x-wsh)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex ScriptPattern();
+
+
+    private static readonly FrozenSet<string> ScriptExactSuffixes = new[]
     {
         "javascript",
         "x-javascript",
@@ -59,7 +71,7 @@ public static partial class MimeHelper
         "x-powershell",
         "x-powershellscript",
         "x-wsh"
-    });
+    }.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
 
     private static readonly string[] ScriptSubstringIndicators =
     [
@@ -97,57 +109,88 @@ public static partial class MimeHelper
             return MimeTypeCategory.Unknown;
         }
 
-        var m = mime.ToLowerInvariant();
+        var type = mime.AsSpan();
+        if (type[^1] == '\n')
+        {
+            // Regex end anchors also accepted one terminal newline.
+            type = type[..^1];
+        }
 
-        if (XmlPattern.IsMatch(m)) return MimeTypeCategory.Xml;
-        if (JsonPattern.IsMatch(m)) return MimeTypeCategory.Json;
+        if (type.EndsWith("xml", StringComparison.OrdinalIgnoreCase) &&
+            (type.StartsWith("application/", StringComparison.OrdinalIgnoreCase) ||
+             type.StartsWith("text/", StringComparison.OrdinalIgnoreCase)) &&
+            !type.Contains('\n'))
+        {
+            return MimeTypeCategory.Xml;
+        }
 
-        if (m.StartsWith("video/")) return MimeTypeCategory.Video;
-        if (m.StartsWith("audio/")) return MimeTypeCategory.Audio;
-        if (m.StartsWith("image/")) return MimeTypeCategory.Image;
-        if (m.StartsWith("font/")) return MimeTypeCategory.Font;
-        if (m.StartsWith("model/")) return MimeTypeCategory.Model;
-        if (m.StartsWith("multipart/")) return MimeTypeCategory.Multipart;
-        if (m.StartsWith("message/")) return MimeTypeCategory.Message;
+        const string application = "application/";
+        if (type.StartsWith(application, StringComparison.OrdinalIgnoreCase))
+        {
+            var subtype = type[application.Length..];
+            if ((subtype.Equals("json", StringComparison.OrdinalIgnoreCase) ||
+                 subtype.Equals("json5", StringComparison.OrdinalIgnoreCase) ||
+                 subtype.EndsWith("+json", StringComparison.OrdinalIgnoreCase) ||
+                 subtype.EndsWith("+json5", StringComparison.OrdinalIgnoreCase)) &&
+                !subtype.Contains('\n'))
+            {
+                return MimeTypeCategory.Json;
+            }
+        }
 
-        var isScript = IsScriptMime(m);
+        // The ordinal fast paths cover ASCII MIME tokens; keep the regex case folding for other inputs.
+        if (!System.Text.Ascii.IsValid(type))
+        {
+            if (XmlPattern().IsMatch(mime)) return MimeTypeCategory.Xml;
+            if (JsonPattern().IsMatch(mime)) return MimeTypeCategory.Json;
+        }
 
-        if (m.StartsWith("text/"))
+        if (mime.StartsWith("video/", StringComparison.OrdinalIgnoreCase)) return MimeTypeCategory.Video;
+        if (mime.StartsWith("audio/", StringComparison.OrdinalIgnoreCase)) return MimeTypeCategory.Audio;
+        if (mime.StartsWith("image/", StringComparison.OrdinalIgnoreCase)) return MimeTypeCategory.Image;
+        if (mime.StartsWith("font/", StringComparison.OrdinalIgnoreCase)) return MimeTypeCategory.Font;
+        if (mime.StartsWith("model/", StringComparison.OrdinalIgnoreCase)) return MimeTypeCategory.Model;
+        if (mime.StartsWith("multipart/", StringComparison.OrdinalIgnoreCase)) return MimeTypeCategory.Multipart;
+        if (mime.StartsWith("message/", StringComparison.OrdinalIgnoreCase)) return MimeTypeCategory.Message;
+
+        var isScript = IsScriptMime(mime);
+
+        if (mime.StartsWith("text/", StringComparison.OrdinalIgnoreCase))
         {
             return isScript ? MimeTypeCategory.Script : MimeTypeCategory.Text;
         }
 
-        if (m == "application/pdf") return MimeTypeCategory.Pdf;
-        if (SpreadsheetPattern.IsMatch(m)) return MimeTypeCategory.Spreadsheet;
-        if (PresentationPattern.IsMatch(m)) return MimeTypeCategory.Presentation;
-        if (WordPattern.IsMatch(m)) return MimeTypeCategory.Document;
+        if (mime.Equals("application/pdf", StringComparison.OrdinalIgnoreCase)) return MimeTypeCategory.Pdf;
+        if (SpreadsheetPattern().IsMatch(mime)) return MimeTypeCategory.Spreadsheet;
+        if (PresentationPattern().IsMatch(mime)) return MimeTypeCategory.Presentation;
+        if (WordPattern().IsMatch(mime)) return MimeTypeCategory.Document;
 
-        if (ArchivePattern.IsMatch(m)) return MimeTypeCategory.Archive;
-        if (ExecutablePattern.IsMatch(m)) return MimeTypeCategory.Executable;
-        if (CertificatePattern.IsMatch(m)) return MimeTypeCategory.Certificate;
-        if (CalendarPattern.IsMatch(m)) return MimeTypeCategory.Calendar;
-        if (EmailPattern.IsMatch(m)) return MimeTypeCategory.Email;
+        if (ArchivePattern().IsMatch(mime)) return MimeTypeCategory.Archive;
+        if (ExecutablePattern().IsMatch(mime)) return MimeTypeCategory.Executable;
+        if (CertificatePattern().IsMatch(mime)) return MimeTypeCategory.Certificate;
+        if (CalendarPattern().IsMatch(mime)) return MimeTypeCategory.Calendar;
+        if (EmailPattern().IsMatch(mime)) return MimeTypeCategory.Email;
 
         if (isScript) return MimeTypeCategory.Script;
 
-        if (m == DefaultMimeType || m.EndsWith("/octet-stream", StringComparison.Ordinal))
+        if (mime.Equals(DefaultMimeType, StringComparison.OrdinalIgnoreCase) || mime.EndsWith("/octet-stream", StringComparison.OrdinalIgnoreCase))
         {
             return MimeTypeCategory.Binary;
         }
 
-        if (m.StartsWith("application/"))
+        if (mime.StartsWith("application/", StringComparison.OrdinalIgnoreCase))
         {
-            if (m.Contains("document", StringComparison.Ordinal) || m.Contains("msword", StringComparison.Ordinal) || m.Contains("officedocument", StringComparison.Ordinal))
+            if (mime.Contains("document", StringComparison.OrdinalIgnoreCase) || mime.Contains("msword", StringComparison.OrdinalIgnoreCase) || mime.Contains("officedocument", StringComparison.OrdinalIgnoreCase))
             {
                 return MimeTypeCategory.Document;
             }
 
-            if (m.Contains("spreadsheet", StringComparison.Ordinal))
+            if (mime.Contains("spreadsheet", StringComparison.OrdinalIgnoreCase))
             {
                 return MimeTypeCategory.Spreadsheet;
             }
 
-            if (m.Contains("presentation", StringComparison.Ordinal))
+            if (mime.Contains("presentation", StringComparison.OrdinalIgnoreCase))
             {
                 return MimeTypeCategory.Presentation;
             }
@@ -197,11 +240,11 @@ public static partial class MimeHelper
     /// <summary>Checks whether the supplied MIME is considered binary.</summary>
     public static bool IsBinary(string mime) => GetMimeCategory(mime) == MimeTypeCategory.Binary;
 
-    private static void RefreshScriptMimeSet()
+    private static void InitializeScriptMimeSet()
     {
         var builder = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var mime in MimeTypes.Values)
+        foreach (var mime in BuiltInMimeTypes.Values)
         {
             if (string.IsNullOrWhiteSpace(mime))
             {
@@ -215,11 +258,9 @@ public static partial class MimeHelper
             }
         }
 
-        var frozen = builder.Count == 0
+        _scriptMimeSet = builder.Count == 0
             ? FrozenSet<string>.Empty
             : builder.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
-
-        Volatile.Write(ref _scriptMimeSet, frozen);
     }
 
     private static bool IsScriptMime(string mime)
@@ -229,12 +270,13 @@ public static partial class MimeHelper
             return false;
         }
 
-        if (mime.Contains("postscript", StringComparison.Ordinal) || mime.Contains("ghostscript", StringComparison.Ordinal))
+        if (mime.Contains("postscript", StringComparison.OrdinalIgnoreCase) || mime.Contains("ghostscript", StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
 
-        if (Volatile.Read(ref _scriptMimeSet).Contains(mime))
+        // Classification depends only on the MIME text. Custom values use the same predicate.
+        if (_scriptMimeSet.Contains(mime))
         {
             return true;
         }
@@ -244,7 +286,7 @@ public static partial class MimeHelper
 
     private static bool IsScriptMimeCore(string mime)
     {
-        if (ScriptPattern.IsMatch(mime))
+        if (ScriptPattern().IsMatch(mime))
         {
             return true;
         }
@@ -255,26 +297,25 @@ public static partial class MimeHelper
             return false;
         }
 
-        var suffix = mime[(slashIndex + 1)..];
+        var suffix = mime.AsSpan(slashIndex + 1);
 
-        if (suffix.Contains("postscript", StringComparison.Ordinal) || suffix.Contains("ghostscript", StringComparison.Ordinal))
+        if (suffix.Contains("postscript", StringComparison.OrdinalIgnoreCase) || suffix.Contains("ghostscript", StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
 
-        if (ScriptSuffixBlacklist.Contains(suffix))
-        {
-            return false;
-        }
-
-        if (ScriptExactSuffixes.Contains(suffix))
+#if NET9_0_OR_GREATER
+        if (ScriptExactSuffixes.GetAlternateLookup<ReadOnlySpan<char>>().Contains(suffix))
+#else
+        if (ScriptExactSuffixes.Contains(suffix.ToString()))
+#endif
         {
             return true;
         }
 
         foreach (var indicator in ScriptSubstringIndicators)
         {
-            if (suffix.Contains(indicator, StringComparison.Ordinal))
+            if (suffix.Contains(indicator, StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }

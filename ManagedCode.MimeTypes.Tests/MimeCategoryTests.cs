@@ -18,6 +18,9 @@ public class MimeCategoryTests
     [InlineData("font/woff2", MimeTypeCategory.Font)]
     [InlineData("model/gltf-binary", MimeTypeCategory.Model)]
     [InlineData("application/pdf", MimeTypeCategory.Pdf)]
+    [InlineData("APPLICATION/PDF", MimeTypeCategory.Pdf)]
+    [InlineData("IMAGE/PNG", MimeTypeCategory.Image)]
+    [InlineData("TEXT/X-CUSTOM-SCRIPT", MimeTypeCategory.Script)]
     public void BasicMimeCategories_ShouldMatch(string mime, MimeTypeCategory expectedCategory)
     {
         MimeHelper.GetMimeCategory(mime).ShouldBe(expectedCategory);
@@ -26,6 +29,7 @@ public class MimeCategoryTests
     [Theory]
     [InlineData("application/json")]
     [InlineData("application/ld+json")]
+    [InlineData("APPLICATION/LD+JSON")]
     [InlineData("application/json5")]
     [InlineData("application/activity+json")]
     public void JsonMimeTypes_ShouldBeJson(string mime)
@@ -38,6 +42,7 @@ public class MimeCategoryTests
     [InlineData("application/xml")]
     [InlineData("text/xml")]
     [InlineData("application/atom+xml")]
+    [InlineData("APPLICATION/ATOM+XML")]
     [InlineData("application/mathml+xml")]
     public void XmlMimeTypes_ShouldBeXml(string mime)
     {

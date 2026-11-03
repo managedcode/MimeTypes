@@ -13,16 +13,22 @@ public static partial class MimeHelper
 {
     private readonly record struct BuiltInMimeMapping(string Extension, string Mime);
 
+    private readonly record struct ExtensionOverride(string Extension, string? Mime);
+
+    private sealed record RegistrySnapshot(
+        ImmutableDictionary<int, ImmutableArray<ExtensionOverride>> Overrides,
+        ImmutableDictionary<string, ImmutableSortedSet<string>> ExtensionsByMime);
+
     private const int ZipProbeLength = 560;
     private static string _defaultMimeType = BIN;
 
-    private static ImmutableDictionary<string, string> MimeTypes = ImmutableDictionary.Create<string, string>(StringComparer.OrdinalIgnoreCase);
+    private static RegistrySnapshot Registry = new(
+        ImmutableDictionary<int, ImmutableArray<ExtensionOverride>>.Empty,
+        ImmutableDictionary.Create<string, ImmutableSortedSet<string>>(StringComparer.OrdinalIgnoreCase));
     private static FrozenDictionary<string, string> BuiltInMimeTypes = FrozenDictionary<string, string>.Empty;
-    private static ImmutableDictionary<string, ImmutableSortedSet<string>> ExtensionsByMime = ImmutableDictionary.Create<string, ImmutableSortedSet<string>>(StringComparer.OrdinalIgnoreCase);
     private static ImmutableDictionary<string, MimeTypeInfo> MimeTypeInfos = ImmutableDictionary.Create<string, MimeTypeInfo>(StringComparer.OrdinalIgnoreCase);
-    private static ImmutableDictionary<string, MimeTypeInfo> MimeTypeInfosByExtension = ImmutableDictionary.Create<string, MimeTypeInfo>(StringComparer.OrdinalIgnoreCase);
+    private static FrozenDictionary<string, MimeTypeInfo> MimeTypeInfosByExtension = FrozenDictionary<string, MimeTypeInfo>.Empty;
     private static IReadOnlyCollection<MimeTypeInfo> KnownMimeTypes = ImmutableArray<MimeTypeInfo>.Empty;
-    private static int _registryMutated;
 
     /// <summary>
     /// Gets the MIME type returned when no better match is found.
@@ -38,8 +44,7 @@ public static partial class MimeHelper
     {
         Init();
         RefreshContentDetectionSignatures();
-        Volatile.Write(ref _defaultMimeType, string.Intern(BIN));
-        RefreshScriptMimeSet();
+        InitializeScriptMimeSet();
     }
 
     /// <summary>
@@ -54,7 +59,7 @@ public static partial class MimeHelper
         ReadOnlySpan<BuiltInMimeMapping> mappings,
         MimeTypeInfo[] metadata)
     {
-        var mimeTypes = ImmutableDictionary.CreateBuilder<string, string>(StringComparer.OrdinalIgnoreCase);
+        var mimeTypes = new Dictionary<string, string>(mappings.Length, StringComparer.OrdinalIgnoreCase);
         var extensionSets = new Dictionary<string, ImmutableSortedSet<string>.Builder>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var mapping in mappings)
@@ -77,7 +82,7 @@ public static partial class MimeHelper
         }
 
         var mimeTypeInfos = ImmutableDictionary.CreateBuilder<string, MimeTypeInfo>(StringComparer.OrdinalIgnoreCase);
-        var mimeTypeInfosByExtension = ImmutableDictionary.CreateBuilder<string, MimeTypeInfo>(StringComparer.OrdinalIgnoreCase);
+        var mimeTypeInfosByExtension = new Dictionary<string, MimeTypeInfo>(StringComparer.OrdinalIgnoreCase);
         foreach (var info in metadata)
         {
             mimeTypeInfos[info.Mime] = info;
@@ -92,11 +97,10 @@ public static partial class MimeHelper
             }
         }
 
-        MimeTypes = mimeTypes.ToImmutable();
+        Registry = Registry with { ExtensionsByMime = extensionsByMime.ToImmutable() };
         BuiltInMimeTypes = mimeTypes.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
-        ExtensionsByMime = extensionsByMime.ToImmutable();
         MimeTypeInfos = mimeTypeInfos.ToImmutable();
-        MimeTypeInfosByExtension = mimeTypeInfosByExtension.ToImmutable();
+        MimeTypeInfosByExtension = mimeTypeInfosByExtension.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
         Array.Sort(metadata, static (left, right) => StringComparer.OrdinalIgnoreCase.Compare(left.Mime, right.Mime));
         KnownMimeTypes = Array.AsReadOnly(metadata);
@@ -114,6 +118,6 @@ public static partial class MimeHelper
             throw new ArgumentException("Default MIME type cannot be null or whitespace.", nameof(mime));
         }
 
-        Volatile.Write(ref _defaultMimeType, string.Intern(mime.Trim()));
+        Volatile.Write(ref _defaultMimeType, mime.Trim());
     }
 }
