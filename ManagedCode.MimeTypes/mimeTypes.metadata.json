@@ -28250,6 +28250,78 @@
     ],
     "magicSignatures": []
   },
+  "application/vnd.ms-visio.drawing": {
+    "mime": "application/vnd.ms-visio.drawing",
+    "extensions": [
+      ".vsdx"
+    ],
+    "isIanaRegistered": false,
+    "isObsolete": false,
+    "source": "curated",
+    "deprecatedAliases": [],
+    "references": [],
+    "magicSignatures": []
+  },
+  "application/vnd.ms-visio.drawing.macroenabled.12": {
+    "mime": "application/vnd.ms-visio.drawing.macroenabled.12",
+    "extensions": [
+      ".vsdm"
+    ],
+    "isIanaRegistered": false,
+    "isObsolete": false,
+    "source": "curated",
+    "deprecatedAliases": [],
+    "references": [],
+    "magicSignatures": []
+  },
+  "application/vnd.ms-visio.stencil": {
+    "mime": "application/vnd.ms-visio.stencil",
+    "extensions": [
+      ".vssx"
+    ],
+    "isIanaRegistered": false,
+    "isObsolete": false,
+    "source": "curated",
+    "deprecatedAliases": [],
+    "references": [],
+    "magicSignatures": []
+  },
+  "application/vnd.ms-visio.stencil.macroenabled.12": {
+    "mime": "application/vnd.ms-visio.stencil.macroenabled.12",
+    "extensions": [
+      ".vssm"
+    ],
+    "isIanaRegistered": false,
+    "isObsolete": false,
+    "source": "curated",
+    "deprecatedAliases": [],
+    "references": [],
+    "magicSignatures": []
+  },
+  "application/vnd.ms-visio.template": {
+    "mime": "application/vnd.ms-visio.template",
+    "extensions": [
+      ".vstx"
+    ],
+    "isIanaRegistered": false,
+    "isObsolete": false,
+    "source": "curated",
+    "deprecatedAliases": [],
+    "references": [],
+    "magicSignatures": []
+  },
+  "application/vnd.ms-visio.template.macroenabled.12": {
+    "mime": "application/vnd.ms-visio.template.macroenabled.12",
+    "extensions": [
+      ".vstm"
+    ],
+    "isIanaRegistered": false,
+    "isObsolete": false,
+    "source": "curated",
+    "deprecatedAliases": [],
+    "references": [],
+    "magicSignatures": []
+  },
   "application/vnd.ms-visio.viewer": {
     "mime": "application/vnd.ms-visio.viewer",
     "extensions": [
@@ -38174,7 +38246,6 @@
     "mime": "application/vnd.visio",
     "extensions": [
       ".vsd",
-      ".vsdx",
       ".vss",
       ".vst",
       ".vsw",

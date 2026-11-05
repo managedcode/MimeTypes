@@ -106,5 +106,41 @@
     "mime": "text/event-stream",
     "source": "MDN Server-sent events",
     "reason": "Server-sent events require text/event-stream, but the MIME has no normal file extension in IANA or Apache."
+  },
+  {
+    "extension": "vsdx",
+    "mime": "application/vnd.ms-visio.drawing",
+    "source": "https://github.com/apache/tika/blob/main/tika-core/src/main/resources/org/apache/tika/mime/tika-mimetypes.xml",
+    "reason": "Distinguish ZIP-based Visio drawings, stencils, templates, and macro-enabled packages from legacy binary Visio files."
+  },
+  {
+    "extension": "vsdm",
+    "mime": "application/vnd.ms-visio.drawing.macroenabled.12",
+    "source": "https://github.com/apache/tika/blob/main/tika-core/src/main/resources/org/apache/tika/mime/tika-mimetypes.xml",
+    "reason": "Distinguish ZIP-based Visio drawings, stencils, templates, and macro-enabled packages from legacy binary Visio files."
+  },
+  {
+    "extension": "vssx",
+    "mime": "application/vnd.ms-visio.stencil",
+    "source": "https://github.com/apache/tika/blob/main/tika-core/src/main/resources/org/apache/tika/mime/tika-mimetypes.xml",
+    "reason": "Distinguish ZIP-based Visio drawings, stencils, templates, and macro-enabled packages from legacy binary Visio files."
+  },
+  {
+    "extension": "vssm",
+    "mime": "application/vnd.ms-visio.stencil.macroenabled.12",
+    "source": "https://github.com/apache/tika/blob/main/tika-core/src/main/resources/org/apache/tika/mime/tika-mimetypes.xml",
+    "reason": "Distinguish ZIP-based Visio drawings, stencils, templates, and macro-enabled packages from legacy binary Visio files."
+  },
+  {
+    "extension": "vstx",
+    "mime": "application/vnd.ms-visio.template",
+    "source": "https://github.com/apache/tika/blob/main/tika-core/src/main/resources/org/apache/tika/mime/tika-mimetypes.xml",
+    "reason": "Distinguish ZIP-based Visio drawings, stencils, templates, and macro-enabled packages from legacy binary Visio files."
+  },
+  {
+    "extension": "vstm",
+    "mime": "application/vnd.ms-visio.template.macroenabled.12",
+    "source": "https://github.com/apache/tika/blob/main/tika-core/src/main/resources/org/apache/tika/mime/tika-mimetypes.xml",
+    "reason": "Distinguish ZIP-based Visio drawings, stencils, templates, and macro-enabled packages from legacy binary Visio files."
   }
 ]

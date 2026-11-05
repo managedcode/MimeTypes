@@ -50,7 +50,7 @@ Targets: `net8.0`, `net9.0`, and `net10.0`.
 | Extension lookup | `GetMimeType("report.pdf")` | Handles file names, extensions, URLs, query strings, and multi-part extension candidates. |
 | Reverse lookup | `GetExtensions("image/jpeg")` | Returns known dot-prefixed extensions for a MIME value. |
 | Registry metadata | `TryGetMimeTypeInfo(...)`, `GetKnownMimeTypes()` | Includes IANA registration status, template URLs, references, intended usage, aliases, and magic-number metadata. |
-| Content detection | `GetMimeTypeByContent(stream)` | Sniffs common signatures plus parseable registry magic prefixes. Seekable streams are restored to their original position. |
+| Content detection | `GetMimeTypeByContent(stream)` | Sniffs common signatures and registry magic prefixes, and inspects ZIP, compound Office, RIFF, ISO BMFF, and Ogg containers. Seekable streams are restored to their original position. |
 | Content validation | `MatchesMimeTypeByContent(...)`, `MatchesExtensionByContent(...)` | Checks whether detected bytes match an expected MIME type or the MIME implied by a file name. |
 | Categorisation | `GetMimeCategory(...)`, `IsImage(...)`, `IsJson(...)` | Groups MIME values into high-level families such as image, archive, script, document, spreadsheet, and executable. |
 | Runtime mappings | `RegisterMimeType(...)`, `UnregisterMimeType(...)` | Allows application-specific extensions without regenerating the database. |
@@ -79,7 +79,7 @@ Console.WriteLine(fallback); // application/octet-stream
 
 ## Content Detection
 
-Extension lookup tells you what a file claims to be. Content detection inspects the first bytes and tells you what the payload looks like.
+Extension lookup tells you what a file claims to be. Content detection inspects signatures and supported container metadata to identify the payload.
 
 ```csharp
 using ManagedCode.MimeTypes;
@@ -97,10 +97,14 @@ if (MimeHelper.TryGetMimeTypeByContent(stream, out var contentMime))
 
 `GetMimeTypeByContent` returns `MimeHelper.DefaultMimeType` when no known signature matches. `TryGetMimeTypeByContent` returns `false` in that case and still gives the fallback value through the `out` parameter.
 
-Seekable streams are rewound to their original position after detection:
+Detection starts at the stream's current position. Seekable streams are restored to that position after detection:
 
 ```csharp
-using var stream = File.OpenRead("image.png");
+using var stream = new MemoryStream(new byte[]
+{
+    0, 0, 0, 0, // Prefix outside the content being probed.
+    0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A
+});
 stream.Position = 4;
 
 var detected = MimeHelper.GetMimeTypeByContent(stream);
@@ -109,7 +113,33 @@ Console.WriteLine(detected);        // image/png
 Console.WriteLine(stream.Position); // 4
 ```
 
-Content detection is signature-based. It is useful for upload checks and mismatch detection, but it is not a full document parser, virus scanner, or guarantee that the entire file is structurally valid.
+ZIP-based Microsoft Office files are identified using their compressed `[Content_Types].xml` manifest, the package's Office document relationship in `_rels/.rels`, and the presence of the declared main part, even when those entries occur beyond the initial signature probe. Transitional and Strict Open XML relationships are supported. The file name is not used to determine the detected type.
+
+```csharp
+using var document = File.OpenRead("report.docx");
+Console.WriteLine(MimeHelper.GetMimeTypeByContent(document));
+// application/vnd.openxmlformats-officedocument.wordprocessingml.document
+```
+
+The container detectors cover these families:
+
+| Family | Formats and evidence |
+| --- | --- |
+| Office Open XML | `docx`, `dotx`, `docm`, `dotm`, `xlsx`, `xltx`, `xlsm`, `xltm`, `xlam`, `xlsb`, `pptx`, `potx`, `ppsx`, `pptm`, `potm`, `ppsm`, `ppam`, `sldx`, `sldm`, `thmx`; exact main-part content type and package relationship. |
+| Visio Open XML | `vsdx`, `vsdm`, `vssx`, `vssm`, `vstx`, `vstm`; drawing, stencil, template, and macro-enabled content types. |
+| Other OPC | `xps`, `oxps`, `3mf`; main relationship, content type, and existing target part. |
+| OpenDocument / OpenOffice | Registered `application/vnd.oasis.opendocument.*` and `application/vnd.sun.xml.*` types; exact `mimetype` entry, including templates and master documents. |
+| EPUB / Android / Java | Exact EPUB `mimetype`, Android binary manifest, or Java `META-INF/MANIFEST.MF` header. JAR/WAR/EAR share `application/java-archive`. |
+| Legacy compound Office | `doc`/`dot`, `xls`/`xlt`/`xla`, `ppt`/`pot`/`pps`, and `vsd`/`vss`/`vst`; root directory stream names in CFB version 3 or 4. |
+| RIFF | WebP, WAV, AVI; complete format FourCC. |
+| ISO BMFF | MP4, QuickTime, M4A/M4V, 3GP/3G2, AVIF, HEIC/HEIF and HEIC/HEIF sequences; major and compatible file-type brands. |
+| Ogg | Audio, Theora video, or generic Ogg according to identification packets in the probed beginning. |
+
+Container probing is bounded: seekable streams allow random access with at most 1 MiB of additional container reads, while non-seekable streams consume and buffer at most 1 MiB in total. ZIP XML entries have a declared size limit of 256 KiB and a parser limit of 256K characters; XML DTDs are prohibited. Non-seekable packages need the required container metadata within that complete buffer. ZIP packages that are unsupported, ambiguous, malformed, or exceed the bounds fall back to `application/zip`. Legacy compound probing follows at most 128 directory sectors using the header DIFAT; unknown, encrypted, or unsupported compound layouts retain `application/vnd.ms-office`.
+
+Templates and add-ins that use the same binary family share its MIME type. An extension alone does not imply a unique content signature. See the [verification matrix](https://github.com/managedcode/MimeTypes/blob/main/docs/content-detection-coverage.md) for the audited families and cases.
+
+Content detection is useful for upload checks and mismatch detection, but it is not a full document parser, virus scanner, or guarantee that the entire file is structurally valid.
 
 ## Validating Uploads
 

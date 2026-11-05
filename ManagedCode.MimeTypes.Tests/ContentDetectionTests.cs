@@ -111,22 +111,22 @@ public class ContentDetectionTests
     }
 
     [Fact]
-    public void DocxHeader_ShouldBeDetected()
+    public void OfficePathWithoutPackageMetadata_ShouldRemainZip()
     {
         var docxBytes = Combine(
             new byte[] { 0x50, 0x4B, 0x03, 0x04 },
             Encoding.ASCII.GetBytes("word/document.xml"));
-        Detect(docxBytes).ShouldBe(MimeHelper.DOCX);
+        Detect(docxBytes).ShouldBe(MimeHelper.ZIP);
     }
 
     [Fact]
-    public void ZipMarker_ShouldMatchMixedCaseAtTheEndOfTheProbe()
+    public void OfficePathAtTheEndOfTheProbe_ShouldNotEstablishOfficeType()
     {
         var header = new byte[560];
         new byte[] { 0x50, 0x4B, 0x03, 0x04 }.CopyTo(header, 0);
         "WoRd/"u8.CopyTo(header.AsSpan(header.Length - 5));
 
-        Detect(header).ShouldBe(MimeHelper.DOCX);
+        Detect(header).ShouldBe(MimeHelper.ZIP);
     }
 
     [Fact]

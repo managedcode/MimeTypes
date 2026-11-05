@@ -46,10 +46,9 @@ public static partial class MimeHelper
         new([0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x01, 0x00], "application/x-rar-compressed"),
         new([0x37, 0x7A, 0xBC, 0xAF, 0x27, 0x1C], "application/x-7z-compressed"),
         new([0xFD, 0x37, 0x7A, 0x58, 0x5A, 0x00], "application/x-xz"),
-        new([0x4F, 0x67, 0x67, 0x53], "audio/ogg"),
-        new([0x66, 0x4C, 0x61, 0x43], "audio/flac"),
+        new([0x66, 0x4C, 0x61, 0x43], FLAC),
         new([0x49, 0x44, 0x33], "audio/mpeg"),
-        new([0x53, 0x51, 0x4C, 0x69, 0x74, 0x65, 0x20, 0x66, 0x6F, 0x72, 0x6D, 0x61, 0x74, 0x20, 0x33, 0x00], "application/x-sqlite3"),
+        new([0x53, 0x51, 0x4C, 0x69, 0x74, 0x65, 0x20, 0x66, 0x6F, 0x72, 0x6D, 0x61, 0x74, 0x20, 0x33, 0x00], SQLITE),
         new([0x25, 0x21, 0x50, 0x53], "application/postscript"),
         new([0x7F, 0x45, 0x4C, 0x46], "application/x-executable"),
         new([0x25, 0x21, 0x50, 0x53, 0x2D], "application/postscript"),
@@ -174,6 +173,15 @@ public static partial class MimeHelper
 
             var header = new ReadOnlySpan<byte>(buffer, 0, bytesRead);
             var detected = DetectMimeType(header);
+            if (header.Length >= 4 && (header[..4].SequenceEqual(ZipSignature) || header[..4].SequenceEqual(ZipEmptySignature)))
+            {
+                detected = DetectContainerType(fileStream, position, header, ReadZipPackageType) ?? detected;
+            }
+            else if (detected == "application/vnd.ms-office")
+            {
+                detected = DetectContainerType(fileStream, position, header, ReadCompoundOfficeType) ?? detected;
+            }
+
             if (detected == null)
             {
                 return false;
@@ -301,12 +309,12 @@ public static partial class MimeHelper
             .ToArray();
     }
 
-    private static int ReadUpTo(Stream stream, byte[] buffer, int count)
+    private static int ReadUpTo(Stream stream, byte[] buffer, int count, int offset = 0)
     {
         var totalRead = 0;
         while (totalRead < count)
         {
-            var read = stream.Read(buffer, totalRead, count - totalRead);
+            var read = stream.Read(buffer, offset + totalRead, count - totalRead);
             if (read <= 0)
             {
                 break;
@@ -320,6 +328,10 @@ public static partial class MimeHelper
 
     private static string? DetectMimeType(ReadOnlySpan<byte> header)
     {
+        // Shared container prefixes must not fall through to an incomplete registry hint.
+        if (header.StartsWith(RiffSignature)) return DetectRiffType(header);
+        if (header.Length >= 8 && header.Slice(4, 4).SequenceEqual(FtypFourCC)) return DetectIsoBaseMediaType(header);
+
         return DetectMagicSignature(header, BuiltInMagicSignatures) ??
             DetectComplexSignature(header) ??
             DetectMagicSignature(header, RegistryMagicSignatures);
@@ -350,37 +362,10 @@ public static partial class MimeHelper
 
     private static string? DetectComplexSignature(ReadOnlySpan<byte> header)
     {
-        if (header.Length >= 12 && header[..4].SequenceEqual(RiffSignature))
+        var mediaType = DetectIsoBaseMediaType(header) ?? DetectOggType(header);
+        if (mediaType != null)
         {
-            var format = header.Slice(8, 4);
-            if (format.SequenceEqual(WebpFourCC))
-            {
-                return "image/webp";
-            }
-
-            if (format.SequenceEqual(AviFourCC))
-            {
-                return "video/x-msvideo";
-            }
-
-            if (format.SequenceEqual(WaveFourCC))
-            {
-                return "audio/wav";
-            }
-        }
-
-        if (header.Length >= 12 && header.Slice(4, 4).SequenceEqual(FtypFourCC))
-        {
-            var brand = header.Slice(8, 4);
-            if (IsMp4Brand(brand))
-            {
-                return "video/mp4";
-            }
-
-            if (brand.SequenceEqual(QuickTimeBrand))
-            {
-                return "video/quicktime";
-            }
+            return mediaType;
         }
 
         if (IsMpegAudioHeader(header))
@@ -390,7 +375,7 @@ public static partial class MimeHelper
 
         if (header.Length >= 4 && (header[..4].SequenceEqual(ZipSignature) || header[..4].SequenceEqual(ZipEmptySignature)))
         {
-            return DetectZipBasedType(header) ?? "application/zip";
+            return "application/zip";
         }
 
         if (header.Length >= 4 && header[..4].SequenceEqual(MzSignature))
@@ -435,83 +420,6 @@ public static partial class MimeHelper
             {
                 return true;
             }
-        }
-
-        return false;
-    }
-
-    private static string? DetectZipBasedType(ReadOnlySpan<byte> header)
-    {
-        ReadOnlySpan<byte> epubPattern = "mimetypeapplication/epub+zip"u8;
-        if (ContainsAsciiIgnoreCase(header, epubPattern))
-        {
-            return "application/epub+zip";
-        }
-
-        ReadOnlySpan<byte> odtPattern = "mimetypeapplication/vnd.oasis.opendocument.text"u8;
-        if (ContainsAsciiIgnoreCase(header, odtPattern))
-        {
-            return "application/vnd.oasis.opendocument.text";
-        }
-
-        ReadOnlySpan<byte> odsPattern = "mimetypeapplication/vnd.oasis.opendocument.spreadsheet"u8;
-        if (ContainsAsciiIgnoreCase(header, odsPattern))
-        {
-            return "application/vnd.oasis.opendocument.spreadsheet";
-        }
-
-        ReadOnlySpan<byte> odpPattern = "mimetypeapplication/vnd.oasis.opendocument.presentation"u8;
-        if (ContainsAsciiIgnoreCase(header, odpPattern))
-        {
-            return "application/vnd.oasis.opendocument.presentation";
-        }
-
-        ReadOnlySpan<byte> wordPattern = "word/"u8;
-        if (ContainsAsciiIgnoreCase(header, wordPattern))
-        {
-            return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-        }
-
-        ReadOnlySpan<byte> xlPattern = "xl/"u8;
-        if (ContainsAsciiIgnoreCase(header, xlPattern))
-        {
-            return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-        }
-
-        ReadOnlySpan<byte> pptPattern = "ppt/"u8;
-        if (ContainsAsciiIgnoreCase(header, pptPattern))
-        {
-            return "application/vnd.openxmlformats-officedocument.presentationml.presentation";
-        }
-
-        ReadOnlySpan<byte> androidManifestPattern = "AndroidManifest.xml"u8;
-        if (ContainsAsciiIgnoreCase(header, androidManifestPattern))
-        {
-            return "application/vnd.android.package-archive";
-        }
-
-        return null;
-    }
-
-    private static bool ContainsAsciiIgnoreCase(ReadOnlySpan<byte> span, ReadOnlySpan<byte> pattern)
-    {
-        // ZIP markers start with ASCII letters, so skip bytes that cannot start a match.
-        var lower = (byte)(pattern[0] | 0x20);
-        var upper = (byte)(lower & ~0x20);
-        while (span.Length >= pattern.Length)
-        {
-            var index = span[..(span.Length - pattern.Length + 1)].IndexOfAny(lower, upper);
-            if (index < 0)
-            {
-                return false;
-            }
-
-            if (Ascii.EqualsIgnoreCase(span.Slice(index, pattern.Length), pattern))
-            {
-                return true;
-            }
-
-            span = span[(index + 1)..];
         }
 
         return false;
